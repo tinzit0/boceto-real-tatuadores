@@ -487,7 +487,32 @@
 </div>
 
 <!-- ================================================================= -->
-<!-- MODAL / VISTA DE LOGIN NEUTRA (SIN SUGERENCIAS NI CORREOS VISIBLES) -->
+<!-- MODAL DE ÉXITO DE RESERVA PARA CLIENTES (SIN GOOGLE CALENDAR) -->
+<!-- ================================================================= -->
+<div id="success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="action-card rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl border border-white/10 space-y-4">
+        <div class="text-emerald-400 text-4xl mb-2"><i class="fa-solid fa-circle-check"></i></div>
+        <h3 class="font-serif text-2xl text-bone">¡Cita Registrada!</h3>
+        <p class="text-xs text-muted leading-relaxed">
+            Tu reserva ha quedado guardada con éxito. Haz clic en el botón para completar tu abono en Webpay Plus.
+        </p>
+        
+        <div class="space-y-2 pt-2">
+            <!-- Botón Continuar a Webpay -->
+            <button onclick="proceedToWebpay()" class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold py-3.5 px-4 rounded-xl uppercase">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Continuar a Pago Webpay ($20.000)</span>
+            </button>
+        </div>
+
+        <button onclick="closeSuccessModal()" class="text-[11px] text-muted hover:text-bone transition pt-2">
+            Cerrar ventana
+        </button>
+    </div>
+</div>
+
+<!-- ================================================================= -->
+<!-- MODAL / VISTA DE LOGIN NEUTRA -->
 <!-- ================================================================= -->
 <div id="login-container" class="hidden min-h-screen pt-36 pb-20 px-4 max-w-md mx-auto flex flex-col justify-center">
     <div class="action-card rounded-2xl p-8 text-center shadow-2xl">
@@ -529,7 +554,7 @@
 </div>
 
 <!-- ================================================================= -->
-<!-- SECCIÓN PANEL ADMIN (HORARIOS POR DÍA DE LA SEMANA) -->
+<!-- SECCIÓN PANEL ADMIN -->
 <!-- ================================================================= -->
 <div id="admin-container" class="hidden min-h-screen pt-36 pb-20 px-4 md:px-8 max-w-6xl mx-auto">
     
@@ -548,7 +573,7 @@
             <button onclick="showPublicLanding()" class="text-xs bg-white/5 hover:bg-white/10 text-bone border border-white/10 px-4 py-2 rounded-lg transition">
                 <i class="fa-solid fa-arrow-left mr-1.5"></i> Volver a la Web
             </button>
-            <button onclick="resetSystemData()" class="text-xs bg-danger/20 text-danger border border-danger/30 hover:bg-danger/30 px-3 py-2 rounded-lg transition">
+            <button onclick="openResetModal()" class="text-xs bg-danger/20 text-danger border border-danger/30 hover:bg-danger/30 px-3 py-2 rounded-lg transition">
                 <i class="fa-solid fa-rotate-left mr-1"></i> Restablecer
             </button>
         </div>
@@ -621,7 +646,7 @@
                                 <th class="pb-3">Cliente</th>
                                 <th class="pb-3">Contacto</th>
                                 <th class="pb-3">Estado</th>
-                                <th class="pb-3 text-right">Acciones</th>
+                                <th class="pb-3 text-right">Sincronizar</th>
                             </tr>
                         </thead>
                         <tbody id="admin-bookings-table" class="divide-y divide-white/5 text-bone">
@@ -636,25 +661,42 @@
 
 </div>
 
-<!-- SCRIPT GENERAL Y LÓGICA DE AGENDAMIENTO POR DÍA DE LA SEMANA -->
+<!-- ================================================================= -->
+<!-- MODAL DE CONFIRMACIÓN DE RESTABLECIMIENTO -->
+<!-- ================================================================= -->
+<div id="reset-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="action-card rounded-2xl p-6 md:p-8 max-w-sm w-full text-center shadow-2xl border border-white/10">
+        <div class="text-danger text-3xl mb-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3 class="font-serif text-xl text-bone mb-2">¿Estás seguro?</h3>
+        <p class="text-xs text-muted mb-6 leading-relaxed">
+            Esta acción restablecerá todos los horarios y eliminará el registro de citas guardadas.
+        </p>
+        <div class="flex gap-3">
+            <button onclick="closeResetModal()" class="flex-1 bg-white/5 hover:bg-white/10 text-bone text-xs py-2.5 rounded-xl transition border border-white/10">
+                Cancelar
+            </button>
+            <button onclick="confirmResetSystem()" class="flex-1 bg-danger hover:bg-red-700 text-white text-xs py-2.5 rounded-xl transition font-semibold">
+                Sí, Restablecer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT GENERAL Y LÓGICA -->
 <script>
-    // -----------------------------------------------------------------
-    // CREDENCIALES Y ESTADO DE AUTENTICACIÓN
-    // -----------------------------------------------------------------
     const ADMIN_EMAIL = "hipso.tattoo@gmail.com";
     const ADMIN_PASS = "hipso2026";
     const WEBPAY_URL = "https://www.webpay.cl/company/158953";
 
-    // Estructura de Horarios por Día de la Semana (0: Domingo ... 6: Sábado)
     const DEFAULT_CONFIG = {
         weeklySchedule: {
-            0: { active: false, slots: [] }, // Domingo
-            1: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Lunes
-            2: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Martes
-            3: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Miércoles
-            4: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Jueves
-            5: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Viernes
-            6: { active: true, slots: ["11:00", "14:00", "16:00"] }, // Sábado
+            0: { active: false, slots: [] },
+            1: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] },
+            2: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] },
+            3: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] },
+            4: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] },
+            5: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] },
+            6: { active: true, slots: ["11:00", "14:00", "16:00"] },
         },
         blockedDates: [],
     };
@@ -666,9 +708,6 @@
     let selectedClientDate = "";
     let selectedClientSlot = "";
 
-    // -----------------------------------------------------------------
-    // CARGA DE PÁGINA Y NAVEGACIÓN
-    // -----------------------------------------------------------------
     window.addEventListener('load', function() {
         const loader = document.getElementById('pantalla-carga');
         setTimeout(() => {
@@ -701,12 +740,8 @@
         renderAdminDashboard();
     });
 
-    // -----------------------------------------------------------------
-    // PROCESO DE INICIO DE SESIÓN
-    // -----------------------------------------------------------------
     function processDirectLogin(e) {
         e.preventDefault();
-
         const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
         const passInput = document.getElementById('login-password').value;
 
@@ -794,9 +829,6 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // -----------------------------------------------------------------
-    // LÓGICA VISTA CLIENTE (MOTOR DE RESERVA)
-    // -----------------------------------------------------------------
     function renderClientSlots() {
         const container = document.getElementById('client-slots-container');
         if (!container) return;
@@ -807,7 +839,6 @@
         const dateObj = new Date(selectedClientDate + 'T00:00:00');
         const dayOfWeek = dateObj.getDay();
 
-        // 1. Verificar si la fecha está bloqueada por vacaciones o rango de fechas
         if (config.blockedDates.includes(selectedClientDate)) {
             container.innerHTML = `<p class="col-span-full text-xs text-danger/80 italic py-4">Estudio cerrado en esta fecha.</p>`;
             return;
@@ -815,7 +846,6 @@
 
         const dayConfig = config.weeklySchedule[dayOfWeek];
 
-        // 2. Verificar si el día de la semana está habilitado
         if (!dayConfig || !dayConfig.active) {
             container.innerHTML = `<p class="col-span-full text-xs text-muted italic py-4">El estudio no atiende los días ${getDayName(dayOfWeek)}.</p>`;
             return;
@@ -826,7 +856,6 @@
             return;
         }
 
-        // 3. Generar bloques disponibles para el día específico
         dayConfig.slots.forEach(slot => {
             const isBooked = bookings.some(b => b.date === selectedClientDate && b.time === slot && b.status !== 'Cancelada');
 
@@ -867,10 +896,12 @@
         if (el) el.addEventListener('input', validateBookingForm);
     });
 
+    let pendingBookingData = null;
+
     function processClientBooking(e) {
         e.preventDefault();
 
-        const newBooking = {
+        pendingBookingData = {
             id: 'RES-' + Date.now().toString().slice(-5),
             date: selectedClientDate,
             time: selectedClientSlot,
@@ -882,16 +913,24 @@
             createdAt: new Date().toISOString()
         };
 
-        bookings.push(newBooking);
+        bookings.push(pendingBookingData);
         saveState();
 
-        alert(`¡Cita agendada correctamente!\n\nSerás redirigido al portal de Webpay Plus para abonar los $20.000 CLP.`);
+        document.getElementById('success-modal').classList.remove('hidden');
+    }
+
+    function proceedToWebpay() {
         window.location.href = WEBPAY_URL;
     }
 
-    // -----------------------------------------------------------------
-    // LÓGICA PANEL ADMIN (CONFIGURACIÓN DE HORARIOS POR DÍA)
-    // -----------------------------------------------------------------
+    function closeSuccessModal() {
+        document.getElementById('success-modal').classList.add('hidden');
+        document.getElementById('booking-form').reset();
+        selectedClientSlot = "";
+        renderClientSlots();
+        validateBookingForm();
+    }
+
     function renderAdminDashboard() {
         renderAdminWeeklySchedule();
         renderAdminBookingsTable();
@@ -902,7 +941,7 @@
         if (!container) return;
         container.innerHTML = "";
 
-        const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Lunes a Domingo
+        const daysOrder = [1, 2, 3, 4, 5, 6, 0];
 
         daysOrder.forEach(dayIdx => {
             const dayData = config.weeklySchedule[dayIdx] || { active: false, slots: [] };
@@ -986,6 +1025,38 @@
         alert(block ? "Fechas bloqueadas correctamente." : "Fechas liberadas correctamente.");
     }
 
+    function openResetModal() {
+        document.getElementById('reset-modal').classList.remove('hidden');
+    }
+
+    function closeResetModal() {
+        document.getElementById('reset-modal').classList.add('hidden');
+    }
+
+    function confirmResetSystem() {
+        localStorage.removeItem('hipso_config_v2');
+        localStorage.removeItem('hipso_bookings');
+        config = DEFAULT_CONFIG;
+        bookings = [];
+        saveState();
+        renderAdminDashboard();
+        closeResetModal();
+        alert("Sistema restablecido correctamente.");
+    }
+
+    // Generador de enlace para Google Calendar desde el Admin
+    function getGoogleCalendarUrl(b) {
+        const title = encodeURIComponent(`Cita Tatuaje: ${b.clientName}`);
+        const details = encodeURIComponent(`Idea: ${b.notes || 'Sin detalles'}\nTeléfono: ${b.clientPhone}\nCorreo: ${b.clientEmail}`);
+        const location = encodeURIComponent("Tucapel 391, Concepción, Chile");
+        
+        const fechaLimpia = b.date.replace(/-/g, '');
+        const horaLimpia = b.time.replace(':', '') + '00';
+        const fechaInicio = `${fechaLimpia}T${horaLimpia}`;
+        
+        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${fechaInicio}/${fechaInicio}`;
+    }
+
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -1010,6 +1081,8 @@
             else if (b.status === 'Pendiente de Pago') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]">Pendiente</span>';
             else statusBadge = '<span class="bg-danger/20 text-danger border border-danger/30 px-2 py-0.5 rounded text-[10px]">Cancelada</span>';
 
+            const gcalLink = getGoogleCalendarUrl(b);
+
             tr.innerHTML = `
                 <td class="py-3 font-mono">
                     <div class="text-bone font-semibold">${b.date}</div>
@@ -1025,11 +1098,16 @@
                 </td>
                 <td class="py-3">${statusBadge}</td>
                 <td class="py-3 text-right">
-                    <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-studio border border-white/10 rounded px-1.5 py-1 text-[11px] text-bone focus:outline-none">
-                        <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente</option>
-                        <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmar</option>
-                        <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelar</option>
-                    </select>
+                    <div class="flex items-center justify-end gap-2">
+                        <a href="${gcalLink}" target="_blank" title="Añadir a Google Calendar" class="bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 px-2.5 py-1 rounded text-[10px] transition flex items-center gap-1">
+                            <i class="fa-brands fa-google text-[10px]"></i> Calendar
+                        </a>
+                        <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-studio border border-white/10 rounded px-1.5 py-1 text-[11px] text-bone focus:outline-none">
+                            <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente</option>
+                            <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmar</option>
+                            <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelar</option>
+                        </select>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1045,9 +1123,6 @@
         }
     }
 
-    // -----------------------------------------------------------------
-    // UTILIDADES & PERSISTENCIA
-    // -----------------------------------------------------------------
     function getDayName(idx) {
         const names = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         return names[idx];
@@ -1058,27 +1133,12 @@
         localStorage.setItem('hipso_bookings', JSON.stringify(bookings));
     }
 
-    function resetSystemData() {
-        if (confirm("¿Seguro que deseas restablecer la agenda a sus valores por defecto?")) {
-            localStorage.removeItem('hipso_config_v2');
-            localStorage.removeItem('hipso_bookings');
-            config = DEFAULT_CONFIG;
-            bookings = [];
-            saveState();
-            renderAdminDashboard();
-            alert("Sistema restablecido.");
-        }
-    }
-
     function formatDateReadable(dateStr) {
         if (!dateStr) return "--";
         const parts = dateStr.split('-');
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
-    // -----------------------------------------------------------------
-    // ANIMACIONES DE SCROLL, CARRUSEL Y FAQ
-    // -----------------------------------------------------------------
     let currentSlide = 0;
     let isPlaying = true;
     let slideInterval;
