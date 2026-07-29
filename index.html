@@ -13,9 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- SDK Oficial de Google Sign-In -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -422,7 +419,7 @@
                               <form id="booking-form" onsubmit="processClientBooking(event)" class="space-y-4">
                                   <div>
                                       <label class="block text-[11px] uppercase text-muted tracking-wider mb-1">Nombre Completo</label>
-                                      <input type="text" id="client-name" required placeholder="Ej: Martín Bustamante"
+                                      <input type="text" id="client-name" required placeholder="Ej: Juan Pérez"
                                              class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-sm focus:outline-none focus:border-accent">
                                   </div>
                                   <div>
@@ -445,7 +442,7 @@
                                   <div class="bg-studio/50 p-3 rounded-lg border border-white/5 text-xs text-muted space-y-1">
                                       <div class="flex justify-between"><span>Fecha:</span> <strong id="summary-date" class="text-bone">--</strong></div>
                                       <div class="flex justify-between"><span>Hora:</span> <strong id="summary-time" class="text-bone">--</strong></div>
-                                      <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$15.000 CLP</strong></div>
+                                      <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$20.000 CLP</strong></div>
                                   </div>
 
                                   <button type="submit" id="btn-submit-booking" disabled
@@ -464,7 +461,7 @@
                               </div>
                               <div class="flex items-center gap-1.5 opacity-80">
                                   <i class="fa-regular fa-envelope text-accent text-xs"></i>
-                                  <span>hipso.tattoo@gmail.com</span>
+                                  <span>Contacto directo del estudio</span>
                               </div>
                           </div>
                       </div>
@@ -490,38 +487,40 @@
 </div>
 
 <!-- ================================================================= -->
-<!-- MODAL / VISTA DE LOGIN CON AUTENTICACIÓN GOOGLE -->
+<!-- MODAL / VISTA DE LOGIN NEUTRA (SIN SUGERENCIAS NI CORREOS VISIBLES) -->
 <!-- ================================================================= -->
 <div id="login-container" class="hidden min-h-screen pt-36 pb-20 px-4 max-w-md mx-auto flex flex-col justify-center">
     <div class="action-card rounded-2xl p-8 text-center shadow-2xl">
         <div class="text-accent text-3xl mb-4"><i class="fa-solid fa-shield-halved"></i></div>
         <h2 class="font-serif text-2xl text-bone mb-2 font-light">Acceso Administrativo</h2>
-        <p class="text-xs text-muted mb-8 leading-relaxed">
-            Inicia sesión con tu cuenta de Google autorizada (<strong>hipso.tattoo@gmail.com</strong>) para configurar la agenda del estudio.
+        <p class="text-xs text-muted mb-6 leading-relaxed">
+            Ingresa tus credenciales para administrar el sistema de agendamiento.
         </p>
 
-        <!-- Botón Nativo Oficial Google Sign-In -->
-        <div class="flex justify-center mb-4">
-            <div id="g_id_onload"
-                 data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
-                 data-callback="handleCredentialResponse"
-                 data-auto_prompt="false">
+        <form id="login-form" onsubmit="processDirectLogin(event)" class="space-y-4 text-left mb-6" autocomplete="off">
+            <div>
+                <label class="block text-[11px] uppercase text-muted tracking-wider mb-1 font-semibold">Correo de Usuario</label>
+                <div class="relative">
+                    <i class="fa-regular fa-envelope absolute left-3 top-3 text-muted text-xs"></i>
+                    <input type="email" id="login-email" required placeholder="ejemplo@correo.com" autocomplete="off"
+                           class="w-full bg-studio border border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-bone text-xs focus:outline-none focus:border-accent">
+                </div>
             </div>
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-shape="rectangular"
-                 data-theme="outline"
-                 data-text="signin_with"
-                 data-size="large"
-                 data-logo_alignment="left">
-            </div>
-        </div>
 
-        <!-- Botón Fallback/Manual para entorno local de pruebas -->
-        <button onclick="promptManualGoogleLogin()" class="w-full flex items-center justify-center gap-2 bg-studio hover:bg-white/5 border border-white/10 text-bone font-sans text-xs py-3 px-4 rounded-xl transition mb-6 cursor-pointer">
-            <i class="fa-brands fa-google text-accent"></i>
-            <span>Ingresar Correo Manualmente (Prototipo)</span>
-        </button>
+            <div>
+                <label class="block text-[11px] uppercase text-muted tracking-wider mb-1 font-semibold">Contraseña</label>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-3 top-3 text-muted text-xs"></i>
+                    <input type="password" id="login-password" required placeholder="••••••••" autocomplete="off"
+                           class="w-full bg-studio border border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-bone text-xs focus:outline-none focus:border-accent">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-3.5 rounded-xl uppercase cursor-pointer mt-2">
+                <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                <span>Ingresar al Panel</span>
+            </button>
+        </form>
 
         <button onclick="showPublicLanding()" class="text-xs text-muted hover:text-bone transition">
             Volver a la vista de cliente
@@ -530,7 +529,7 @@
 </div>
 
 <!-- ================================================================= -->
-<!-- SECCIÓN PANEL ADMIN (RESTRINGIDO PARA hipso.tattoo@gmail.com) -->
+<!-- SECCIÓN PANEL ADMIN (HORARIOS POR DÍA DE LA SEMANA) -->
 <!-- ================================================================= -->
 <div id="admin-container" class="hidden min-h-screen pt-36 pb-20 px-4 md:px-8 max-w-6xl mx-auto">
     
@@ -560,47 +559,42 @@
         <!-- CONTROLES DE DISPONIBILIDAD -->
         <div class="lg:col-span-5 space-y-6">
             
-            <!-- 1. Días Operativos -->
+            <!-- 1. Días Laborales y Horarios Específicos por Día -->
             <div class="action-card rounded-2xl p-6">
-                <h3 class="font-serif text-md text-bone mb-4 flex items-center gap-2">
+                <h3 class="font-serif text-md text-bone mb-2 flex items-center gap-2">
                     <i class="fa-regular fa-calendar-check text-accent"></i>
-                    Días Laborales Activos
+                    Horarios por Día de la Semana
                 </h3>
-                <div id="admin-days-config" class="space-y-2">
-                    <!-- Render JS -->
+                <p class="text-[11px] text-muted mb-4">Activa o inactiva días y configura sus bloques independientes.</p>
+                
+                <div id="admin-days-config" class="space-y-3">
+                    <!-- Render JS de días con sus bloques -->
                 </div>
             </div>
 
-            <!-- 2. Bloques de Tiempo Genéricos -->
+            <!-- 2. Bloqueo de Días o Semanas Libres -->
             <div class="action-card rounded-2xl p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-serif text-md text-bone flex items-center gap-2">
-                        <i class="fa-regular fa-clock text-accent"></i>
-                        Bloques de Horario Diarios
-                    </h3>
-                    <button onclick="addNewTimeSlot()" class="text-xs bg-accent/20 text-accent hover:bg-accent/30 px-2 py-1 rounded border border-accent/30">
-                        + Añadir
-                    </button>
-                </div>
-                <div id="admin-slots-config" class="grid grid-cols-2 gap-2">
-                    <!-- Render JS -->
-                </div>
-            </div>
-
-            <!-- 3. Bloquear / Liberar Fecha Específica -->
-            <div class="action-card rounded-2xl p-6">
-                <h3 class="font-serif text-md text-bone mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-ban text-accent"></i>
-                    Bloqueo de Día Específico
+                <h3 class="font-serif text-md text-bone mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-plane-departure text-accent"></i>
+                    Bloqueo de Vacaciones / Semanas Libres
                 </h3>
+                <p class="text-[11px] text-muted mb-4">Bloquea un día individual o un rango de fechas completo.</p>
+                
                 <div class="space-y-3">
-                    <input type="date" id="admin-block-date-input" class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                    <div class="flex gap-2">
-                        <button onclick="toggleBlockSpecificDate(true)" class="flex-1 bg-danger/20 hover:bg-danger/30 text-danger border border-danger/30 text-xs py-2 rounded-lg transition font-semibold">
-                            Bloquear Día
+                    <div>
+                        <label class="block text-[10px] uppercase text-muted tracking-wider mb-1 font-semibold">Desde</label>
+                        <input type="date" id="admin-block-start-date" class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase text-muted tracking-wider mb-1 font-semibold">Hasta</label>
+                        <input type="date" id="admin-block-end-date" class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+                    </div>
+                    <div class="flex gap-2 pt-1">
+                        <button onclick="toggleBlockDateRange(true)" class="flex-1 bg-danger/20 hover:bg-danger/30 text-danger border border-danger/30 text-xs py-2.5 rounded-lg transition font-semibold">
+                            Bloquear Rango
                         </button>
-                        <button onclick="toggleBlockSpecificDate(false)" class="flex-1 bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 text-xs py-2 rounded-lg transition font-semibold">
-                            Desbloquear
+                        <button onclick="toggleBlockDateRange(false)" class="flex-1 bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 text-xs py-2.5 rounded-lg transition font-semibold">
+                            Liberar Rango
                         </button>
                     </div>
                 </div>
@@ -642,21 +636,30 @@
 
 </div>
 
-<!-- SCRIPT GENERAL Y LÓGICA DE AGENDAMIENTO PROPIO CON AUTENTICACIÓN GOOGLE REAL -->
+<!-- SCRIPT GENERAL Y LÓGICA DE AGENDAMIENTO POR DÍA DE LA SEMANA -->
 <script>
     // -----------------------------------------------------------------
-    // CONSTANTES Y ESTADO DE AUTENTICACIÓN
+    // CREDENCIALES Y ESTADO DE AUTENTICACIÓN
     // -----------------------------------------------------------------
     const ADMIN_EMAIL = "hipso.tattoo@gmail.com";
+    const ADMIN_PASS = "hipso2026";
     const WEBPAY_URL = "https://www.webpay.cl/company/158953";
 
+    // Estructura de Horarios por Día de la Semana (0: Domingo ... 6: Sábado)
     const DEFAULT_CONFIG = {
-        activeDays: [1, 2, 3, 4, 5, 6], // 1: Lunes a 6: Sábado
-        timeSlots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"],
+        weeklySchedule: {
+            0: { active: false, slots: [] }, // Domingo
+            1: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Lunes
+            2: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Martes
+            3: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Miércoles
+            4: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Jueves
+            5: { active: true, slots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"] }, // Viernes
+            6: { active: true, slots: ["11:00", "14:00", "16:00"] }, // Sábado
+        },
         blockedDates: [],
     };
 
-    let config = JSON.parse(localStorage.getItem('hipso_config')) || DEFAULT_CONFIG;
+    let config = JSON.parse(localStorage.getItem('hipso_config_v2')) || DEFAULT_CONFIG;
     let bookings = JSON.parse(localStorage.getItem('hipso_bookings')) || [];
     let currentUser = JSON.parse(localStorage.getItem('hipso_user')) || null;
 
@@ -699,52 +702,27 @@
     });
 
     // -----------------------------------------------------------------
-    // LÓGICA DE AUTENTICACIÓN OFICIAL DE GOOGLE
+    // PROCESO DE INICIO DE SESIÓN
     // -----------------------------------------------------------------
-    
-    // Callback invocado automáticamente por el SDK de Google Sign-In
-    function handleCredentialResponse(response) {
-        try {
-            const payload = parseJwt(response.credential);
-            const googleEmail = payload.email ? payload.email.trim().toLowerCase() : "";
+    function processDirectLogin(e) {
+        e.preventDefault();
 
-            validateAndAuthenticateEmail(googleEmail, payload.name, payload.picture);
-        } catch (err) {
-            alert("Error al procesar el inicio de sesión con Google.");
-        }
-    }
+        const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+        const passInput = document.getElementById('login-password').value;
 
-    // Método alternativo/manual por prompt para desarrollo local
-    function promptManualGoogleLogin() {
-        const inputEmail = prompt("Ingresa tu correo de Google para verificar el rol de Administrador:");
-        if (!inputEmail) return;
-
-        validateAndAuthenticateEmail(inputEmail.trim().toLowerCase(), "Hipso Tattoo Admin", "https://ui-avatars.com/api/?name=Hipso+Tattoo&background=62776a&color=fff");
-    }
-
-    // Validación centralizada del correo del Administrador
-    function validateAndAuthenticateEmail(email, name, picture) {
-        if (email === ADMIN_EMAIL.toLowerCase()) {
+        if (emailInput === ADMIN_EMAIL.toLowerCase() && passInput === ADMIN_PASS) {
             currentUser = {
                 email: ADMIN_EMAIL,
-                name: name || "Hipso Tattoo Admin",
-                picture: picture || "https://ui-avatars.com/api/?name=Hipso+Tattoo&background=62776a&color=fff"
+                name: "Hipso Tattoo Admin",
+                picture: "https://ui-avatars.com/api/?name=Hipso+Tattoo&background=62776a&color=fff"
             };
             localStorage.setItem('hipso_user', JSON.stringify(currentUser));
+            document.getElementById('login-form').reset();
             updateAuthUI();
             showAdminPanel();
         } else {
-            alert(`Acceso Denegado: La cuenta (${email}) no coincide con la dirección del administrador autorizada (${ADMIN_EMAIL}).`);
+            alert("Credenciales incorrectas: Verifique el correo o la contraseña ingresada.");
         }
-    }
-
-    function parseJwt(token) {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
     }
 
     function logoutAdmin() {
@@ -829,17 +807,27 @@
         const dateObj = new Date(selectedClientDate + 'T00:00:00');
         const dayOfWeek = dateObj.getDay();
 
-        if (!config.activeDays.includes(dayOfWeek)) {
-            container.innerHTML = `<p class="col-span-full text-xs text-muted italic py-4">El estudio no atiende en este día de la semana.</p>`;
-            return;
-        }
-
+        // 1. Verificar si la fecha está bloqueada por vacaciones o rango de fechas
         if (config.blockedDates.includes(selectedClientDate)) {
-            container.innerHTML = `<p class="col-span-full text-xs text-danger/80 italic py-4">Fecha no disponible para agendar.</p>`;
+            container.innerHTML = `<p class="col-span-full text-xs text-danger/80 italic py-4">Estudio cerrado en esta fecha.</p>`;
             return;
         }
 
-        config.timeSlots.forEach(slot => {
+        const dayConfig = config.weeklySchedule[dayOfWeek];
+
+        // 2. Verificar si el día de la semana está habilitado
+        if (!dayConfig || !dayConfig.active) {
+            container.innerHTML = `<p class="col-span-full text-xs text-muted italic py-4">El estudio no atiende los días ${getDayName(dayOfWeek)}.</p>`;
+            return;
+        }
+
+        if (dayConfig.slots.length === 0) {
+            container.innerHTML = `<p class="col-span-full text-xs text-muted italic py-4">No hay bloques configurados para este día.</p>`;
+            return;
+        }
+
+        // 3. Generar bloques disponibles para el día específico
+        dayConfig.slots.forEach(slot => {
             const isBooked = bookings.some(b => b.date === selectedClientDate && b.time === slot && b.status !== 'Cancelada');
 
             const btn = document.createElement('button');
@@ -897,96 +885,105 @@
         bookings.push(newBooking);
         saveState();
 
-        alert(`¡Cita agendada correctamente!\n\nSerás redirigido al portal de Webpay Plus para abonar los $15.000 CLP.`);
+        alert(`¡Cita agendada correctamente!\n\nSerás redirigido al portal de Webpay Plus para abonar los $20.000 CLP.`);
         window.location.href = WEBPAY_URL;
     }
 
     // -----------------------------------------------------------------
-    // LÓGICA PANEL ADMIN (RESTRINGIDO)
+    // LÓGICA PANEL ADMIN (CONFIGURACIÓN DE HORARIOS POR DÍA)
     // -----------------------------------------------------------------
     function renderAdminDashboard() {
-        renderAdminDaysConfig();
-        renderAdminSlotsConfig();
+        renderAdminWeeklySchedule();
         renderAdminBookingsTable();
     }
 
-    function renderAdminDaysConfig() {
+    function renderAdminWeeklySchedule() {
         const container = document.getElementById('admin-days-config');
         if (!container) return;
-        const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         container.innerHTML = "";
 
-        dayNames.forEach((name, index) => {
-            const isActive = config.activeDays.includes(index);
-            const row = document.createElement('div');
-            row.className = "flex items-center justify-between p-2 rounded bg-studio/60 text-xs";
-            row.innerHTML = `
-                <span class="${isActive ? 'text-bone font-medium' : 'text-muted'}">${name}</span>
-                <button onclick="toggleAdminDay(${index})" class="px-2.5 py-1 rounded text-[10px] uppercase font-bold tracking-wider transition ${isActive ? 'bg-accent/20 text-accent border border-accent/40' : 'bg-white/5 text-muted border border-white/10'}">
-                    ${isActive ? 'Activo' : 'Inactivo'}
-                </button>
+        const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Lunes a Domingo
+
+        daysOrder.forEach(dayIdx => {
+            const dayData = config.weeklySchedule[dayIdx] || { active: false, slots: [] };
+            const dayName = getDayName(dayIdx);
+
+            const card = document.createElement('div');
+            card.className = "bg-studio/60 border border-white/5 rounded-xl p-3 space-y-2";
+
+            let slotsBadges = dayData.slots.map((s, idx) => `
+                <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-[10px] font-mono px-2 py-0.5 rounded">
+                    ${s}
+                    <button onclick="removeSlotFromDay(${dayIdx}, ${idx})" class="text-danger hover:text-red-400 ml-1">×</button>
+                </span>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="font-medium text-xs text-bone">${dayName}</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="addSlotToDay(${dayIdx})" ${!dayData.active ? 'disabled' : ''} class="text-[10px] bg-accent/20 text-accent border border-accent/30 px-2 py-0.5 rounded hover:bg-accent/30 disabled:opacity-30">
+                            + Horario
+                        </button>
+                        <button onclick="toggleDayActive(${dayIdx})" class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase transition ${dayData.active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-muted border border-white/10'}">
+                            ${dayData.active ? 'Activo' : 'Inactivo'}
+                        </button>
+                    </div>
+                </div>
+                ${dayData.active ? `<div class="flex flex-wrap gap-1.5 pt-1">${slotsBadges || '<span class="text-[10px] text-muted italic">Sin bloques asignados</span>'}</div>` : ''}
             `;
-            container.appendChild(row);
+
+            container.appendChild(card);
         });
     }
 
-    function toggleAdminDay(dayIndex) {
-        if (config.activeDays.includes(dayIndex)) {
-            config.activeDays = config.activeDays.filter(d => d !== dayIndex);
-        } else {
-            config.activeDays.push(dayIndex);
-        }
+    function toggleDayActive(dayIdx) {
+        config.weeklySchedule[dayIdx].active = !config.weeklySchedule[dayIdx].active;
         saveState();
-        renderAdminDaysConfig();
+        renderAdminWeeklySchedule();
     }
 
-    function renderAdminSlotsConfig() {
-        const container = document.getElementById('admin-slots-config');
-        if (!container) return;
-        container.innerHTML = "";
-
-        config.timeSlots.forEach((slot, idx) => {
-            const tag = document.createElement('div');
-            tag.className = "flex items-center justify-between bg-studio/80 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono text-bone";
-            tag.innerHTML = `
-                <span>${slot}</span>
-                <button onclick="removeTimeSlot(${idx})" class="text-danger hover:text-red-400 ml-2">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
-            container.appendChild(tag);
-        });
-    }
-
-    function addNewTimeSlot() {
-        const newTime = prompt("Ingrese el nuevo bloque de hora (ej: 13:00):");
-        if (newTime && !config.timeSlots.includes(newTime)) {
-            config.timeSlots.push(newTime);
-            config.timeSlots.sort();
+    function addSlotToDay(dayIdx) {
+        const time = prompt(`Ingrese un nuevo bloque de hora para los días ${getDayName(dayIdx)} (ej: 13:00):`);
+        if (time && !config.weeklySchedule[dayIdx].slots.includes(time)) {
+            config.weeklySchedule[dayIdx].slots.push(time);
+            config.weeklySchedule[dayIdx].slots.sort();
             saveState();
-            renderAdminSlotsConfig();
+            renderAdminWeeklySchedule();
         }
     }
 
-    function removeTimeSlot(index) {
-        config.timeSlots.splice(index, 1);
+    function removeSlotFromDay(dayIdx, slotIdx) {
+        config.weeklySchedule[dayIdx].slots.splice(slotIdx, 1);
         saveState();
-        renderAdminSlotsConfig();
+        renderAdminWeeklySchedule();
     }
 
-    function toggleBlockSpecificDate(block) {
-        const input = document.getElementById('admin-block-date-input');
-        const val = input.value;
-        if (!val) return alert("Seleccione una fecha en el calendario.");
+    function toggleBlockDateRange(block) {
+        const start = document.getElementById('admin-block-start-date').value;
+        const end = document.getElementById('admin-block-end-date').value || start;
 
-        if (block) {
-            if (!config.blockedDates.includes(val)) config.blockedDates.push(val);
-            alert(`La fecha ${val} ha sido bloqueada.`);
-        } else {
-            config.blockedDates = config.blockedDates.filter(d => d !== val);
-            alert(`La fecha ${val} ha sido liberada.`);
+        if (!start) return alert("Selecciona al menos una fecha inicial.");
+
+        let currentDate = new Date(start + 'T00:00:00');
+        const endDate = new Date(end + 'T00:00:00');
+
+        if (currentDate > endDate) {
+            return alert("La fecha inicial no puede ser posterior a la fecha final.");
         }
+
+        while (currentDate <= endDate) {
+            const dateStr = currentDate.toISOString().split('T')[0];
+            if (block) {
+                if (!config.blockedDates.includes(dateStr)) config.blockedDates.push(dateStr);
+            } else {
+                config.blockedDates = config.blockedDates.filter(d => d !== dateStr);
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
         saveState();
+        alert(block ? "Fechas bloqueadas correctamente." : "Fechas liberadas correctamente.");
     }
 
     function renderAdminBookingsTable() {
@@ -1051,14 +1048,19 @@
     // -----------------------------------------------------------------
     // UTILIDADES & PERSISTENCIA
     // -----------------------------------------------------------------
+    function getDayName(idx) {
+        const names = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        return names[idx];
+    }
+
     function saveState() {
-        localStorage.setItem('hipso_config', JSON.stringify(config));
+        localStorage.setItem('hipso_config_v2', JSON.stringify(config));
         localStorage.setItem('hipso_bookings', JSON.stringify(bookings));
     }
 
     function resetSystemData() {
-        if (confirm("¿Seguro que deseas restablecer los datos del sistema?")) {
-            localStorage.removeItem('hipso_config');
+        if (confirm("¿Seguro que deseas restablecer la agenda a sus valores por defecto?")) {
+            localStorage.removeItem('hipso_config_v2');
             localStorage.removeItem('hipso_bookings');
             config = DEFAULT_CONFIG;
             bookings = [];
