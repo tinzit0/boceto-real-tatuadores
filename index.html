@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Hipso Tattoo | Estudio Privado & Agendamiento</title>
+    <meta name="description" content="Estudio de tatuajes y arte corporal. Tucapel 391, Concepción.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Tipografías Clásicas y Elegantes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: '#161b18', /* Verde agrisado muy oscuro */
+                        panel: '#1f2622',  /* Verde agrisado para tarjetas */
+                        accent: '#62776a', /* Verde salvia para detalles */
+                        accentHover: '#738b7d',
+                        muted: '#8b9690',  /* Texto secundario */
+                        bone: '#e0e6e2',   /* Texto principal blanco/hueso */
+                        danger: '#9e4242',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Elegante */
+        body {
+            background-color: #161b18;
+            color: #e0e6e2;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        ::selection { background: #62776a; color: #ffffff; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #161b18; }
+        ::-webkit-scrollbar-thumb { background: #37443d; }
+        ::-webkit-scrollbar-thumb:hover { background: #62776a; }
+
+        /* PANTALLA DE CARGA */
+        #pantalla-carga {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #161b18;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
+        }
+        .ocultar-carga { opacity: 0; visibility: hidden; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(224, 230, 226, 0.05);
+            border-top: 1px solid #62776a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ANIMACIÓN MASK REVEAL */
+        .reveal-mask { overflow: hidden; display: block; width: 100%; }
+        .reveal-mask.inline-mask { display: inline-block; width: auto; vertical-align: top; }
+        .reveal-item {
+            display: block; transform: translateY(110%); opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+            height: 100%;
+        }
+        .page-ready .reveal-mask.in-view > .reveal-item { transform: translateY(0); opacity: 1; }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
+
+        /* NAVBAR */
+        .navbar { transition: all 0.5s ease; background-color: transparent; padding: 25px 0; }
+        .navbar.scrolled {
+            background-color: rgba(22, 27, 24, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .nav-link { position: relative; padding-bottom: 4px; cursor: pointer; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 1px; bottom: 0; left: 50%;
+            background-color: #62776a; transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #e0e6e2; }
+
+        /* ACORDEÓN */
+        .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+
+        /* CARRUSEL */
+        .carousel-slide {
+            display: none;
+            animation: fadeEffect 0.8s ease-in-out;
+        }
+        .carousel-slide.active { display: grid; }
+        @keyframes fadeEffect {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .carousel-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            border: 1px solid #8b9690;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
+
+        /* ESTILOS DE TARJETAS Y BLOQUES DE AGENDAMIENTO */
+        .action-card {
+            background: linear-gradient(145deg, #1f2622 0%, #171d19 100%);
+            border: 1px solid rgba(98, 119, 106, 0.2);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .action-card:hover {
+            border-color: rgba(98, 119, 106, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .btn-primary-action {
+            background: #62776a;
+            transition: all 0.3s ease;
+        }
+        .btn-primary-action:hover:not(:disabled) {
+            background: #738b7d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(98, 119, 106, 0.3);
+        }
+
+        .slot-btn {
+            border: 1px solid rgba(98, 119, 106, 0.3);
+            transition: all 0.2s ease;
+        }
+        .slot-btn:hover:not(:disabled) {
+            background: rgba(98, 119, 106, 0.2);
+            border-color: #62776a;
+        }
+        .slot-btn.selected {
+            background: #62776a;
+            color: #ffffff;
+            border-color: #62776a;
+        }
+        .slot-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- PANTALLA DE CARGA -->
+<div id="pantalla-carga">
+    <div class="spinner"></div>
+    <h2 class="font-serif text-lg tracking-widest text-bone uppercase font-light">Hipso Tattoo</h2>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar" class="navbar fixed top-0 w-full z-50 flex flex-col items-center">
+    <div class="text-muted text-xl mb-3 hover:text-accent transition-colors cursor-pointer" onclick="showPublicLanding()">
+        <i class="fa-solid fa-leaf"></i>
+    </div>
+    <a href="#" onclick="showPublicLanding()" class="font-serif text-3xl md:text-4xl text-bone tracking-wide font-normal mb-5">Hipso Tattoo</a>
+    
+    <div class="hidden md:flex items-center gap-8 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-muted">
+        <a href="#estudio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Estudio</a>
+        <a href="#portafolio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Portafolio</a>
+        <a href="#preparacion" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Info</a>
+        <a href="#agendar" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Booking</a>
+        <span class="w-px h-3 bg-white/10"></span>
+        
+        <!-- Botón de Acceso Admin o Perfil -->
+        <div id="auth-nav-slot">
+            <button onclick="handleAdminNavClick()" id="nav-admin-toggle" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-user-gear text-xs"></i>
+                <span id="nav-admin-label">Panel Admin</span>
+            </button>
+        </div>
+    </div>
+
+    <button id="mobileBtn" class="md:hidden absolute right-6 top-10 text-muted hover:text-accent focus:outline-none transition-colors">
+        <i class="fa-solid fa-bars text-xl"></i>
+    </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 bg-studio z-40 hidden flex-col justify-center items-center gap-8 font-serif text-2xl text-bone">
+    <a href="#estudio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Estudio</a>
+    <a href="#portafolio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Portafolio</a>
+    <a href="#preparacion" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Info</a>
+    <a href="#agendar" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Booking</a>
+    <button onclick="handleAdminNavClick()" class="hover:text-accent mobile-link text-accent transition-colors flex items-center gap-2 text-xl">
+        <i class="fa-solid fa-user-gear"></i>
+        <span id="mobile-admin-label">Panel Admin</span>
+    </button>
+</div>
+
+<!-- ================================================================= -->
+<!-- CONTENEDOR PRINCIPAL VISTA PÚBLICA (LANDING PAGE) -->
+<!-- ================================================================= -->
+<div id="landing-container">
+    
+    <!-- HERO SECTION -->
+    <header class="relative min-h-[85vh] flex items-center justify-center text-center pt-20">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&w=1920&q=80" 
+                 alt="Fondo Tatuaje" class="w-full h-full object-cover grayscale opacity-20 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-t from-studio via-transparent to-studio"></div>
+        </div>
+        <div class="relative z-10 w-full px-6">
+            <span class="reveal-mask inline-mask">
+                <h2 class="reveal-item delay-2 font-serif text-3xl md:text-4xl text-bone font-light tracking-wide">
+                    Estudio Privado & Arte Corporal
+                </h2>
+            </span>
+        </div>
+    </header>
+
+    <main>
+
+      <!-- GALERÍA / CARRUSEL -->
+      <section id="portafolio" class="py-24 bg-studio border-y border-[rgba(255,255,255,0.02)]">
+        <div class="max-w-6xl mx-auto px-6">
+          
+          <div class="reveal-mask mb-12 text-center">
+              <h2 class="reveal-item delay-1 font-serif text-2xl md:text-3xl text-bone border-b border-accent inline-block pb-2 px-4">
+                Trabajos Recientes
+              </h2>
+          </div>
+
+          <div class="reveal-mask w-full shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+              <div class="reveal-item delay-2 bg-panel w-full flex flex-col">
+                  
+                  <div class="p-6 md:p-12 min-h-[450px] relative w-full overflow-hidden">
+                      
+                      <div class="carousel-slide active grid-cols-1 md:grid-cols-3 gap-6 h-full items-center">
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          <div class="flex flex-col gap-6 h-[400px]">
+                              <div class="h-1/2 border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                              <div class="h-1/2 border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          </div>
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                      </div>
+
+                      <div class="carousel-slide grid-cols-1 md:grid-cols-3 gap-6 h-full items-center">
+                           <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                      </div>
+
+                      <div class="carousel-slide grid-cols-1 md:grid-cols-3 gap-6 h-full items-center">
+                          <div class="flex flex-col gap-6 h-[400px]">
+                              <div class="h-1/2 border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                              <div class="h-1/2 border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          </div>
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                          <div class="h-[400px] border-[3px] border-[#131715] bg-black shadow-lg"></div>
+                      </div>
+
+                  </div>
+
+                  <div class="bg-[#1b211e] border-t border-[rgba(255,255,255,0.03)] py-4 px-6 flex justify-center items-center gap-6 text-muted text-sm font-sans tracking-widest">
+                      <button onclick="prevSlide()" class="hover:text-bone transition cursor-pointer p-2">&lt;</button>
+                      <div class="flex gap-4 items-center">
+                          <button onclick="goToSlide(0)" class="carousel-dot active"></button>
+                          <button onclick="goToSlide(1)" class="carousel-dot"></button>
+                          <button onclick="goToSlide(2)" class="carousel-dot"></button>
+                      </div>
+                      <button onclick="nextSlide()" class="hover:text-bone transition cursor-pointer p-2">&gt;</button>
+                      <div class="w-px h-4 bg-muted mx-1 opacity-30"></div>
+                      <button id="playPauseBtn" onclick="togglePlay()" class="hover:text-bone transition cursor-pointer font-bold p-2 text-xs">||</button>
+                  </div>
+
+              </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- EL ESTUDIO -->
+      <section id="estudio" class="py-32 relative bg-studio">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <div class="reveal-mask mb-12">
+              <h2 class="reveal-item delay-1 font-serif text-3xl text-bone font-light">El Estudio</h2>
+          </div>
+          <div class="reveal-mask mb-16">
+              <p class="reveal-item delay-2 font-sans text-muted text-sm leading-loose max-w-2xl mx-auto font-light">
+                  Un espacio diseñado para la calma y la creatividad. Diseños de autor, higiene clínica estricta y atención dedicada en cada sesión. Adaptamos cada proyecto a la anatomía del cliente con manejo experto, sin importar si es un tatuaje nuevo o una cobertura.
+              </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="preparacion" class="py-24 bg-panel border-y border-[rgba(255,255,255,0.02)]">
+        <div class="max-w-3xl mx-auto px-6">
+          <div class="reveal-mask mb-16 text-center">
+            <h2 class="reveal-item delay-1 font-serif text-3xl text-bone font-light">Información Importante</h2>
+          </div>
+          <div class="space-y-2">
+            <div class="reveal-mask w-full">
+                <div class="reveal-item delay-1 faq-item">
+                    <button class="w-full text-left py-6 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                        <span class="font-serif text-lg text-bone font-light tracking-wide group-hover:text-accent transition-colors">Definir Estilo y Diseño</span>
+                        <i class="fa-solid fa-angle-down text-accent text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content">
+                        <p class="pb-6 font-sans text-muted text-sm font-light leading-relaxed">
+                            Lo esencial es tener claro el estilo (minimalismo, sombras, blackwork) y una idea acotada. A mayor información, mayor debe ser el tamaño.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal-mask w-full">
+                <div class="reveal-item delay-2 faq-item">
+                    <button class="w-full text-left py-6 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                        <span class="font-serif text-lg text-bone font-light tracking-wide group-hover:text-accent transition-colors">El Día de la Sesión</span>
+                        <i class="fa-solid fa-angle-down text-accent text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content">
+                        <p class="pb-6 font-sans text-muted text-sm font-light leading-relaxed">
+                            Ven descansado, bien hidratado y habiendo comido adecuadamente. Trae ropa cómoda que permita el fácil acceso a la zona a tatuar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal-mask w-full">
+                <div class="reveal-item delay-3 faq-item border-none">
+                    <button class="w-full text-left py-6 flex justify-between items-center focus:outline-none group" onclick="toggleFaq(this)">
+                        <span class="font-serif text-lg text-bone font-light tracking-wide group-hover:text-accent transition-colors">Cuidados Posteriores</span>
+                        <i class="fa-solid fa-angle-down text-accent text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content">
+                        <p class="pb-6 font-sans text-muted text-sm font-light leading-relaxed">
+                            Lavado con jabón neutro, humectación con crema especializada y cero exposición al sol o piscina durante al menos dos semanas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UBICACIÓN & SISTEMA NATIVO DE AGENDAMIENTO Y PAGO WEBPAY -->
+      <section id="agendar" class="py-32 bg-studio relative">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          
+          <div class="reveal-mask mb-12">
+              <h2 class="reveal-item delay-1 font-serif text-3xl text-bone font-light mb-4">Booking & Contacto</h2>
+              <p class="reveal-item delay-2 font-sans text-accent text-xs tracking-[0.25em] uppercase mb-2 font-semibold">Tucapel 391, Concepción</p>
+              <div class="w-12 h-px bg-accent/30 mx-auto my-6"></div>
+              <p class="reveal-item delay-3 font-sans text-muted text-xs mx-auto max-w-lg leading-relaxed">
+                  Selecciona la fecha y el bloque de horario disponible. Al completar tus datos serás redirigido al portal oficial de pago Webpay Plus.
+              </p>
+          </div>
+
+          <!-- MÓDULO DE RESERVA DIRECTO SIN CAL.COM -->
+          <div class="reveal-mask">
+              <div class="reveal-item delay-3 text-left max-w-4xl mx-auto">
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                      
+                      <!-- Columna 1: Selección de Fecha y Hora -->
+                      <div class="md:col-span-7 action-card rounded-2xl p-6 md:p-8 shadow-2xl">
+                          <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                              <h3 class="font-serif text-lg text-bone flex items-center gap-2">
+                                  <span class="text-xs font-mono bg-accent/20 text-accent px-2 py-0.5 rounded border border-accent/20">01</span>
+                                  Selecciona Fecha y Hora
+                              </h3>
+                          </div>
+
+                          <!-- Selector de Fecha -->
+                          <div class="mb-6">
+                              <label class="block text-xs uppercase text-muted tracking-wider mb-2 font-semibold">Fecha de Atención</label>
+                              <input type="date" id="client-date-picker" 
+                                     class="w-full bg-studio border border-white/10 rounded-xl px-4 py-3 text-bone font-sans focus:outline-none focus:border-accent text-sm">
+                          </div>
+
+                          <!-- Selector de Horarios Genéricos Disponibles -->
+                          <div>
+                              <label class="block text-xs uppercase text-muted tracking-wider mb-3 font-semibold">Bloques Disponibles</label>
+                              <div id="client-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                  <!-- Generado dinámicamente por Javascript -->
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Columna 2: Datos del Cliente y Botón de Pago -->
+                      <div class="md:col-span-5 action-card rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col justify-between">
+                          <div>
+                              <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                                  <h3 class="font-serif text-lg text-bone flex items-center gap-2">
+                                      <span class="text-xs font-mono bg-accent/20 text-accent px-2 py-0.5 rounded border border-accent/20">02</span>
+                                      Tus Datos
+                                  </h3>
+                              </div>
+
+                              <form id="booking-form" onsubmit="processClientBooking(event)" class="space-y-4">
+                                  <div>
+                                      <label class="block text-[11px] uppercase text-muted tracking-wider mb-1">Nombre Completo</label>
+                                      <input type="text" id="client-name" required placeholder="Ej: Martín Bustamante"
+                                             class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-sm focus:outline-none focus:border-accent">
+                                  </div>
+                                  <div>
+                                      <label class="block text-[11px] uppercase text-muted tracking-wider mb-1">Correo Electrónico</label>
+                                      <input type="email" id="client-email" required placeholder="ejemplo@correo.com"
+                                             class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-sm focus:outline-none focus:border-accent">
+                                  </div>
+                                  <div>
+                                      <label class="block text-[11px] uppercase text-muted tracking-wider mb-1">Teléfono / WhatsApp</label>
+                                      <input type="tel" id="client-phone" required placeholder="+56 9 1234 5678"
+                                             class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-sm focus:outline-none focus:border-accent">
+                                  </div>
+                                  <div>
+                                      <label class="block text-[11px] uppercase text-muted tracking-wider mb-1">Idea / Estilo de Tatuaje</label>
+                                      <textarea id="client-notes" rows="2" placeholder="Detalla estilo, zona del cuerpo, tamaño aprox..."
+                                                class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-sm focus:outline-none focus:border-accent"></textarea>
+                                  </div>
+
+                                  <!-- Resumen Selección -->
+                                  <div class="bg-studio/50 p-3 rounded-lg border border-white/5 text-xs text-muted space-y-1">
+                                      <div class="flex justify-between"><span>Fecha:</span> <strong id="summary-date" class="text-bone">--</strong></div>
+                                      <div class="flex justify-between"><span>Hora:</span> <strong id="summary-time" class="text-bone">--</strong></div>
+                                      <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$15.000 CLP</strong></div>
+                                  </div>
+
+                                  <button type="submit" id="btn-submit-booking" disabled
+                                          class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-4 rounded-xl uppercase cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
+                                      <i class="fa-solid fa-credit-card text-xs"></i>
+                                      <span>Reservar & Pagar Abono</span>
+                                  </button>
+                              </form>
+                          </div>
+
+                          <!-- NOTA PIE CON CORREO -->
+                          <div class="mt-6 pt-4 border-t border-white/[0.04] flex flex-col gap-1.5 text-muted text-[11px]">
+                              <div class="flex items-center gap-2">
+                                  <i class="fa-solid fa-shield-halved text-accent text-xs"></i>
+                                  <span>Pagos procesados con Webpay Plus.</span>
+                              </div>
+                              <div class="flex items-center gap-1.5 opacity-80">
+                                  <i class="fa-regular fa-envelope text-accent text-xs"></i>
+                                  <span>hipso.tattoo@gmail.com</span>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+
+              </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-studio py-16 border-t border-[rgba(255,255,255,0.02)] text-center relative z-10">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-accent text-lg mb-6"><i class="fa-solid fa-leaf"></i></div>
+        <p class="font-serif text-xl tracking-wide text-bone mb-4 font-light">Hipso Tattoo</p>
+        <p class="font-sans text-[10px] text-muted uppercase tracking-widest">© 2026. Arte Corporal.</p>
+      </div>
+    </footer>
+
+</div>
+
+<!-- ================================================================= -->
+<!-- MODAL / VISTA DE LOGIN CON GOOGLE -->
+<!-- ================================================================= -->
+<div id="login-container" class="hidden min-h-screen pt-36 pb-20 px-4 max-w-md mx-auto flex flex-col justify-center">
+    <div class="action-card rounded-2xl p-8 text-center shadow-2xl">
+        <div class="text-accent text-3xl mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+        <h2 class="font-serif text-2xl text-bone mb-2 font-light">Acceso Administrativo</h2>
+        <p class="text-xs text-muted mb-8 leading-relaxed">
+            Inicia sesión con tu cuenta de Google autorizada (<strong>hipso.tattoo@gmail.com</strong>) para configurar la agenda del estudio.
+        </p>
+
+        <button onclick="loginWithGoogleAdmin()" class="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-100 font-sans text-xs font-semibold py-4 px-6 rounded-xl transition shadow-lg mb-4 cursor-pointer">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.39 7.37 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.37 0 3.26 2.61 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Iniciar Sesión con Google</span>
+        </button>
+
+        <button onclick="showPublicLanding()" class="text-xs text-muted hover:text-bone transition">
+            Volver a la vista de cliente
+        </button>
+    </div>
+</div>
+
+<!-- ================================================================= -->
+<!-- SECCIÓN PANEL ADMIN (RESTRINGIDO PARA hipso.tattoo@gmail.com) -->
+<!-- ================================================================= -->
+<div id="admin-container" class="hidden min-h-screen pt-36 pb-20 px-4 md:px-8 max-w-6xl mx-auto">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-white/10 gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-accent text-xs tracking-[0.25em] uppercase font-semibold">Panel de Administración</span>
+                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded font-mono">Sesión Activa</span>
+            </div>
+            <h1 class="font-serif text-2xl md:text-3xl text-bone font-light">Gestión de Horarios y Citas</h1>
+        </div>
+        <div class="flex gap-3 items-center">
+            <button onclick="logoutAdmin()" class="text-xs bg-white/5 hover:bg-white/10 text-danger border border-white/10 px-3 py-2 rounded-lg transition">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> Cerrar Sesión
+            </button>
+            <button onclick="showPublicLanding()" class="text-xs bg-white/5 hover:bg-white/10 text-bone border border-white/10 px-4 py-2 rounded-lg transition">
+                <i class="fa-solid fa-arrow-left mr-1.5"></i> Volver a la Web
+            </button>
+            <button onclick="resetSystemData()" class="text-xs bg-danger/20 text-danger border border-danger/30 hover:bg-danger/30 px-3 py-2 rounded-lg transition">
+                <i class="fa-solid fa-rotate-left mr-1"></i> Restablecer
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- CONTROLES DE DISPONIBILIDAD -->
+        <div class="lg:col-span-5 space-y-6">
+            
+            <!-- 1. Días Operativos -->
+            <div class="action-card rounded-2xl p-6">
+                <h3 class="font-serif text-md text-bone mb-4 flex items-center gap-2">
+                    <i class="fa-regular fa-calendar-check text-accent"></i>
+                    Días Laborales Activos
+                </h3>
+                <div id="admin-days-config" class="space-y-2">
+                    <!-- Render JS -->
+                </div>
+            </div>
+
+            <!-- 2. Bloques de Tiempo Genéricos -->
+            <div class="action-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-serif text-md text-bone flex items-center gap-2">
+                        <i class="fa-regular fa-clock text-accent"></i>
+                        Bloques de Horario Diarios
+                    </h3>
+                    <button onclick="addNewTimeSlot()" class="text-xs bg-accent/20 text-accent hover:bg-accent/30 px-2 py-1 rounded border border-accent/30">
+                        + Añadir
+                    </button>
+                </div>
+                <div id="admin-slots-config" class="grid grid-cols-2 gap-2">
+                    <!-- Render JS -->
+                </div>
+            </div>
+
+            <!-- 3. Bloquear / Liberar Fecha Específica -->
+            <div class="action-card rounded-2xl p-6">
+                <h3 class="font-serif text-md text-bone mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-ban text-accent"></i>
+                    Bloqueo de Día Específico
+                </h3>
+                <div class="space-y-3">
+                    <input type="date" id="admin-block-date-input" class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+                    <div class="flex gap-2">
+                        <button onclick="toggleBlockSpecificDate(true)" class="flex-1 bg-danger/20 hover:bg-danger/30 text-danger border border-danger/30 text-xs py-2 rounded-lg transition font-semibold">
+                            Bloquear Día
+                        </button>
+                        <button onclick="toggleBlockSpecificDate(false)" class="flex-1 bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 text-xs py-2 rounded-lg transition font-semibold">
+                            Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- REGISTRO Y TABLA DE RESERVAS -->
+        <div class="lg:col-span-7">
+            <div class="action-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-serif text-md text-bone flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-accent"></i>
+                        Registro de Agendamientos
+                    </h3>
+                    <span id="booking-counter" class="text-xs bg-accent/20 text-accent px-2.5 py-1 rounded font-mono">0 Citas</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-muted border-b border-white/10 uppercase tracking-wider font-semibold">
+                            <tr>
+                                <th class="pb-3">Fecha/Hora</th>
+                                <th class="pb-3">Cliente</th>
+                                <th class="pb-3">Contacto</th>
+                                <th class="pb-3">Estado</th>
+                                <th class="pb-3 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-table" class="divide-y divide-white/5 text-bone">
+                            <!-- Render JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT GENERAL Y LÓGICA DE AGENDAMIENTO PROPIO CON AUTENTICACIÓN -->
+<script>
+    // -----------------------------------------------------------------
+    // CONSTANTES Y ESTADO DE AUTENTICACIÓN
+    // -----------------------------------------------------------------
+    const ADMIN_EMAIL = "hipso.tattoo@gmail.com";
+    const WEBPAY_URL = "https://www.webpay.cl/company/158953";
+
+    const DEFAULT_CONFIG = {
+        activeDays: [1, 2, 3, 4, 5, 6], // 1: Lunes a 6: Sábado
+        timeSlots: ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"],
+        blockedDates: [],
+    };
+
+    let config = JSON.parse(localStorage.getItem('hipso_config')) || DEFAULT_CONFIG;
+    let bookings = JSON.parse(localStorage.getItem('hipso_bookings')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('hipso_user')) || null;
+
+    let selectedClientDate = "";
+    let selectedClientSlot = "";
+
+    // -----------------------------------------------------------------
+    // CARGA DE PÁGINA Y NAVEGACIÓN
+    // -----------------------------------------------------------------
+    window.addEventListener('load', function() {
+        const loader = document.getElementById('pantalla-carga');
+        setTimeout(() => {
+            loader.classList.add('ocultar-carga');
+            setTimeout(() => { document.body.classList.add('page-ready'); }, 800); 
+        }, 1000); 
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('client-date-picker');
+        if (dateInput) {
+            dateInput.min = today;
+            dateInput.value = today;
+            selectedClientDate = today;
+            document.getElementById('summary-date').innerText = formatDateReadable(today);
+
+            dateInput.addEventListener('change', (e) => {
+                selectedClientDate = e.target.value;
+                selectedClientSlot = "";
+                document.getElementById('summary-date').innerText = formatDateReadable(selectedClientDate);
+                document.getElementById('summary-time').innerText = "--";
+                validateBookingForm();
+                renderClientSlots();
+            });
+        }
+
+        updateAuthUI();
+        renderClientSlots();
+        renderAdminDashboard();
+    });
+
+    // -----------------------------------------------------------------
+    // LÓGICA DE AUTENTICACIÓN Y ROLES
+    // -----------------------------------------------------------------
+    function loginWithGoogleAdmin() {
+        // Simulación de respuesta OAuth de Google
+        currentUser = {
+            email: ADMIN_EMAIL,
+            name: "Hipso Tattoo Admin",
+            picture: "https://ui-avatars.com/api/?name=Hipso+Tattoo&background=62776a&color=fff"
+        };
+        localStorage.setItem('hipso_user', JSON.stringify(currentUser));
+        updateAuthUI();
+        showAdminPanel();
+    }
+
+    function logoutAdmin() {
+        currentUser = null;
+        localStorage.removeItem('hipso_user');
+        updateAuthUI();
+        showPublicLanding();
+    }
+
+    function updateAuthUI() {
+        const navSlot = document.getElementById('auth-nav-slot');
+        const mobileLabel = document.getElementById('mobile-admin-label');
+
+        if (currentUser && currentUser.email === ADMIN_EMAIL) {
+            navSlot.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <button onclick="showAdminPanel()" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-2">
+                        <img src="${currentUser.picture}" class="w-5 h-5 rounded-full border border-accent">
+                        <span>Panel Admin</span>
+                    </button>
+                    <button onclick="logoutAdmin()" class="text-xs text-muted hover:text-danger transition" title="Cerrar Sesión">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+            `;
+            if (mobileLabel) mobileLabel.innerText = "Panel Admin (Conectado)";
+        } else {
+            navSlot.innerHTML = `
+                <button onclick="handleAdminNavClick()" id="nav-admin-toggle" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-gear text-xs"></i>
+                    <span>Panel Admin</span>
+                </button>
+            `;
+            if (mobileLabel) mobileLabel.innerText = "Panel Admin";
+        }
+    }
+
+    function handleAdminNavClick() {
+        if (currentUser && currentUser.email === ADMIN_EMAIL) {
+            showAdminPanel();
+        } else {
+            showLoginView();
+        }
+    }
+
+    function showPublicLanding() {
+        document.getElementById('landing-container').classList.remove('hidden');
+        document.getElementById('admin-container').classList.add('hidden');
+        document.getElementById('login-container').classList.add('hidden');
+        renderClientSlots();
+    }
+
+    function showLoginView() {
+        document.getElementById('landing-container').classList.add('hidden');
+        document.getElementById('admin-container').classList.add('hidden');
+        document.getElementById('login-container').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showAdminPanel() {
+        if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+            showLoginView();
+            return;
+        }
+        document.getElementById('landing-container').classList.add('hidden');
+        document.getElementById('login-container').classList.add('hidden');
+        document.getElementById('admin-container').classList.remove('hidden');
+        renderAdminDashboard();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // -----------------------------------------------------------------
+    // LÓGICA VISTA CLIENTE (MOTOR DE RESERVA)
+    // -----------------------------------------------------------------
+    function renderClientSlots() {
+        const container = document.getElementById('client-slots-container');
+        if (!container) return;
+        container.innerHTML = "";
+
+        if (!selectedClientDate) return;
+
+        const dateObj = new Date(selectedClientDate + 'T00:00:00');
+        const dayOfWeek = dateObj.getDay();
+
+        if (!config.activeDays.includes(dayOfWeek)) {
+            container.innerHTML = `<p class="col-span-full text-xs text-muted italic py-4">El estudio no atiende en este día de la semana.</p>`;
+            return;
+        }
+
+        if (config.blockedDates.includes(selectedClientDate)) {
+            container.innerHTML = `<p class="col-span-full text-xs text-danger/80 italic py-4">Fecha no disponible para agendar.</p>`;
+            return;
+        }
+
+        config.timeSlots.forEach(slot => {
+            const isBooked = bookings.some(b => b.date === selectedClientDate && b.time === slot && b.status !== 'Cancelada');
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `slot-btn py-2.5 px-3 rounded-xl text-xs font-mono text-center ${selectedClientSlot === slot ? 'selected' : 'text-bone'}`;
+            btn.disabled = isBooked;
+            btn.innerText = isBooked ? `${slot} (Ocupado)` : slot;
+
+            if (!isBooked) {
+                btn.onclick = () => {
+                    selectedClientSlot = slot;
+                    document.getElementById('summary-time').innerText = slot;
+                    renderClientSlots();
+                    validateBookingForm();
+                };
+            }
+
+            container.appendChild(btn);
+        });
+    }
+
+    function validateBookingForm() {
+        const name = document.getElementById('client-name').value;
+        const email = document.getElementById('client-email').value;
+        const phone = document.getElementById('client-phone').value;
+        const submitBtn = document.getElementById('btn-submit-booking');
+
+        if (selectedClientDate && selectedClientSlot && name && email && phone) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    ['client-name', 'client-email', 'client-phone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', validateBookingForm);
+    });
+
+    function processClientBooking(e) {
+        e.preventDefault();
+
+        const newBooking = {
+            id: 'RES-' + Date.now().toString().slice(-5),
+            date: selectedClientDate,
+            time: selectedClientSlot,
+            clientName: document.getElementById('client-name').value,
+            clientEmail: document.getElementById('client-email').value,
+            clientPhone: document.getElementById('client-phone').value,
+            notes: document.getElementById('client-notes').value,
+            status: 'Pendiente de Pago',
+            createdAt: new Date().toISOString()
+        };
+
+        bookings.push(newBooking);
+        saveState();
+
+        alert(`¡Cita agendada correctamente!\n\nSerás redirigido al portal de Webpay Plus para abonar los $15.000 CLP.`);
+        window.location.href = WEBPAY_URL;
+    }
+
+    // -----------------------------------------------------------------
+    // LÓGICA PANEL ADMIN (RESTRINGIDO)
+    // -----------------------------------------------------------------
+    function renderAdminDashboard() {
+        renderAdminDaysConfig();
+        renderAdminSlotsConfig();
+        renderAdminBookingsTable();
+    }
+
+    function renderAdminDaysConfig() {
+        const container = document.getElementById('admin-days-config');
+        if (!container) return;
+        const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        container.innerHTML = "";
+
+        dayNames.forEach((name, index) => {
+            const isActive = config.activeDays.includes(index);
+            const row = document.createElement('div');
+            row.className = "flex items-center justify-between p-2 rounded bg-studio/60 text-xs";
+            row.innerHTML = `
+                <span class="${isActive ? 'text-bone font-medium' : 'text-muted'}">${name}</span>
+                <button onclick="toggleAdminDay(${index})" class="px-2.5 py-1 rounded text-[10px] uppercase font-bold tracking-wider transition ${isActive ? 'bg-accent/20 text-accent border border-accent/40' : 'bg-white/5 text-muted border border-white/10'}">
+                    ${isActive ? 'Activo' : 'Inactivo'}
+                </button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function toggleAdminDay(dayIndex) {
+        if (config.activeDays.includes(dayIndex)) {
+            config.activeDays = config.activeDays.filter(d => d !== dayIndex);
+        } else {
+            config.activeDays.push(dayIndex);
+        }
+        saveState();
+        renderAdminDaysConfig();
+    }
+
+    function renderAdminSlotsConfig() {
+        const container = document.getElementById('admin-slots-config');
+        if (!container) return;
+        container.innerHTML = "";
+
+        config.timeSlots.forEach((slot, idx) => {
+            const tag = document.createElement('div');
+            tag.className = "flex items-center justify-between bg-studio/80 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono text-bone";
+            tag.innerHTML = `
+                <span>${slot}</span>
+                <button onclick="removeTimeSlot(${idx})" class="text-danger hover:text-red-400 ml-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+            container.appendChild(tag);
+        });
+    }
+
+    function addNewTimeSlot() {
+        const newTime = prompt("Ingrese el nuevo bloque de hora (ej: 13:00):");
+        if (newTime && !config.timeSlots.includes(newTime)) {
+            config.timeSlots.push(newTime);
+            config.timeSlots.sort();
+            saveState();
+            renderAdminSlotsConfig();
+        }
+    }
+
+    function removeTimeSlot(index) {
+        config.timeSlots.splice(index, 1);
+        saveState();
+        renderAdminSlotsConfig();
+    }
+
+    function toggleBlockSpecificDate(block) {
+        const input = document.getElementById('admin-block-date-input');
+        const val = input.value;
+        if (!val) return alert("Seleccione una fecha en el calendario.");
+
+        if (block) {
+            if (!config.blockedDates.includes(val)) config.blockedDates.push(val);
+            alert(`La fecha ${val} ha sido bloqueada.`);
+        } else {
+            config.blockedDates = config.blockedDates.filter(d => d !== val);
+            alert(`La fecha ${val} ha sido liberada.`);
+        }
+        saveState();
+    }
+
+    function renderAdminBookingsTable() {
+        const tbody = document.getElementById('admin-bookings-table');
+        const counter = document.getElementById('booking-counter');
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        counter.innerText = `${bookings.length} Citas`;
+
+        if (bookings.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-muted italic">No hay registros de reservas aún.</td></tr>`;
+            return;
+        }
+
+        const sorted = [...bookings].reverse();
+
+        sorted.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-white/[0.02]";
+
+            let statusBadge = "";
+            if (b.status === 'Confirmada') statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]">Confirmada</span>';
+            else if (b.status === 'Pendiente de Pago') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]">Pendiente</span>';
+            else statusBadge = '<span class="bg-danger/20 text-danger border border-danger/30 px-2 py-0.5 rounded text-[10px]">Cancelada</span>';
+
+            tr.innerHTML = `
+                <td class="py-3 font-mono">
+                    <div class="text-bone font-semibold">${b.date}</div>
+                    <div class="text-accent text-[11px]">${b.time}</div>
+                </td>
+                <td class="py-3">
+                    <div class="text-bone font-medium">${b.clientName}</div>
+                    <div class="text-muted text-[10px] truncate max-w-[120px]">${b.notes || 'Sin detalles'}</div>
+                </td>
+                <td class="py-3 text-[11px]">
+                    <div>${b.clientPhone}</div>
+                    <div class="text-muted">${b.clientEmail}</div>
+                </td>
+                <td class="py-3">${statusBadge}</td>
+                <td class="py-3 text-right">
+                    <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-studio border border-white/10 rounded px-1.5 py-1 text-[11px] text-bone focus:outline-none">
+                        <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente</option>
+                        <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmar</option>
+                        <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelar</option>
+                    </select>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updateBookingStatus(id, newStatus) {
+        const item = bookings.find(b => b.id === id);
+        if (item) {
+            item.status = newStatus;
+            saveState();
+            renderAdminBookingsTable();
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // UTILIDADES & PERSISTENCIA
+    // -----------------------------------------------------------------
+    function saveState() {
+        localStorage.setItem('hipso_config', JSON.stringify(config));
+        localStorage.setItem('hipso_bookings', JSON.stringify(bookings));
+    }
+
+    function resetSystemData() {
+        if (confirm("¿Seguro que deseas restablecer los datos del sistema?")) {
+            localStorage.removeItem('hipso_config');
+            localStorage.removeItem('hipso_bookings');
+            config = DEFAULT_CONFIG;
+            bookings = [];
+            saveState();
+            renderAdminDashboard();
+            alert("Sistema restablecido.");
+        }
+    }
+
+    function formatDateReadable(dateStr) {
+        if (!dateStr) return "--";
+        const parts = dateStr.split('-');
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // -----------------------------------------------------------------
+    // ANIMACIONES DE SCROLL, CARRUSEL Y FAQ
+    // -----------------------------------------------------------------
+    let currentSlide = 0;
+    let isPlaying = true;
+    let slideInterval;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+
+    function showSlide(index) {
+        if (!slides.length) return;
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+    }
+
+    function goToSlide(index) {
+        showSlide(index);
+        resetInterval(); 
+    }
+
+    function togglePlay() {
+        if (isPlaying) {
+            clearInterval(slideInterval);
+            if (playPauseBtn) playPauseBtn.innerHTML = '&#9658;'; 
+        } else {
+            startInterval();
+            if (playPauseBtn) playPauseBtn.innerHTML = '||'; 
+        }
+        isPlaying = !isPlaying;
+    }
+
+    function startInterval() {
+        slideInterval = setInterval(nextSlide, 4000); 
+    }
+
+    function resetInterval() {
+        if (isPlaying) {
+            clearInterval(slideInterval);
+            startInterval();
+        }
+    }
+
+    startInterval();
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-mask').forEach(el => { observer.observe(el); });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) { navbar.classList.add('scrolled'); } 
+        else { navbar.classList.remove('scrolled'); }
+    });
+
+    const mobileBtn = document.getElementById('mobileBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    function toggleMobileMenu() {
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('flex');
+        const icon = mobileBtn.querySelector('i');
+        if(mobileMenu.classList.contains('hidden')) { icon.classList.replace('fa-xmark', 'fa-bars'); } 
+        else { icon.classList.replace('fa-bars', 'fa-xmark'); }
+    }
+    if (mobileBtn) mobileBtn.addEventListener('click', toggleMobileMenu);
+    mobileLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
+
+    function toggleFaq(btn) {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('i');
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.style.transform = 'rotate(180deg)'; 
+        }
+    }
+</script>
+
+</body>
+</html>
