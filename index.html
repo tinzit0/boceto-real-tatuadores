@@ -751,6 +751,25 @@
         updateAuthUI();
         renderClientSlots();
         renderAdminDashboard();
+
+        // SUSCRIPCIÓN EN TIEMPO REAL PARA SINCRONIZAR PC Y TELÉFONO INSTANTÁNEAMENTE
+        supabaseClient
+            .channel('realtime_changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
+                await loadDataFromSupabase();
+                renderClientSlots();
+                if (!document.getElementById('admin-container').classList.contains('hidden')) {
+                    renderAdminDashboard();
+                }
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async () => {
+                await loadDataFromSupabase();
+                renderClientSlots();
+                if (!document.getElementById('admin-container').classList.contains('hidden')) {
+                    renderAdminBookingsTable();
+                }
+            })
+            .subscribe();
     });
 
     async function loadDataFromSupabase() {
