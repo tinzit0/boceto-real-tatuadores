@@ -705,6 +705,14 @@
     let selectedClientSlot = "";
     let currentEditingWeekState = {};
 
+    // FUNCIÓN PARA OBTENER FECHA LOCAL YYYY-MM-DD SIN INTERFERENCIA DE ZONAS HORARIAS
+    function getLocalDateString(d = new Date()) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     window.addEventListener('load', function() {
         const loader = document.getElementById('pantalla-carga');
         setTimeout(() => {
@@ -716,7 +724,7 @@
     window.addEventListener('DOMContentLoaded', async () => {
         await loadDataFromSupabase();
 
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDateString(new Date());
         const dateInput = document.getElementById('client-date-picker');
         if (dateInput) {
             dateInput.min = today;
@@ -752,7 +760,7 @@
         renderClientSlots();
         renderAdminDashboard();
 
-        // SUSCRIPCIÓN EN TIEMPO REAL PARA SINCRONIZAR PC Y TELÉFONO INSTANTÁNEAMENTE
+        // REALTIME EN SUPABASE PARA SINCRONIZAR AUTOMÁTICAMENTE ENTRE PC Y TELÉFONOS
         supabaseClient
             .channel('realtime_changes')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
@@ -939,6 +947,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // OBTENER PAUTA DE HORARIOS SIN INTERFERENCIA DE ZONAS HORARIAS UTC
     function getEffectiveScheduleForDate(dateStr) {
         if (!dateStr) return { active: false, slots: [] };
 
