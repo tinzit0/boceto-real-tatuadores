@@ -258,7 +258,7 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
     <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
-        <!-- FONDOS DINÁMICOS CON IMAGEN1, IMAGEN2 Y IMAGEN9 -->
+        <!-- FONDOS DINÁMICOS CON IMAGEN 1, 2 Y 9 -->
         <div class="absolute inset-0 z-0">
             <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
             <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
@@ -286,50 +286,58 @@
               <div class="reveal-item delay-2 bg-panel w-full flex flex-col rounded-2xl overflow-hidden">
                   <div class="p-4 md:p-12 min-h-[350px] md:min-h-[480px] relative w-full overflow-hidden">
                       
-                      <!-- SLIDE 1 (IMAGEN 3, 4, 5) -->
-                      <div class="carousel-slide active grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[250px] md:h-[400px]" onclick="openLightbox('assets/imagen3.jpeg')">
+                      <!-- SLIDE 1: IMAGEN 3 Y 4 (ORGANIZADAS DE 2 EN 2) -->
+                      <div class="carousel-slide active grid-cols-2 gap-3 md:gap-6 h-full items-center">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen3.jpeg')">
                               <img src="assets/imagen3.jpeg" alt="Trabajo Tattoo 3">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-2xl"></i></div>
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
-                          <div class="hidden md:flex flex-col gap-6 h-[400px]">
-                              <div class="portfolio-img-card h-1/2" onclick="openLightbox('assets/imagen4.jpeg')">
-                                  <img src="assets/imagen4.jpeg" alt="Trabajo Tattoo 4">
-                                  <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl"></i></div>
-                              </div>
-                              <div class="portfolio-img-card h-1/2" onclick="openLightbox('assets/imagen5.jpeg')">
-                                  <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
-                                  <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl"></i></div>
-                              </div>
-                          </div>
-                          <div class="hidden md:block portfolio-img-card h-[400px]" onclick="openLightbox('assets/imagen6.jpeg')">
-                              <img src="assets/imagen6.jpeg" alt="Trabajo Tattoo 6">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-2xl"></i></div>
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen4.jpeg')">
+                              <img src="assets/imagen4.jpeg" alt="Trabajo Tattoo 4">
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
                       </div>
 
-                      <!-- SLIDE 2 (IMAGEN 7, 8, 10) -->
-                      <div class="carousel-slide grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[250px] md:h-[400px]" onclick="openLightbox('assets/imagen7.jpeg')">
+                      <!-- SLIDE 2: IMAGEN 5 Y 6 (ORGANIZADAS DE 2 EN 2) -->
+                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen5.jpeg')">
+                              <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
+                          </div>
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen6.jpeg')">
+                              <img src="assets/imagen6.jpeg" alt="Trabajo Tattoo 6">
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
+                          </div>
+                      </div>
+
+                      <!-- SLIDE 3: IMAGEN 7 Y 8 (ORGANIZADAS DE 2 EN 2) -->
+                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen7.jpeg')">
                               <img src="assets/imagen7.jpeg" alt="Trabajo Tattoo 7">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-2xl"></i></div>
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
-                          <div class="hidden md:block portfolio-img-card h-[400px]" onclick="openLightbox('assets/imagen8.jpeg')">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen8.jpeg')">
                               <img src="assets/imagen8.jpeg" alt="Trabajo Tattoo 8">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-2xl"></i></div>
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
-                          <div class="hidden md:block portfolio-img-card h-[400px]" onclick="openLightbox('assets/imagen10.jpeg')">
+                      </div>
+
+                      <!-- SLIDE 4: IMAGEN 10 (ORGANIZADA DE 2 EN 2) -->
+                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px] col-span-2 sm:col-span-1" onclick="openLightbox('assets/imagen10.jpeg')">
                               <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-2xl"></i></div>
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
                       </div>
 
                   </div>
                   <div class="bg-[#1b211e] border-t border-[rgba(255,255,255,0.03)] py-4 px-6 flex justify-center items-center gap-6 text-muted text-sm font-sans tracking-widest">
                       <button onclick="prevSlide()" class="hover:text-bone transition cursor-pointer p-2">&lt;</button>
-                      <div class="flex gap-4 items-center">
+                      <div class="flex gap-3 items-center">
                           <button onclick="goToSlide(0)" class="carousel-dot active"></button>
                           <button onclick="goToSlide(1)" class="carousel-dot"></button>
+                          <button onclick="goToSlide(2)" class="carousel-dot"></button>
+                          <button onclick="goToSlide(3)" class="carousel-dot"></button>
                       </div>
                       <button onclick="nextSlide()" class="hover:text-bone transition cursor-pointer p-2">&gt;</button>
                       <div class="w-px h-4 bg-muted mx-1 opacity-30"></div>
