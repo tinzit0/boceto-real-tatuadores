@@ -67,7 +67,7 @@
             align-items: center;
             justify-content: center;
             z-index: 999999;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
         }
         .ocultar-carga { opacity: 0; visibility: hidden; pointer-events: none; }
         .spinner {
@@ -470,10 +470,14 @@
                           </div>
                       </div>
 
-                      <!-- SLIDE 4 -->
+                      <!-- SLIDE 4: INCLUYE IMAGEN 10 E IMAGEN 11 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px] col-span-2 sm:col-span-1" onclick="openLightbox('assets/imagen10.jpeg')">
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen10.jpeg')">
                               <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
+                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
+                          </div>
+                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen11.jpeg')">
+                              <img src="assets/imagen11.jpeg" alt="Trabajo Tattoo 11">
                               <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
                           </div>
                       </div>
@@ -652,7 +656,6 @@
                                       <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$20.000 CLP</strong></div>
                                   </div>
                                   
-                                  <!-- BOTÓN PRINCIPAL ÚNICO PARA WEBPAY -->
                                   <button type="submit" id="btn-submit-booking" disabled
                                           class="btn-primary-action mt-4 w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-3.5 rounded-xl uppercase cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
                                       <i class="fa-solid fa-credit-card text-xs"></i>
@@ -675,6 +678,26 @@
               </div>
           </div>
         </div>
+      </section>
+
+      <!-- NUEVA SECCIÓN DE PAGO DIRECTO WEBPAY AL FINAL -->
+      <section id="pago-directo" class="py-12 bg-panel border-t border-[rgba(255,255,255,0.03)]">
+          <div class="max-w-3xl mx-auto px-6 text-center space-y-4">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20 border border-accent/30 text-accent mb-1">
+                  <i class="fa-solid fa-credit-card text-xl"></i>
+              </div>
+              <h3 class="font-serif text-xl md:text-2xl text-bone font-light">¿Ya agendaste y necesitas pagar tu abono?</h3>
+              <p class="text-xs text-muted leading-relaxed max-w-lg mx-auto">
+                  Si no pudiste completar el pago de tu abono al momento de agendar o necesitas realizar un pago posterior de tu sesión, puedes hacerlo directamente desde aquí a través del portal oficial de Webpay Plus.
+              </p>
+              <div class="pt-2">
+                  <a href="https://www.webpay.cl/company/158953" target="_blank" rel="noopener noreferrer" 
+                     class="btn-primary-action inline-flex items-center justify-center gap-3 text-white font-sans text-xs font-semibold tracking-widest py-3.5 px-8 rounded-xl uppercase shadow-xl hover:scale-105 transition-transform">
+                      <i class="fa-solid fa-lock text-sm"></i>
+                      <span>Pagar Abono en Webpay Plus</span>
+                  </a>
+              </div>
+          </div>
       </section>
     </main>
 
@@ -812,13 +835,13 @@
                 </div>
             </div>
             <div class="overflow-x-auto -mx-2 px-2">
-                <table class="w-full text-left text-[11px] min-w-[500px]">
+                <table class="w-full text-left text-[11px] min-w-[600px]">
                     <thead class="text-muted border-b border-white/10 uppercase tracking-wider font-semibold text-[9px]">
                         <tr>
-                            <th class="pb-2">Fecha/Hora</th>
-                            <th class="pb-2">Cliente</th>
-                            <th class="pb-2">Contacto</th>
-                            <th class="pb-2">Estado</th>
+                            <th class="pb-2 w-1/5">Fecha/Hora</th>
+                            <th class="pb-2 w-1/4">Cliente / Idea</th>
+                            <th class="pb-2 w-1/4">Contacto</th>
+                            <th class="pb-2 w-1/6">Estado</th>
                             <th class="pb-2 text-right">Opciones</th>
                         </tr>
                     </thead>
@@ -1290,8 +1313,6 @@
 
             dataLoaded = true;
             setSyncStatus('synced');
-            
-            // Forzar ocultar pantalla de carga inmediatamente
             hideLoadingScreen();
 
         } catch (err) {
@@ -1352,7 +1373,7 @@
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error Supabase: Faltan columnas en 'hipso_bookings' (client_name, client_email, etc). Revisa la base de datos.", "error");
+                showToast("Error de la BD: Verifica las columnas en Supabase.", "error");
                 return false;
             } else {
                 return true;
@@ -1522,7 +1543,6 @@
         return { active: false, slots: [] };
     }
 
-    // CORRECCIÓN MATEMÁTICA ESTRICTA DE HORARIOS
     function getRemainingSlotsForDate(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots) return [];
@@ -2523,6 +2543,7 @@
         renderAdminBookingsTable();
     }
 
+    // RENDERIZADO DE TABLA CORREGIDO: MUESTRA DATOS COMPLETOS SIN RECORTAR
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -2548,7 +2569,7 @@
 
         sorted.forEach(b => {
             const tr = document.createElement('tr');
-            tr.className = "hover:bg-white/[0.02]";
+            tr.className = "hover:bg-white/[0.02] border-b border-white/5";
 
             let statusBadge = "";
             if (b.status === 'Confirmada') statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px]">Confirmada</span>';
@@ -2558,20 +2579,20 @@
             const gcalLink = getGoogleCalendarUrl(b);
 
             tr.innerHTML = `
-                <td class="py-2.5 font-mono">
+                <td class="py-3 font-mono align-top">
                     <div class="text-bone font-semibold text-[10px] md:text-[11px]">${b.date}</div>
                     <div class="text-accent text-[10px]">${b.time}</div>
                 </td>
-                <td class="py-2.5">
-                    <div class="text-bone font-medium text-[10px] md:text-[11px]">${b.clientName}</div>
-                    <div class="text-muted text-[9px] truncate max-w-[90px] md:max-w-[120px]">${b.notes || 'Sin detalles'}</div>
+                <td class="py-3 align-top">
+                    <div class="text-bone font-medium text-[10px] md:text-[11px] break-words">${b.clientName}</div>
+                    <div class="text-muted text-[10px] leading-relaxed break-words whitespace-pre-wrap mt-0.5">${b.notes || 'Sin detalles'}</div>
                 </td>
-                <td class="py-2.5 text-[10px]">
-                    <div>${b.clientPhone}</div>
-                    <div class="text-muted truncate max-w-[100px]">${b.clientEmail}</div>
+                <td class="py-3 text-[10px] align-top break-words">
+                    <div class="font-mono text-bone">${b.clientPhone}</div>
+                    <div class="text-muted break-all">${b.clientEmail}</div>
                 </td>
-                <td class="py-2.5">${statusBadge}</td>
-                <td class="py-2.5 text-right">
+                <td class="py-3 align-top">${statusBadge}</td>
+                <td class="py-3 text-right align-top">
                     <div class="flex items-center justify-end gap-1.5 flex-wrap">
                         <a href="${gcalLink}" target="_blank" title="Añadir a Google Calendar" class="bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] transition flex items-center gap-1 font-semibold">
                             <i class="fa-brands fa-google text-[9px]"></i> Calendar
@@ -2709,10 +2730,10 @@
         }
     }
 
-    // EVENTO PRINCIPAL UNIFICADO DE INICIALIZACIÓN
+    // EVENTO PRINCIPAL UNIFICADO
     window.addEventListener('DOMContentLoaded', async () => {
-        // Fallback de seguridad: Si pasan 2.5s y la pantalla de carga no se ocultó, forzar cierre
-        setTimeout(hideLoadingScreen, 2500);
+        // Garantizar ocultar la pantalla de carga tras 2 segundos si hay demoras
+        setTimeout(hideLoadingScreen, 2000);
 
         await loadDataFromSupabase(true);
 
