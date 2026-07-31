@@ -109,7 +109,7 @@
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO */
+        /* FONDO HERO INTERACTIVO (CADA 2 SEGUNDOS) */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
@@ -362,6 +362,9 @@
             <a href="#portafolio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Portafolio</a>
             <a href="#preparacion" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Info</a>
             <a href="#agendar" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Booking</a>
+            <button onclick="openClientManageModal()" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-check text-xs"></i> Mis Citas
+            </button>
             <span class="w-px h-3 bg-white/10"></span>
             <span id="sync-status-header" class="sync-indicator">
                 <i class="fa-solid fa-cloud"></i>
@@ -388,7 +391,11 @@
     <a href="#portafolio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Portafolio</a>
     <a href="#preparacion" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Info</a>
     <a href="#agendar" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Booking</a>
-    <button onclick="handleAdminNavClick()" class="hover:text-accent mobile-link text-accent transition-colors flex items-center gap-2 text-lg">
+    <button onclick="openClientManageModal(); toggleMobileMenu();" class="hover:text-accent text-accent transition-colors flex items-center gap-2 text-lg">
+        <i class="fa-solid fa-calendar-check"></i>
+        <span>Mis Citas</span>
+    </button>
+    <button onclick="handleAdminNavClick()" class="hover:text-accent mobile-link text-muted transition-colors flex items-center gap-2 text-lg">
         <i class="fa-solid fa-user-gear"></i>
         <span id="mobile-admin-label">Panel Admin</span>
     </button>
@@ -625,8 +632,8 @@
                                              class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm focus:outline-none focus:border-accent">
                                   </div>
                                   <div>
-                                      <label class="block text-[10px] uppercase text-muted tracking-wider mb-1">Correo Electrónico</label>
-                                      <input type="email" id="client-email" required placeholder="ejemplo@correo.com"
+                                      <label class="block text-[10px] uppercase text-muted tracking-wider mb-1">Usuario de Instagram</label>
+                                      <input type="text" id="client-email" required placeholder="@tu_instagram"
                                              class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm focus:outline-none focus:border-accent">
                                   </div>
                                   <div>
@@ -713,7 +720,35 @@
     </footer>
 </div>
 
-<!-- VISOR LIGHTBOX CON CONTROLES DE ZOOM -->
+<!-- MODAL CONSULTAR / CANCELAR CITAS (CLIENTE) -->
+<div id="client-manage-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="action-card rounded-2xl p-6 max-w-md w-full shadow-2xl border border-white/10 space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 class="font-serif text-lg text-bone flex items-center gap-2">
+                <i class="fa-solid fa-calendar-check text-accent"></i>
+                Consultar o Cancelar mi Cita
+            </h3>
+            <button onclick="closeClientManageModal()" class="text-muted hover:text-bone text-lg cursor-pointer">×</button>
+        </div>
+        <p class="text-xs text-muted leading-relaxed">
+            Ingresa tu teléfono o tu usuario de Instagram con el que agendaste para revisar tus citas activas.
+        </p>
+        <form onsubmit="searchClientBookings(event)" class="space-y-3">
+            <div>
+                <input type="text" id="client-search-input" required placeholder="Ej: +56912345678 o @tu_instagram"
+                       class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+            </div>
+            <button type="submit" class="btn-primary-action w-full py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-white cursor-pointer">
+                Buscar Citas
+            </button>
+        </form>
+
+        <div id="client-bookings-results" class="space-y-3 max-h-60 overflow-y-auto pt-2 border-t border-white/5">
+        </div>
+    </div>
+</div>
+
+<!-- VISOR LIGHTBOX -->
 <div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
     <div class="absolute top-6 right-6 flex items-center gap-3 z-10">
         <button onclick="event.stopPropagation(); changeZoom(0.25)" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-sm transition" title="Acercar (+)">
@@ -857,7 +892,7 @@
                         <tr>
                             <th class="pb-2 w-1/5">Fecha/Hora</th>
                             <th class="pb-2 w-1/4">Cliente / Idea</th>
-                            <th class="pb-2 w-1/4">Contacto</th>
+                            <th class="pb-2 w-1/4">Instagram / Teléfono</th>
                             <th class="pb-2 w-1/6">Estado</th>
                             <th class="pb-2 text-right">Opciones</th>
                         </tr>
@@ -965,6 +1000,12 @@
 
                     <div id="custom-date-editor-container" class="hidden bg-studio/80 p-3 rounded-xl border border-white/5 space-y-2">
                     </div>
+                </div>
+
+                <div class="pt-2 border-t border-white/5 mt-3">
+                    <p class="text-[9px] font-mono text-muted uppercase tracking-wider mb-2 font-semibold">Excepciones Guardadas Actualmente</p>
+                    <p class="text-[9px] text-muted mb-2 leading-relaxed">Estas fechas tienen un horario propio que sobrescribe la agenda semanal. Revisa aquí si algún día parece bloqueado sin razón aparente.</p>
+                    <div id="date-exceptions-list" class="space-y-1.5 max-h-64 overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
@@ -1160,7 +1201,81 @@
         return `${year}-${month}-${day}`;
     }
 
-    // PREVISUALIZACIÓN DE IMAGEN SELECCIONADA POR EL CLIENTE
+    // GESTIÓN DEL MODAL "MIS CITAS" PARA CLIENTES
+    function openClientManageModal() {
+        const modal = document.getElementById('client-manage-modal');
+        const results = document.getElementById('client-bookings-results');
+        if (modal) {
+            if (results) results.innerHTML = "";
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeClientManageModal() {
+        const modal = document.getElementById('client-manage-modal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    }
+
+    function searchClientBookings(e) {
+        e.preventDefault();
+        const inputVal = document.getElementById('client-search-input').value.trim().toLowerCase();
+        const container = document.getElementById('client-bookings-results');
+        if (!container) return;
+        container.innerHTML = "";
+
+        if (!inputVal) {
+            showToast("Ingresa un dato para buscar.", "error");
+            return;
+        }
+
+        const matchInput = inputVal.replace('@', '');
+
+        const userBookings = bookings.filter(b => {
+            const phoneMatch = b.clientPhone && b.clientPhone.toLowerCase().includes(matchInput);
+            const igMatch = b.clientEmail && b.clientEmail.toLowerCase().replace('@', '').includes(matchInput);
+            return phoneMatch || igMatch;
+        });
+
+        if (userBookings.length === 0) {
+            container.innerHTML = `<p class="text-xs text-muted italic text-center py-2">No se encontraron citas activas asociadas a esa búsqueda.</p>`;
+            return;
+        }
+
+        userBookings.forEach(b => {
+            const card = document.createElement('div');
+            card.className = "bg-studio/80 border border-white/10 rounded-xl p-3 flex flex-col sm:flex-row justify-between sm:items-center gap-3";
+            card.innerHTML = `
+                <div>
+                    <div class="font-mono text-xs font-semibold text-bone">${formatDateReadable(b.date)} a las ${b.time}</div>
+                    <div class="text-[10px] text-accent">${b.clientName} (${b.clientEmail})</div>
+                    <div class="text-[9px] text-muted truncate max-w-[200px]">${b.notes || 'Sin especificaciones'}</div>
+                </div>
+                <button onclick="cancelClientBooking('${b.id}')" class="bg-danger/20 hover:bg-danger/40 border border-danger/30 text-danger text-[10px] px-3 py-1.5 rounded-lg transition font-mono self-start sm:self-auto cursor-pointer">
+                    Cancelar Cita
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // ELIMINACIÓN DEFINITIVA DESDE EL CLIENTE
+    function cancelClientBooking(id) {
+        showConfirm("¿Estás seguro de cancelar tu reserva? Se eliminará de la agenda y el horario quedará libre.", async () => {
+            const success = await deleteBookingFromSupabase(id);
+            if (success) {
+                bookings = bookings.filter(b => b.id !== id);
+                await loadDataFromSupabase(false);
+                renderAllViews();
+                closeClientManageModal();
+                showToast("Tu cita ha sido eliminada y el horario ha quedado libre.", "success");
+            }
+        });
+    }
+
     function previewSelectedImage(event) {
         const file = event.target.files[0];
         const previewContainer = document.getElementById('image-preview-container');
@@ -1187,7 +1302,6 @@
         if (previewContainer) previewContainer.classList.add('hidden');
     }
 
-    // SUBIR IMAGEN A SUPABASE STORAGE BUCKET 'tattoo-ideas'
     async function uploadClientImageToStorage(file) {
         try {
             const fileExt = file.name.split('.').pop();
@@ -1605,30 +1719,11 @@
         return { active: false, slots: [] };
     }
 
+    // CORRECCIÓN: Se entregan todos los bloques sin filtrar por hora del reloj
     function getRemainingSlotsForDate(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots) return [];
-
-        let slots = [...sched.slots];
-        const todayStr = getLocalDateString(new Date());
-
-        if (dateStr === todayStr) {
-            const now = new Date();
-            const currentHour = now.getHours();
-            const currentMin = now.getMinutes();
-
-            slots = slots.filter(slot => {
-                const parts = slot.split(':');
-                if (parts.length !== 2) return true; 
-                const slotH = parseInt(parts[0], 10);
-                const slotM = parseInt(parts[1], 10);
-
-                if (slotH > currentHour) return true;
-                if (slotH === currentHour && slotM >= currentMin) return true;
-                return false;
-            });
-        }
-        return slots;
+        return [...sched.slots];
     }
 
     function isDayFullyBookedOrClosed(dateStr) {
@@ -1877,6 +1972,7 @@
         renderTemplateEditor();
         renderCustomDateEditor();
         renderBlockedRangesList();
+        renderDateExceptionsList();
         renderAdminBookingsTable();
     }
 
@@ -2023,6 +2119,7 @@
             mergeSlotsInto(config.dateExceptions[dateStr], generated);
             await saveState();
             renderCustomDateEditor();
+            renderDateExceptionsList();
             renderAllViews();
         }
 
@@ -2071,6 +2168,7 @@
             mergeSlotsInto(config.dateExceptions[dateStr], generated);
             await saveState();
             renderCustomDateEditor();
+            renderDateExceptionsList();
             renderAllViews();
         }
 
@@ -2113,6 +2211,14 @@
         renderWeeklyScheduleEditorFromMemory();
     }
 
+    // Indica si una fecha tiene un bloqueo o una excepción guardada que sobrescribirá
+    // lo que se configure para ella en el horario semanal.
+    function getDateOverrideWarning(dateStr) {
+        if (config.blockedDates && config.blockedDates.includes(dateStr)) return 'blocked';
+        if (config.dateExceptions && config.dateExceptions[dateStr]) return 'exception';
+        return null;
+    }
+
     function renderWeeklyScheduleEditorFromMemory() {
         const container = document.getElementById('weekly-days-editor-container');
         const monthVal = document.getElementById('admin-week-month').value;
@@ -2139,6 +2245,13 @@
                 </span>
             `).join('');
 
+            const overrideType = getDateOverrideWarning(dateStr);
+            const overrideBadge = overrideType === 'blocked'
+                ? `<div class="text-[9px] text-danger font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Bloqueado: este horario no se mostrará a clientes mientras el bloqueo exista.</div>`
+                : overrideType === 'exception'
+                    ? `<div class="text-[9px] text-amber-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Tiene una excepción propia (pestaña "Bloqueos y Excepciones") que sobrescribe este horario para esta fecha.</div>`
+                    : '';
+
             card.innerHTML = `
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <span class="font-medium text-xs text-bone">${dayName} ${dayNumber}</span>
@@ -2154,6 +2267,7 @@
                         </button>
                     </div>
                 </div>
+                ${overrideBadge}
                 ${dayState.active ? `<div class="flex flex-wrap gap-1.5 pt-0.5">${slotsBadges || '<span class="text-[9px] text-muted italic">Sin horarios, usa "+ Hora" o "Masivo"</span>'}</div>` : ''}
             `;
 
@@ -2188,7 +2302,7 @@
         if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
 
         config.weekCustomSchedules[weekKey] = JSON.parse(JSON.stringify(currentEditingWeekState));
-
+        
         const saved = await saveState();
         if (saved) {
             renderAllViews();
@@ -2324,6 +2438,20 @@
         });
     }
 
+    // Devuelve el horario que aplicaría a una fecha SIN considerar dateExceptions,
+    // es decir, lo que definiría el horario semanal (weekCustomSchedules). Se usa
+    // solo para mostrarle contexto al admin en el editor de excepciones.
+    function getWeeklyScheduleOnlyForDate(dateStr) {
+        if (config.weekCustomSchedules) {
+            for (let weekKey in config.weekCustomSchedules) {
+                if (config.weekCustomSchedules[weekKey] && config.weekCustomSchedules[weekKey][dateStr]) {
+                    return config.weekCustomSchedules[weekKey][dateStr];
+                }
+            }
+        }
+        return null;
+    }
+
     function renderCustomDateEditor() {
         const dateInput = document.getElementById('admin-custom-date');
         const container = document.getElementById('custom-date-editor-container');
@@ -2339,14 +2467,50 @@
 
         if (!config.dateExceptions) config.dateExceptions = {};
 
-        let dateData = config.dateExceptions[dateStr];
-
-        if (!dateData) {
-            dateData = { active: true, slots: [], note: "", noteVisible: false };
-            config.dateExceptions[dateStr] = dateData;
-        }
+        // CORRECCIÓN CRÍTICA: antes, con solo seleccionar/mirar una fecha en este campo,
+        // se creaba y guardaba una excepción "activa" (active:true, slots:[]) para ese día.
+        // Como las excepciones tienen prioridad sobre el horario semanal, esto anulaba
+        // silenciosamente horarios ya configurados (ej: un día marcado ACTIVO con 12:00 en
+        // "Configuración de Agenda" aparecía como "sin disponibilidad" para el cliente).
+        // Ahora solo se usa un objeto temporal en memoria para mostrar la vista previa;
+        // la excepción real recién se crea/guarda cuando el admin ejecuta una acción explícita
+        // (agregar hora, activar/desactivar, escribir nota), lo cual ya manejan las funciones
+        // toggleCustomDateActive / updateCustomDateNote / etc. más abajo.
+        const savedException = config.dateExceptions[dateStr];
+        const hasSavedException = !!savedException;
+        const dateData = savedException || { active: true, slots: [], note: "", noteVisible: false };
         if (dateData.note === undefined) dateData.note = "";
         if (dateData.noteVisible === undefined) dateData.noteVisible = false;
+
+        const isBlocked = config.blockedDates && config.blockedDates.includes(dateStr);
+        const weeklySched = getWeeklyScheduleOnlyForDate(dateStr);
+
+        let warningHtml = "";
+        if (isBlocked) {
+            warningHtml = `
+                <div class="bg-danger/10 border border-danger/30 rounded-lg px-2.5 py-2 text-[10px] text-danger leading-relaxed">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                    Este día está <strong>bloqueado</strong> (pestaña "Bloqueo de Fechas"). El bloqueo tiene prioridad
+                    absoluta: aunque configures horas aquí o en la agenda semanal, el cliente NO verá disponibilidad
+                    hasta que liberes el bloqueo.
+                </div>`;
+        } else if (hasSavedException) {
+            warningHtml = `
+                <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-400 leading-relaxed">
+                    <i class="fa-solid fa-circle-info mr-1"></i>
+                    Este día tiene una <strong>excepción guardada</strong>. Mientras exista, ella manda sobre el horario
+                    semanal de "Configuración de Agenda" para esta fecha específica.
+                    ${weeklySched ? `El horario semanal para este día es <strong>${weeklySched.active ? (weeklySched.slots || []).join(', ') || 'activo sin horas' : 'inactivo'}</strong>, pero no se usará mientras la excepción exista.` : ''}
+                    Usa "Limpiar este día" si quieres volver a usar el horario semanal.
+                </div>`;
+        } else if (weeklySched) {
+            warningHtml = `
+                <div class="bg-white/5 border border-white/10 rounded-lg px-2.5 py-2 text-[10px] text-muted leading-relaxed">
+                    <i class="fa-solid fa-circle-info mr-1"></i>
+                    Sin excepción, hoy se usa el horario semanal (<strong>${weeklySched.active ? (weeklySched.slots || []).join(', ') || 'activo sin horas' : 'inactivo'}</strong>).
+                    Si agregas una hora o activas/desactivas algo aquí, se creará una excepción que sobrescribirá ese horario solo para esta fecha.
+                </div>`;
+        }
 
         let slotsBadges = (dateData.slots || []).map((s, idx) => `
             <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-[10px] font-mono px-2 py-0.5 rounded">
@@ -2370,6 +2534,7 @@
                     </button>
                 </div>
             </div>
+            ${warningHtml}
             <div class="flex flex-wrap gap-1 py-1">
                 ${dateData.active ? (slotsBadges || '<span class="text-[10px] text-muted italic">No hay horas configuradas</span>') : '<span class="text-[10px] text-danger italic">Día inactivo</span>'}
             </div>
@@ -2383,9 +2548,10 @@
                     Mostrar esta nota a los clientes
                 </label>
             </div>
+            ${hasSavedException ? `
             <button onclick="removeCustomDateException('${dateStr}')" class="text-[10px] text-muted hover:text-danger underline pt-1 cursor-pointer font-mono">
-                Limpiar este día
-            </button>
+                Limpiar este día (eliminar excepción y volver al horario semanal)
+            </button>` : ''}
         `;
     }
 
@@ -2394,6 +2560,7 @@
         config.dateExceptions[dateStr].active = !config.dateExceptions[dateStr].active;
         await saveState();
         renderCustomDateEditor();
+        renderDateExceptionsList();
         renderAllViews();
     }
 
@@ -2402,6 +2569,7 @@
             config.dateExceptions[dateStr].slots.splice(slotIdx, 1);
             await saveState();
             renderCustomDateEditor();
+            renderDateExceptionsList();
             renderAllViews();
         }
     }
@@ -2410,6 +2578,7 @@
         if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
         config.dateExceptions[dateStr].note = value;
         await saveState();
+        renderDateExceptionsList();
     }
 
     async function toggleCustomDateNoteVisible(dateStr, checked) {
@@ -2424,9 +2593,48 @@
             delete config.dateExceptions[dateStr];
             await saveState();
             renderCustomDateEditor();
+            renderDateExceptionsList();
             renderAllViews();
             showToast("Excepción eliminada para ese día.", "success");
         }
+    }
+
+    function renderDateExceptionsList() {
+        const container = document.getElementById('date-exceptions-list');
+        if (!container) return;
+
+        const exceptions = config.dateExceptions || {};
+        const dateKeys = Object.keys(exceptions).sort();
+
+        if (dateKeys.length === 0) {
+            container.innerHTML = `<p class="text-[10px] text-muted italic py-2">No hay excepciones guardadas actualmente.</p>`;
+            return;
+        }
+
+        container.innerHTML = dateKeys.map(dateStr => {
+            const data = exceptions[dateStr];
+            const isEmptyActive = data.active && (!data.slots || data.slots.length === 0);
+            const summary = !data.active
+                ? 'Inactivo (bloquea este día)'
+                : (data.slots && data.slots.length > 0)
+                    ? data.slots.join(', ')
+                    : 'Activo, sin horas (bloquea este día por falta de horas)';
+            return `
+            <div class="range-item flex items-center justify-between gap-2 bg-studio/60 border border-white/5 rounded-lg px-3 py-2">
+                <div class="min-w-0">
+                    <div class="text-[11px] text-bone font-mono">${formatDateReadable(dateStr)}</div>
+                    <div class="text-[9px] ${isEmptyActive || !data.active ? 'text-danger' : 'text-muted'} truncate">${summary}</div>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                    <button onclick="document.getElementById('admin-custom-date').value='${dateStr}'; renderCustomDateEditor(); document.getElementById('admin-custom-date').scrollIntoView({behavior:'smooth', block:'center'});" title="Editar esta fecha" class="text-muted hover:text-accent hover:bg-accent/10 border border-white/10 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
+                        <i class="fa-solid fa-pen text-[10px]"></i>
+                    </button>
+                    <button onclick="removeCustomDateException('${dateStr}')" title="Eliminar excepción" class="text-danger hover:bg-danger/20 border border-danger/30 bg-danger/5 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
+                        <i class="fa-solid fa-trash text-[10px]"></i>
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
     async function toggleBlockDateRange(block) {
@@ -2581,7 +2789,7 @@
 
     function getGoogleCalendarUrl(b) {
         const title = encodeURIComponent(`Cita Tatuaje: ${b.clientName}`);
-        const details = encodeURIComponent(`Idea: ${b.notes || 'Sin detalles'}\nTeléfono: ${b.clientPhone}\nCorreo: ${b.clientEmail}`);
+        const details = encodeURIComponent(`Idea: ${b.notes || 'Sin detalles'}\nInstagram: ${b.clientEmail}\nTeléfono: ${b.clientPhone}`);
         const location = encodeURIComponent("Tucapel 391, Concepción, Chile");
 
         const fechaLimpia = b.date.replace(/-/g, '');
@@ -2597,7 +2805,6 @@
         renderAdminBookingsTable();
     }
 
-    // RENDERIZADO DE TABLA ADMIN CON VISUALIZADOR DE IMAGEN DEL CLIENTE
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -2633,8 +2840,8 @@
             const gcalLink = getGoogleCalendarUrl(b);
 
             const imageButton = b.imageUrl ? `
-                <button onclick="openLightbox('${b.imageUrl}')" class="mt-1 bg-accent/20 hover:bg-accent/40 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] font-mono flex items-center gap-1 transition cursor-pointer">
-                    <i class="fa-solid fa-image text-[9px]"></i> Ver Foto
+                <button onclick="openLightbox('${b.imageUrl}')" class="mt-1.5 bg-accent/20 hover:bg-accent/40 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] font-mono flex items-center gap-1 transition cursor-pointer w-fit">
+                    <i class="fa-solid fa-image text-[9px]"></i> Ver Foto Ref
                 </button>
             ` : '';
 
@@ -2649,8 +2856,8 @@
                     ${imageButton}
                 </td>
                 <td class="py-3 text-[10px] align-top break-words">
-                    <div class="font-mono text-bone">${b.clientPhone}</div>
-                    <div class="text-muted break-all">${b.clientEmail}</div>
+                    <div class="font-mono text-accent font-semibold">${b.clientEmail}</div>
+                    <div class="text-muted mt-0.5">${b.clientPhone}</div>
                 </td>
                 <td class="py-3 align-top">${statusBadge}</td>
                 <td class="py-3 text-right align-top">
