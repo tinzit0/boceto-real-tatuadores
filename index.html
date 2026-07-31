@@ -109,7 +109,7 @@
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO (CADA 2 SEGUNDOS) */
+        /* FONDO HERO INTERACTIVO */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
@@ -215,7 +215,7 @@
             text-decoration: line-through;
         }
 
-        /* CALENDARIO VISUAL CLIENTE */
+        /* CALENDARIO VISUAL (ADMIN Y CLIENTE) */
         .cal-day {
             position: relative;
             aspect-ratio: 1 / 1;
@@ -876,9 +876,6 @@
         </div>
 
         <div class="flex flex-wrap gap-2.5 w-full sm:w-auto z-50 font-mono text-xs">
-            <button onclick="openResetModal()" class="text-danger hover:bg-danger/10 border border-danger/30 bg-danger/5 px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5">
-                <i class="fa-solid fa-rotate-left text-xs"></i> Restablecer Semana
-            </button>
             <button onclick="logoutAdmin()" class="bg-studio hover:bg-white/5 text-bone border border-white/10 px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5">
                 <span>Cerrar Sesión</span>
             </button>
@@ -894,10 +891,10 @@
             <i class="fa-solid fa-list-check"></i> Agendamientos
         </button>
         <button onclick="switchAdminTab('config')" data-tab="config" class="admin-tab-btn px-4 py-3 text-muted hover:text-bone whitespace-nowrap cursor-pointer flex items-center gap-2">
-            <i class="fa-regular fa-calendar-check"></i> Configuración de Agenda
+            <i class="fa-regular fa-calendar-days"></i> Calendario de Horarios (Por Días)
         </button>
         <button onclick="switchAdminTab('bloqueos')" data-tab="bloqueos" class="admin-tab-btn px-4 py-3 text-muted hover:text-bone whitespace-nowrap cursor-pointer flex items-center gap-2">
-            <i class="fa-solid fa-plane-departure"></i> Bloqueos y Excepciones
+            <i class="fa-solid fa-plane-departure"></i> Bloqueos y Vacaciones
         </button>
     </div>
 
@@ -938,169 +935,91 @@
         </div>
     </div>
 
-    <!-- TAB: CONFIGURACIÓN DE AGENDA -->
+    <!-- TAB: CALENDARIO DE HORARIOS (POR DÍAS) -->
     <div id="tab-config" class="admin-tab-panel">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-            <!-- HORARIO SEMANAL BASE -->
-            <div class="action-card rounded-2xl p-4 md:p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2 font-medium">
-                        Horario Semanal Base
-                    </h3>
-                    <i class="fa-solid fa-layer-group text-accent text-sm"></i>
-                </div>
-                <p class="text-[11px] text-muted leading-relaxed">
-                    Define una plantilla reutilizable (ej. Lunes a Viernes 10:00–19:00) y aplícala a todo el mes con un clic.
-                </p>
-
-                <div id="template-days-editor-container" class="space-y-2.5"></div>
-
-                <div class="bg-studio/80 p-3 rounded-xl border border-white/5 space-y-2.5">
-                    <label class="block text-[9px] font-mono text-muted uppercase tracking-wider font-semibold">Aplicar plantilla al mes:</label>
-                    <input type="month" id="template-target-month" class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-xs font-mono focus:outline-none focus:border-accent">
-                    <button onclick="saveWeeklyTemplate()" class="w-full bg-studio hover:bg-white/5 text-bone border border-white/10 font-mono text-[11px] font-bold tracking-widest uppercase py-2.5 rounded-xl cursor-pointer transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-floppy-disk text-xs"></i> Guardar Plantilla
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- CALENDARIO MENSUAL DE ADMIN -->
+            <div class="lg:col-span-7 action-card rounded-2xl p-4 md:p-6 space-y-4">
+                <div class="flex items-center justify-between mb-2">
+                    <button type="button" onclick="adminCalNavigate(-1)" class="w-8 h-8 flex items-center justify-center rounded-full bg-studio border border-white/10 text-muted hover:text-bone hover:border-accent transition cursor-pointer">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
                     </button>
-                    <button onclick="applyTemplateToMonth()" class="w-full bg-accent hover:bg-accentHover text-white font-mono text-[11px] font-bold tracking-widest uppercase py-3 rounded-xl cursor-pointer transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Aplicar a Todo el Mes
+                    <span id="admin-cal-month-label" class="font-serif text-base text-bone tracking-wide capitalize"></span>
+                    <button type="button" onclick="adminCalNavigate(1)" class="w-8 h-8 flex items-center justify-center rounded-full bg-studio border border-white/10 text-muted hover:text-bone hover:border-accent transition cursor-pointer">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
                     </button>
                 </div>
+                <p class="text-[11px] text-muted text-center">Haz clic en cualquier día actual o futuro para configurar sus horas disponibles.</p>
+                
+                <div class="grid grid-cols-7 gap-1.5 text-center text-[10px] text-muted uppercase tracking-wider font-semibold">
+                    <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+                </div>
+                <div id="admin-calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
             </div>
 
-            <!-- HORARIOS SEMANA POR SEMANA -->
-            <div class="action-card rounded-2xl p-4 md:p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2 font-medium">
-                        Horarios Semana por Semana
-                    </h3>
-                    <i class="fa-regular fa-calendar-check text-accent text-sm"></i>
-                </div>
-                <p class="text-[11px] text-muted leading-relaxed">
-                    Ajusta manualmente los bloques de hora de una semana puntual, o clónala hacia el resto del mes.
-                </p>
-
-                <div class="bg-studio/80 p-3 rounded-xl border border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[9px] font-mono text-muted uppercase tracking-wider mb-1 font-semibold">SELECCIONAR MES:</label>
-                        <input type="month" id="admin-week-month" onchange="populateWeekSelector(); renderWeeklyScheduleEditor();"
-                               class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-xs font-mono focus:outline-none focus:border-accent">
+            <!-- EDITOR DEL DÍA SELECCIONADO -->
+            <div class="lg:col-span-5 action-card rounded-2xl p-4 md:p-6 space-y-4 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
+                        <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-accent"></i>
+                            <span id="admin-selected-date-title">Selecciona un día</span>
+                        </h3>
                     </div>
-                    <div>
-                        <label class="block text-[9px] font-mono text-muted uppercase tracking-wider mb-1 font-semibold">SEMANA A CONFIGURAR:</label>
-                        <select id="admin-week-number" onchange="renderWeeklyScheduleEditor()"
-                                class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-xs font-mono focus:outline-none focus:border-accent cursor-pointer">
-                        </select>
+                    
+                    <div id="admin-day-editor-content" class="text-center text-muted text-xs py-8">
+                        Selecciona un día en el calendario izquierdo para administrar sus horarios.
                     </div>
                 </div>
 
-                <div id="weekly-days-editor-container" class="space-y-2.5 pt-1">
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                    <button onclick="saveCurrentWeekSchedule()" class="flex-1 bg-black hover:bg-black/80 text-bone border border-white/10 font-mono text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl cursor-pointer transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-floppy-disk text-xs"></i>
-                        <span>GUARDAR SEMANA</span>
-                    </button>
-                    <button onclick="cloneWeekToRestOfMonth()" class="flex-1 bg-studio hover:bg-white/5 text-bone border border-white/10 font-mono text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl cursor-pointer transition flex items-center justify-center gap-2">
-                        <i class="fa-regular fa-copy text-xs"></i>
-                        <span>CLONAR AL MES</span>
+                <div id="admin-day-save-wrap" class="hidden pt-3 border-t border-white/5">
+                    <button onclick="saveAdminDaySchedule()" class="btn-primary-action w-full py-3 rounded-xl text-xs font-semibold uppercase tracking-widest text-white cursor-pointer">
+                        Guardar Horarios del Día
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB: BLOQUEOS Y EXCEPCIONES -->
+    <!-- TAB: BLOQUEOS Y VACACIONES -->
     <div id="tab-bloqueos" class="admin-tab-panel">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-            <!-- CAMBIAR HORARIO DE UN DÍA ESPECÍFICO -->
-            <div class="action-card rounded-2xl p-4 md:p-6 space-y-3">
+        <div class="action-card rounded-2xl p-4 md:p-6 space-y-4 max-w-xl mx-auto">
+            <div class="flex items-center justify-between">
                 <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-accent"></i>
-                    Cambiar Horario de un Día Específico
+                    Bloqueo de Fechas / Vacaciones
                 </h3>
-                <p class="text-[11px] text-muted leading-relaxed">
-                    Modifica horas de una fecha exacta y agrega notas visibles opcionalmente para los clientes.
-                </p>
-
-                <div class="space-y-3 pt-1">
-                    <div>
-                        <label class="block text-[9px] font-mono text-muted uppercase tracking-wider mb-1 font-semibold">SELECCIONAR FECHA EXACTA</label>
-                        <input type="date" id="admin-custom-date" onchange="renderCustomDateEditor()"
-                               class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs font-mono focus:outline-none focus:border-accent">
-                    </div>
-
-                    <div id="custom-date-editor-container" class="hidden bg-studio/80 p-3 rounded-xl border border-white/5 space-y-2">
-                    </div>
+                <i class="fa-solid fa-plane-departure text-accent text-sm"></i>
+            </div>
+            <p class="text-[11px] text-muted leading-relaxed">
+                Bloquea un día individual o un rango completo de fechas para que no se pueda agendar.
+            </p>
+            <div class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">DESDE</label>
+                    <input type="date" id="admin-block-start-date" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
                 </div>
-
-                <div class="pt-2 border-t border-white/5 mt-3">
-                    <p class="text-[9px] font-mono text-muted uppercase tracking-wider mb-2 font-semibold">Excepciones Guardadas Actualmente</p>
-                    <p class="text-[9px] text-muted mb-2 leading-relaxed">Estas fechas tienen un horario propio que sobrescribe la agenda semanal. Revisa aquí si algún día parece bloqueado sin razón aparente.</p>
-                    <div id="date-exceptions-list" class="space-y-1.5 max-h-64 overflow-y-auto pr-1"></div>
+                <div>
+                    <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">HASTA</label>
+                    <input type="date" id="admin-block-end-date" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+                </div>
+                <div>
+                    <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">MOTIVO (OPCIONAL)</label>
+                    <input type="text" id="admin-block-reason" placeholder="Ej: Vacaciones" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+                </div>
+                <div class="flex gap-2 pt-1">
+                    <button onclick="toggleBlockDateRange(true)" class="flex-1 border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20 text-xs py-2.5 rounded-xl transition cursor-pointer font-bold">
+                        Bloquear
+                    </button>
+                    <button onclick="toggleBlockDateRange(false)" class="flex-1 border border-white/10 bg-studio hover:bg-white/5 text-bone text-xs py-2.5 rounded-xl transition cursor-pointer font-bold">
+                        Liberar
+                    </button>
                 </div>
             </div>
 
-            <!-- BLOQUEO DE FECHAS -->
-            <div class="action-card rounded-2xl p-4 md:p-6 space-y-3">
-                <div class="flex items-center justify-between">
-                    <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2">
-                        Bloqueo de Fechas / Vacaciones
-                    </h3>
-                    <i class="fa-solid fa-plane-departure text-accent text-sm"></i>
-                </div>
-                <p class="text-[11px] text-muted leading-relaxed">
-                    Bloquea un día individual o un rango completo de fechas, con historial visual.
-                </p>
-                <div class="space-y-3 pt-1 font-mono text-xs">
-                    <div>
-                        <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">DESDE</label>
-                        <input type="date" id="admin-block-start-date" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                    </div>
-                    <div>
-                        <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">HASTA</label>
-                        <input type="date" id="admin-block-end-date" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                    </div>
-                    <div>
-                        <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">MOTIVO (OPCIONAL)</label>
-                        <input type="text" id="admin-block-reason" placeholder="Ej: Vacaciones de verano" class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                    </div>
-                    <div class="flex gap-2 pt-1">
-                        <button onclick="toggleBlockDateRange(true)" class="flex-1 border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20 text-xs py-2.5 rounded-xl transition cursor-pointer font-bold">
-                            Bloquear
-                        </button>
-                        <button onclick="toggleBlockDateRange(false)" class="flex-1 border border-white/10 bg-studio hover:bg-white/5 text-bone text-xs py-2.5 rounded-xl transition cursor-pointer font-bold">
-                            Liberar
-                        </button>
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-white/5 mt-3">
-                    <p class="text-[9px] font-mono text-muted uppercase tracking-wider mb-2 font-semibold">Rangos Bloqueados Actualmente</p>
-                    <div id="blocked-ranges-list" class="space-y-1.5 max-h-64 overflow-y-auto pr-1"></div>
-                </div>
+            <div class="pt-3 border-t border-white/5">
+                <p class="text-[9px] font-mono text-muted uppercase tracking-wider mb-2 font-semibold">Rangos Bloqueados Actualmente</p>
+                <div id="blocked-ranges-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL CONFIRMACIÓN RESTABLECER -->
-<div id="reset-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="action-card rounded-2xl p-5 md:p-7 max-w-xs w-full text-center shadow-2xl border border-white/10">
-        <div class="text-amber-400 text-2xl mb-2"><i class="fa-solid fa-rotate-left"></i></div>
-        <h3 class="font-serif text-lg text-bone mb-1">Restablecer Semana</h3>
-        <p class="text-[11px] text-muted mb-5 leading-relaxed font-mono">
-            Se vaciarán los horarios de la semana seleccionada. Las citas registradas no se borrarán.
-        </p>
-        <div class="flex gap-2 font-mono text-xs">
-            <button onclick="closeResetModal()" class="flex-1 bg-white/5 hover:bg-white/10 text-bone py-2 rounded-xl transition border border-white/10 cursor-pointer">
-                Cancelar
-            </button>
-            <button onclick="confirmResetSystem()" class="flex-1 bg-accent hover:bg-accentHover text-white py-2 rounded-xl transition font-semibold cursor-pointer">
-                Restablecer
-            </button>
         </div>
     </div>
 </div>
@@ -1122,82 +1041,12 @@
     </div>
 </div>
 
-<!-- MODAL GENERADOR MASIVO -->
-<div id="bulk-slot-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-    <div class="action-card rounded-2xl p-5 md:p-7 max-w-sm w-full shadow-2xl border border-white/10">
-        <div class="flex items-center gap-2 mb-1">
-            <i class="fa-solid fa-bolt text-accent text-lg"></i>
-            <h3 class="font-serif text-lg text-bone">Generador Masivo de Horarios</h3>
-        </div>
-        <p id="bulk-slot-target-label" class="text-[11px] text-muted mb-4 font-mono"></p>
-        <div class="space-y-3 font-mono text-xs">
-            <div class="grid grid-cols-2 gap-2.5">
-                <div>
-                    <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">Hora Inicio</label>
-                    <input type="time" id="bulk-slot-start" value="10:00" class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                </div>
-                <div>
-                    <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">Hora Fin</label>
-                    <input type="time" id="bulk-slot-end" value="19:00" class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-                </div>
-            </div>
-            <div>
-                <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">Duración de Bloque</label>
-                <select id="bulk-slot-interval" class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-2 text-bone text-xs focus:outline-none focus:border-accent cursor-pointer">
-                    <option value="60" selected>Cada 1 hora</option>
-                    <option value="30">Cada 30 minutos</option>
-                    <option value="90">Cada 1.5 horas</option>
-                    <option value="120">Cada 2 horas</option>
-                    <option value="180">Cada 3 horas</option>
-                </select>
-            </div>
-            <div id="bulk-slot-scope-wrap" class="hidden">
-                <label class="flex items-center gap-2 text-[11px] text-muted cursor-pointer">
-                    <input type="checkbox" id="bulk-slot-apply-week" class="accent-accent w-3.5 h-3.5 cursor-pointer">
-                    Aplicar a todos los días activos de esta semana
-                </label>
-            </div>
-        </div>
-        <div class="flex gap-2 font-mono text-xs mt-5">
-            <button onclick="closeBulkSlotModal()" class="flex-1 bg-white/5 hover:bg-white/10 text-bone py-2.5 rounded-xl transition border border-white/10 cursor-pointer">
-                Cancelar
-            </button>
-            <button onclick="confirmBulkSlotGeneration()" class="flex-1 bg-accent hover:bg-accentHover text-white py-2.5 rounded-xl transition font-semibold cursor-pointer">
-                Generar y Agregar
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL AGREGAR HORA MANUAL -->
-<div id="single-slot-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-    <div class="action-card rounded-2xl p-5 md:p-7 max-w-xs w-full shadow-2xl border border-white/10">
-        <div class="flex items-center gap-2 mb-1">
-            <i class="fa-regular fa-clock text-accent text-lg"></i>
-            <h3 class="font-serif text-lg text-bone">Agregar Hora Manual</h3>
-        </div>
-        <p id="single-slot-target-label" class="text-[11px] text-muted mb-4 font-mono"></p>
-        <div class="space-y-3 font-mono text-xs">
-            <div>
-                <label class="block text-[9px] text-muted uppercase tracking-wider mb-1 font-semibold">Seleccionar Hora</label>
-                <input type="time" id="single-slot-input" value="12:00" class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
-            </div>
-        </div>
-        <div class="flex gap-2 font-mono text-xs mt-5">
-            <button onclick="closeSingleSlotModal()" class="flex-1 bg-white/5 hover:bg-white/10 text-bone py-2.5 rounded-xl transition border border-white/10 cursor-pointer">
-                Cancelar
-            </button>
-            <button onclick="confirmSingleSlotAddition()" class="flex-1 bg-accent hover:bg-accentHover text-white py-2.5 rounded-xl transition font-semibold cursor-pointer">
-                Añadir Hora
-            </button>
-        </div>
-    </div>
-</div>
-
 <script>
     // =====================================================================
-    // CREDENCIALES DE SUPABASE
+    // VARIABLES GLOBALES Y MESES EN ESPAÑOL
     // =====================================================================
+    const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
     const SUPABASE_URL = 'https://kxldsjodgfonrrlwjbws.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_J5s_2YqtASIYSqu2k00SGA_copdr39x';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1207,20 +1056,18 @@
     const WEBPAY_URL = "https://www.webpay.cl/company/158953";
 
     let config = {
-        weekCustomSchedules: {},
-        dateExceptions: {},
+        daySchedules: {},
         blockedDates: [],
-        blockedReasons: {},
-        weeklyBaseTemplate: {},
+        blockedReasons: {}
     };
     let bookings = [];
     let currentUser = JSON.parse(localStorage.getItem('hipso_user')) || null;
 
     let selectedClientDate = "";
     let selectedClientSlot = "";
-    let currentEditingWeekState = {};
-    let currentEditingTemplateState = {};
     let clientCalendarViewDate = new Date();
+    let adminCalendarViewDate = new Date();
+    let selectedAdminDate = "";
 
     let isSyncing = false;
     let dataLoaded = false;
@@ -1293,7 +1140,6 @@
 
         activeFoundBookingForReceipt = found;
         
-        // Renderizamos la estructura del formulario una sola vez para evitar que el input se reinicie cada segundo
         infoDiv.innerHTML = `
             <div class="bg-studio p-3.5 rounded-xl border border-white/10 space-y-3 text-xs">
                 <div class="flex justify-between text-bone border-b border-white/5 pb-1"><span>Cliente:</span> <strong>${found.clientName}</strong></div>
@@ -1411,7 +1257,6 @@
         }
     }
 
-    // GESTIÓN DEL MODAL "MIS CITAS" PARA CLIENTES
     function openClientManageModal() {
         const modal = document.getElementById('client-manage-modal');
         const results = document.getElementById('client-bookings-results');
@@ -1539,7 +1384,6 @@
         }
     }
 
-    // TOASTS
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         if (!container) return;
@@ -1562,7 +1406,6 @@
         }, 3800);
     }
 
-    // MODAL DE CONFIRMACIÓN
     let pendingConfirmAction = null;
     function showConfirm(message, onAccept) {
         document.getElementById('confirm-modal-message').innerText = message;
@@ -1581,40 +1424,21 @@
         if (typeof action === 'function') action();
     }
 
-    // SINCRONIZACIÓN SUPABASE
-    function setSyncStatus(status, isAdmin = false) {
+    function setSyncStatus(status) {
         const statusText = document.getElementById('sync-status-text');
         const headerEl = document.getElementById('sync-status-header');
         const adminEl = document.getElementById('admin-sync-status');
         const clientEl = document.getElementById('client-sync-status');
 
-        const texts = {
-            'synced': 'Sincronizado',
-            'syncing': 'Sincronizando...',
-            'error': 'Error de conexión'
-        };
-
-        const classes = {
-            'synced': '',
-            'syncing': 'syncing',
-            'error': 'syncing'
-        };
+        const texts = { 'synced': 'Sincronizado', 'syncing': 'Sincronizando...', 'error': 'Error de conexión' };
+        const classes = { 'synced': '', 'syncing': 'syncing', 'error': 'syncing' };
 
         if (statusText) statusText.innerText = texts[status] || texts.synced;
-
         [headerEl, adminEl, clientEl].forEach(el => {
             if (el) {
                 el.className = `sync-indicator ${classes[status] || ''}`;
-                if (status === 'syncing') {
-                    const icon = el.querySelector('i');
-                    if (icon) icon.className = 'fa-solid fa-cloud fa-spin';
-                } else if (status === 'synced') {
-                    const icon = el.querySelector('i');
-                    if (icon) icon.className = 'fa-solid fa-cloud';
-                } else if (status === 'error') {
-                    const icon = el.querySelector('i');
-                    if (icon) icon.className = 'fa-solid fa-triangle-exclamation';
-                }
+                const icon = el.querySelector('i');
+                if (icon) icon.className = status === 'syncing' ? 'fa-solid fa-cloud fa-spin' : 'fa-solid fa-cloud';
             }
         });
     }
@@ -1633,60 +1457,29 @@
         if (isLoadingData) return;
         isLoadingData = true;
 
-        if (showLoading) {
-            setSyncStatus('syncing');
-            const loadingStatusEl = document.getElementById('loading-status');
-            if (loadingStatusEl) loadingStatusEl.innerText = 'Cargando datos desde la nube...';
-        }
+        if (showLoading) setSyncStatus('syncing');
 
         try {
-            const { data: settingsRows, error: settingsError } = await supabaseClient
+            const { data: settingsRows } = await supabaseClient
                 .from('hipso_settings')
                 .select('*')
                 .eq('key', 'main_config');
-
-            if (settingsError) {
-                console.error('Error al cargar settings:', settingsError);
-                showToast("No se pudo leer la configuración desde Supabase.", "error");
-            }
 
             if (settingsRows && settingsRows.length > 0) {
                 const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
                 const loadedConfig = sortedRows[0].value || {};
 
                 config = {
-                    weekCustomSchedules: loadedConfig.weekCustomSchedules || {},
-                    dateExceptions: loadedConfig.dateExceptions || {},
+                    daySchedules: loadedConfig.daySchedules || {},
                     blockedDates: loadedConfig.blockedDates || [],
                     blockedReasons: loadedConfig.blockedReasons || {},
-                    weeklyBaseTemplate: loadedConfig.weeklyBaseTemplate || {},
                 };
-
-                const duplicateIds = sortedRows.slice(1).map(r => r.id).filter(id => id !== undefined && id !== null);
-                if (duplicateIds.length > 0) {
-                    await supabaseClient.from('hipso_settings').delete().in('id', duplicateIds);
-                }
             } else {
-                config = {
-                    weekCustomSchedules: {},
-                    dateExceptions: {},
-                    blockedDates: [],
-                    blockedReasons: {},
-                    weeklyBaseTemplate: {},
-                };
-                await supabaseClient
-                    .from('hipso_settings')
-                    .upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
+                config = { daySchedules: {}, blockedDates: [], blockedReasons: {} };
+                await supabaseClient.from('hipso_settings').upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
             }
 
-            const { data: bookingsData, error: bookingsError } = await supabaseClient
-                .from('hipso_bookings')
-                .select('*');
-
-            if (bookingsError) {
-                console.error('Error al cargar reservas:', bookingsError);
-            }
-
+            const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
             if (bookingsData) {
                 bookings = bookingsData.map(b => ({
                     id: b.id,
@@ -1708,44 +1501,34 @@
             dataLoaded = true;
             setSyncStatus('synced');
             hideLoadingScreen();
-
         } catch (err) {
-            console.error("Error crítico al cargar desde Supabase:", err);
             setSyncStatus('error');
             hideLoadingScreen();
-            showToast("Error al conectar con la base de datos.", "error");
         } finally {
             isLoadingData = false;
         }
     }
 
     async function saveState() {
-        isSyncing = true;
         setSyncStatus('syncing');
-
         try {
             const { error } = await supabaseClient
                 .from('hipso_settings')
                 .upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
 
             if (error) {
-                console.error("Error al guardar en Supabase:", error);
-                showToast("No se pudo guardar en la nube: " + error.message, "error");
                 setSyncStatus('error');
+                showToast("Error al guardar en la nube.", "error");
                 return false;
             } else {
                 setSyncStatus('synced');
                 renderAllViews();
-                showToast("Cambios guardados en la nube.", "success");
+                showToast("Cambios guardados con éxito.", "success");
                 return true;
             }
         } catch (err) {
-            console.error("Error al guardar:", err);
-            showToast("Error al guardar en la nube.", "error");
             setSyncStatus('error');
             return false;
-        } finally {
-            isSyncing = false;
         }
     }
 
@@ -1768,34 +1551,20 @@
                 }, { onConflict: 'id' });
 
             if (error) {
-                console.error("Error al guardar reserva:", error);
-                showToast("Error Supabase: Verifica las columnas de 'hipso_bookings'.", "error");
+                showToast("Error al guardar reserva en Supabase.", "error");
                 return false;
-            } else {
-                return true;
             }
+            return true;
         } catch (err) {
-            console.error("Error al guardar reserva:", err);
-            showToast("Error al procesar la reserva.", "error");
             return false;
         }
     }
 
     async function deleteBookingFromSupabase(id) {
         try {
-            const { error } = await supabaseClient
-                .from('hipso_bookings')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                console.error("Error al eliminar reserva:", error);
-                showToast("Error al eliminar la reserva.", "error");
-                return false;
-            }
-            return true;
+            const { error } = await supabaseClient.from('hipso_bookings').delete().eq('id', id);
+            return !error;
         } catch (err) {
-            console.error("Error al eliminar reserva:", err);
             return false;
         }
     }
@@ -1915,16 +1684,8 @@
             return { active: false, slots: [], blocked: true, note: config.blockedReasons ? config.blockedReasons[dateStr] : "" };
         }
 
-        if (config.dateExceptions && config.dateExceptions[dateStr]) {
-            return config.dateExceptions[dateStr];
-        }
-
-        if (config.weekCustomSchedules) {
-            for (let weekKey in config.weekCustomSchedules) {
-                if (config.weekCustomSchedules[weekKey] && config.weekCustomSchedules[weekKey][dateStr]) {
-                    return config.weekCustomSchedules[weekKey][dateStr];
-                }
-            }
+        if (config.daySchedules && config.daySchedules[dateStr]) {
+            return config.daySchedules[dateStr];
         }
 
         return { active: false, slots: [] };
@@ -1986,8 +1747,6 @@
         if (free <= 2) return { status: 'yellow', free, total };
         return { status: 'green', free, total };
     }
-
-    const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     function calNavigate(delta) {
         const now = new Date();
@@ -2193,74 +1952,171 @@
         validateBookingForm();
     }
 
+    // CALENDARIO ADMIN (MENSUAL POR DÍAS)
     function renderAdminDashboard() {
-        populateWeekSelector();
-        renderWeeklyScheduleEditor();
-        renderTemplateEditor();
-        renderCustomDateEditor();
+        renderAdminCalendar();
+        renderAdminDayEditor();
         renderBlockedRangesList();
-        renderDateExceptionsList();
         renderAdminBookingsTable();
     }
 
-    function getDatesForWeek(yearMonth, weekNum) {
-        if (!yearMonth) return [];
-        const [year, month] = yearMonth.split('-').map(Number);
-        let firstDay = new Date(year, month - 1, 1);
-        let firstMonday = new Date(firstDay);
-        let dayOfWeek = firstMonday.getDay();
-        let diffToMonday = (dayOfWeek === 0 ? -6 : 1 - dayOfWeek);
-        firstMonday.setDate(firstMonday.getDate() + diffToMonday);
-
-        let weekStart = new Date(firstMonday);
-        weekStart.setDate(weekStart.getDate() + (weekNum - 1) * 7);
-
-        let weekDates = [];
-        for (let i = 0; i < 7; i++) {
-            let d = new Date(weekStart);
-            d.setDate(d.getDate() + i);
-            let yyyy = d.getFullYear();
-            let mm = String(d.getMonth() + 1).padStart(2, '0');
-            let dd = String(d.getDate()).padStart(2, '0');
-            weekDates.push({
-                dateStr: `${yyyy}-${mm}-${dd}`,
-                dayNumber: d.getDate(),
-                dayOfWeek: d.getDay()
-            });
-        }
-        return weekDates;
+    function adminCalNavigate(delta) {
+        adminCalendarViewDate.setMonth(adminCalendarViewDate.getMonth() + delta);
+        renderAdminCalendar();
     }
 
-    function populateWeekSelector() {
-        const monthInput = document.getElementById('admin-week-month');
-        const weekSelect = document.getElementById('admin-week-number');
-        if (!monthInput || !weekSelect) return;
+    function renderAdminCalendar() {
+        const grid = document.getElementById('admin-calendar-grid');
+        const label = document.getElementById('admin-cal-month-label');
+        if (!grid || !label) return;
 
-        const monthVal = monthInput.value;
-        if (!monthVal) return;
+        const year = adminCalendarViewDate.getFullYear();
+        const month = adminCalendarViewDate.getMonth();
+        label.innerText = `${MONTH_NAMES_ES[month]} ${year}`;
 
-        const previousVal = weekSelect.value || "1";
-        weekSelect.innerHTML = "";
+        const todayStr = getLocalDateString(new Date());
+        const firstOfMonth = new Date(year, month, 1);
+        let leadingBlank = firstOfMonth.getDay() - 1;
+        if (leadingBlank < 0) leadingBlank = 6;
+        const lastDay = new Date(year, month + 1, 0).getDate();
 
-        const MONTH_SHORT = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        grid.innerHTML = "";
 
-        for (let w = 1; w <= 5; w++) {
-            const weekDates = getDatesForWeek(monthVal, w);
-            if (weekDates.length === 7) {
-                const startDate = new Date(weekDates[0].dateStr + 'T00:00:00');
-                const endDate = new Date(weekDates[6].dateStr + 'T00:00:00');
+        for (let i = 0; i < leadingBlank; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'cal-day cal-empty';
+            grid.appendChild(empty);
+        }
 
-                const startFormatted = `${startDate.getDate()} ${MONTH_SHORT[startDate.getMonth()]}`;
-                const endFormatted = `${endDate.getDate()} ${MONTH_SHORT[endDate.getMonth()]}`;
+        for (let day = 1; day <= lastDay; day++) {
+            const cellDate = new Date(year, month, day);
+            const dateStr = getLocalDateString(cellDate);
+            const isPast = dateStr < todayStr;
+            const sched = getEffectiveScheduleForDate(dateStr);
 
-                const opt = document.createElement('option');
-                opt.value = w;
-                opt.innerText = `Del ${startFormatted} al ${endFormatted}`;
+            const cell = document.createElement('div');
+            cell.className = 'cal-day cal-fade-enter';
+            if (dateStr === selectedAdminDate) cell.classList.add('cal-selected');
+            if (isPast) cell.classList.add('cal-disabled');
+            
+            let dotColor = 'gray';
+            if (sched.blocked) dotColor = 'red';
+            else if (sched.active && sched.slots && sched.slots.length > 0) dotColor = 'green';
 
-                if (String(w) === previousVal) opt.selected = true;
-
-                weekSelect.appendChild(opt);
+            cell.innerHTML = `<span>${day}</span><span class="cal-dot cal-dot-${dotColor}"></span>`;
+            
+            if (!isPast) {
+                cell.onclick = () => {
+                    selectedAdminDate = dateStr;
+                    renderAdminCalendar();
+                    renderAdminDayEditor();
+                };
             }
+            grid.appendChild(cell);
+        }
+    }
+
+    function renderAdminDayEditor() {
+        const titleEl = document.getElementById('admin-selected-date-title');
+        const contentEl = document.getElementById('admin-day-editor-content');
+        const saveWrap = document.getElementById('admin-day-save-wrap');
+        if (!titleEl || !contentEl) return;
+
+        if (!selectedAdminDate) {
+            titleEl.innerText = "Selecciona un día";
+            contentEl.innerHTML = `<p class="text-muted text-xs py-8">Haz clic en un día del calendario para ver o modificar sus horas.</p>`;
+            saveWrap.classList.add('hidden');
+            return;
+        }
+
+        const todayStr = getLocalDateString(new Date());
+        const isPast = selectedAdminDate < todayStr;
+
+        titleEl.innerText = `Horario para el ${formatDateReadable(selectedAdminDate)}`;
+
+        if (isPast) {
+            saveWrap.classList.add('hidden');
+            contentEl.innerHTML = `
+                <div class="text-center py-8 text-muted text-xs space-y-2">
+                    <i class="fa-solid fa-lock text-sm text-danger/70"></i>
+                    <p>No se pueden modificar ni agregar horarios en días pasados.</p>
+                </div>
+            `;
+            return;
+        }
+
+        saveWrap.classList.remove('hidden');
+
+        if (!config.daySchedules[selectedAdminDate]) {
+            config.daySchedules[selectedAdminDate] = { active: true, slots: [], note: "", noteVisible: false };
+        }
+
+        const dayData = config.daySchedules[selectedAdminDate];
+
+        let slotsHtml = (dayData.slots || []).map((s, idx) => `
+            <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-xs font-mono px-2.5 py-1 rounded-lg">
+                ${s}
+                <button type="button" onclick="removeSlotFromAdminDay('${selectedAdminDate}', ${idx})" class="text-danger hover:text-red-400 ml-1.5 font-bold cursor-pointer">×</button>
+            </span>
+        `).join('');
+
+        contentEl.innerHTML = `
+            <div class="space-y-4 text-left">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs uppercase text-muted tracking-wider font-semibold">Estado del Día</span>
+                    <button type="button" onclick="toggleAdminDayActive('${selectedAdminDate}')" class="px-3 py-1 rounded-lg text-xs font-bold uppercase transition cursor-pointer ${dayData.active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-danger/20 text-danger border border-danger/30'}">
+                        ${dayData.active ? 'Activo' : 'Cerrado / Inactivo'}
+                    </button>
+                </div>
+
+                ${dayData.active ? `
+                    <div class="space-y-2">
+                        <label class="block text-[10px] uppercase text-muted tracking-wider">Bloques de Hora</label>
+                        <div class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 bg-studio/50 rounded-xl border border-white/5">
+                            ${slotsHtml || '<span class="text-xs text-muted italic">No hay horas agregadas</span>'}
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <input type="time" id="new-admin-slot-input" value="12:00" class="bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs font-mono focus:outline-none focus:border-accent">
+                            <button type="button" onclick="addSlotToAdminDay('${selectedAdminDate}')" class="bg-studio hover:bg-white/10 border border-white/10 text-bone px-3 py-2 rounded-xl text-xs font-mono transition cursor-pointer">
+                                + Agregar Hora
+                            </button>
+                            <button type="button" onclick="generateBulkForAdminDay('${selectedAdminDate}')" class="bg-accent/20 hover:bg-accent/30 border border-accent/30 text-accent px-3 py-2 rounded-xl text-xs font-mono transition cursor-pointer">
+                                Generar 10:00 - 19:00
+                            </button>
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    function toggleAdminDayActive(dateStr) {
+        if (config.daySchedules[dateStr]) {
+            config.daySchedules[dateStr].active = !config.daySchedules[dateStr].active;
+            renderAdminDayEditor();
+            renderAdminCalendar();
+        }
+    }
+
+    function addSlotToAdminDay(dateStr) {
+        const input = document.getElementById('new-admin-slot-input');
+        if (!input || !input.value) return;
+        const timeVal = input.value;
+
+        if (!config.daySchedules[dateStr].slots) config.daySchedules[dateStr].slots = [];
+        if (!config.daySchedules[dateStr].slots.includes(timeVal)) {
+            config.daySchedules[dateStr].slots.push(timeVal);
+            config.daySchedules[dateStr].slots.sort();
+            renderAdminDayEditor();
+            renderAdminCalendar();
+        }
+    }
+
+    function removeSlotFromAdminDay(dateStr, idx) {
+        if (config.daySchedules[dateStr] && config.daySchedules[dateStr].slots) {
+            config.daySchedules[dateStr].slots.splice(idx, 1);
+            renderAdminDayEditor();
+            renderAdminCalendar();
         }
     }
 
@@ -2279,581 +2135,21 @@
         return slots;
     }
 
-    let bulkSlotTarget = null;
-    let singleSlotTarget = null;
-
-    function openBulkSlotModal(target, label, showWeekScope) {
-        bulkSlotTarget = target;
-        document.getElementById('bulk-slot-target-label').innerText = label;
-        document.getElementById('bulk-slot-scope-wrap').classList.toggle('hidden', !showWeekScope);
-        document.getElementById('bulk-slot-apply-week').checked = false;
-        document.getElementById('bulk-slot-modal').classList.remove('hidden');
-        document.getElementById('bulk-slot-modal').classList.add('flex');
+    function generateBulkForAdminDay(dateStr) {
+        const slots = generateTimeSlots("10:00", "19:00", 60);
+        config.daySchedules[dateStr].slots = slots;
+        config.daySchedules[dateStr].active = true;
+        renderAdminDayEditor();
+        renderAdminCalendar();
+        showToast("Horarios generados de 10:00 a 19:00.", "success");
     }
 
-    function closeBulkSlotModal() {
-        document.getElementById('bulk-slot-modal').classList.remove('flex');
-        document.getElementById('bulk-slot-modal').classList.add('hidden');
-        bulkSlotTarget = null;
-    }
-
-    async function confirmBulkSlotGeneration() {
-        const start = document.getElementById('bulk-slot-start').value;
-        const end = document.getElementById('bulk-slot-end').value;
-        const interval = parseInt(document.getElementById('bulk-slot-interval').value);
-
-        if (!start || !end || start >= end) {
-            showToast("Revisa el rango de horas ingresado.", "error");
-            return;
-        }
-
-        const generated = generateTimeSlots(start, end, interval);
-        if (!bulkSlotTarget) { closeBulkSlotModal(); return; }
-
-        const applyToWholeWeek = !document.getElementById('bulk-slot-scope-wrap').classList.contains('hidden')
-            && document.getElementById('bulk-slot-apply-week').checked;
-
-        if (bulkSlotTarget.type === 'week') {
-            if (applyToWholeWeek) {
-                Object.keys(currentEditingWeekState).forEach(dateStr => {
-                    if (currentEditingWeekState[dateStr].active) {
-                        mergeSlotsInto(currentEditingWeekState[dateStr], generated, dateStr);
-                    }
-                });
-            } else {
-                const day = currentEditingWeekState[bulkSlotTarget.dateStr];
-                day.active = true;
-                mergeSlotsInto(day, generated, bulkSlotTarget.dateStr);
-            }
-            renderWeeklyScheduleEditorFromMemory();
-        } else if (bulkSlotTarget.type === 'template') {
-            if (applyToWholeWeek) {
-                Object.keys(currentEditingTemplateState).forEach(dow => {
-                    if (currentEditingTemplateState[dow].active) {
-                        mergeSlotsInto(currentEditingTemplateState[dow], generated);
-                    }
-                });
-            } else {
-                const dayTpl = currentEditingTemplateState[bulkSlotTarget.dow];
-                dayTpl.active = true;
-                mergeSlotsInto(dayTpl, generated);
-            }
-            renderTemplateEditorFromMemory();
-        } else if (bulkSlotTarget.type === 'exception') {
-            const dateStr = bulkSlotTarget.dateStr;
-            if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
-            config.dateExceptions[dateStr].active = true;
-            mergeSlotsInto(config.dateExceptions[dateStr], generated, dateStr);
-            await saveState();
-            renderCustomDateEditor();
-            renderDateExceptionsList();
-            renderAllViews();
-        }
-
-        closeBulkSlotModal();
-        showToast(`${generated.length} horarios generados y agregados.`, "success");
-    }
-
-    function openSingleSlotModal(target, label) {
-        singleSlotTarget = target;
-        document.getElementById('single-slot-target-label').innerText = label;
-        document.getElementById('single-slot-modal').classList.remove('hidden');
-        document.getElementById('single-slot-modal').classList.add('flex');
-    }
-
-    function closeSingleSlotModal() {
-        document.getElementById('single-slot-modal').classList.remove('flex');
-        document.getElementById('single-slot-modal').classList.add('hidden');
-        singleSlotTarget = null;
-    }
-
-    async function confirmSingleSlotAddition() {
-        const timeVal = document.getElementById('single-slot-input').value;
-        if (!timeVal) {
-            showToast("Selecciona una hora válida.", "error");
-            return;
-        }
-
-        if (!singleSlotTarget) { closeSingleSlotModal(); return; }
-
-        const generated = [timeVal];
-
-        if (singleSlotTarget.type === 'week') {
-            const day = currentEditingWeekState[singleSlotTarget.dateStr];
-            day.active = true;
-            const added = mergeSlotsInto(day, generated, singleSlotTarget.dateStr);
-            if (!added) return;
-            renderWeeklyScheduleEditorFromMemory();
-        } else if (singleSlotTarget.type === 'template') {
-            const dayTpl = currentEditingTemplateState[singleSlotTarget.dow];
-            dayTpl.active = true;
-            mergeSlotsInto(dayTpl, generated);
-            renderTemplateEditorFromMemory();
-        } else if (singleSlotTarget.type === 'exception') {
-            const dateStr = singleSlotTarget.dateStr;
-            if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
-            config.dateExceptions[dateStr].active = true;
-            const added = mergeSlotsInto(config.dateExceptions[dateStr], generated, dateStr);
-            if (!added) return;
-            await saveState();
-            renderCustomDateEditor();
-            renderDateExceptionsList();
-            renderAllViews();
-        }
-
-        closeSingleSlotModal();
-        showToast(`Hora ${timeVal} agregada.`, "success");
-    }
-
-    function mergeSlotsInto(dayObj, newSlots, targetDateStr = null) {
-        if (!dayObj.slots) dayObj.slots = [];
-        const todayStr = getLocalDateString(new Date());
-
-        let addedCount = 0;
-        for (const s of newSlots) {
-            if (targetDateStr === todayStr) {
-                const now = new Date();
-                const [sH, sM] = s.split(':').map(Number);
-                const currentH = now.getHours();
-                const currentM = now.getMinutes();
-
-                if (sH < currentH || (sH === currentH && sM <= currentM)) {
-                    const currentFormatted = `${String(currentH).padStart(2,'0')}:${String(currentM).padStart(2,'0')}`;
-                    showToast(`No puedes agregar la hora ${s} para hoy ya que es anterior o igual a la hora actual (${currentFormatted}).`, "error");
-                    continue;
-                }
-            }
-            if (!dayObj.slots.includes(s)) {
-                dayObj.slots.push(s);
-                addedCount++;
-            }
-        }
-        dayObj.slots.sort();
-        return addedCount > 0;
-    }
-
-    function renderWeeklyScheduleEditor() {
-        const container = document.getElementById('weekly-days-editor-container');
-        const monthVal = document.getElementById('admin-week-month').value;
-        const weekSelect = document.getElementById('admin-week-number');
-
-        let weekVal = 1;
-        if (weekSelect && weekSelect.value) {
-            weekVal = parseInt(weekSelect.value) || 1;
-        }
-
-        if (!container || !monthVal) return;
-
-        const weekKey = `${monthVal}-W${weekVal}`;
-
-        if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
-
-        let savedWeekData = config.weekCustomSchedules[weekKey] || {};
-        currentEditingWeekState = JSON.parse(JSON.stringify(savedWeekData));
-
-        const weekDates = getDatesForWeek(monthVal, weekVal);
-        weekDates.forEach((dayInfo) => {
-            if (!currentEditingWeekState[dayInfo.dateStr]) {
-                currentEditingWeekState[dayInfo.dateStr] = { active: false, slots: [] };
-            }
-        });
-
-        renderWeeklyScheduleEditorFromMemory();
-    }
-
-    function getDateOverrideWarning(dateStr) {
-        if (config.blockedDates && config.blockedDates.includes(dateStr)) return 'blocked';
-        if (config.dateExceptions && config.dateExceptions[dateStr]) return 'exception';
-        return null;
-    }
-
-    function renderWeeklyScheduleEditorFromMemory() {
-        const container = document.getElementById('weekly-days-editor-container');
-        const monthVal = document.getElementById('admin-week-month').value;
-        const weekSelect = document.getElementById('admin-week-number');
-        const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-
-        if (!container) return;
-
-        container.innerHTML = "";
-        const weekDates = getDatesForWeek(monthVal, weekVal);
-
-        weekDates.forEach((dayInfo) => {
-            const { dateStr, dayNumber, dayOfWeek } = dayInfo;
-            const dayState = currentEditingWeekState[dateStr] || { active: false, slots: [] };
-            const dayName = getDayName(dayOfWeek);
-
-            const card = document.createElement('div');
-            card.className = "bg-studio/60 border border-white/5 rounded-xl p-3 space-y-2";
-
-            let slotsBadges = (dayState.slots || []).map((s, slotIdx) => `
-                <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-[10px] font-mono px-2 py-0.5 rounded">
-                    ${s}
-                    <button onclick="removeSlotFromEditingWeek('${dateStr}', ${slotIdx})" class="text-danger hover:text-red-400 ml-1 cursor-pointer font-bold">×</button>
-                </span>
-            `).join('');
-
-            const overrideType = getDateOverrideWarning(dateStr);
-            const overrideBadge = overrideType === 'blocked'
-                ? `<div class="text-[9px] text-danger font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Bloqueado: este horario no se mostrará a clientes mientras el bloqueo exista.</div>`
-                : overrideType === 'exception'
-                    ? `<div class="text-[9px] text-amber-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Tiene una excepción propia que sobrescribe este horario.</div>`
-                    : '';
-
-            card.innerHTML = `
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="font-medium text-xs text-bone">${dayName} ${dayNumber}</span>
-                    <div class="flex items-center gap-1.5 font-mono">
-                        <button onclick="openSingleSlotModal({type:'week', dateStr:'${dateStr}'}, 'Semana: ${dayName} ${dayNumber}')" ${!dayState.active ? 'disabled' : ''} class="text-[10px] bg-studio border border-white/10 text-bone px-2 py-1 rounded hover:bg-white/5 disabled:opacity-30 cursor-pointer flex items-center gap-1">
-                            <i class="fa-solid fa-plus text-[9px]"></i> Hora
-                        </button>
-                        <button onclick="openBulkSlotModal({type:'week', dateStr:'${dateStr}'}, 'Semana: ${dayName} ${dayNumber}', true)" ${!dayState.active ? 'disabled' : ''} class="text-[10px] bg-studio border border-white/10 text-bone px-2 py-1 rounded hover:bg-white/5 disabled:opacity-30 cursor-pointer flex items-center gap-1">
-                            <i class="fa-solid fa-bolt text-[9px]"></i> Masivo
-                        </button>
-                        <button onclick="toggleActiveEditingWeek('${dateStr}')" class="px-2.5 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${dayState.active ? 'bg-black text-bone border border-white/10' : 'bg-white/5 text-muted border border-white/5'}">
-                            ${dayState.active ? 'ACTIVO' : 'INACTIVO'}
-                        </button>
-                    </div>
-                </div>
-                ${overrideBadge}
-                ${dayState.active ? `<div class="flex flex-wrap gap-1.5 pt-0.5">${slotsBadges || '<span class="text-[9px] text-muted italic">Sin horarios, usa "+ Hora" o "Masivo"</span>'}</div>` : ''}
-            `;
-
-            container.appendChild(card);
-        });
-    }
-
-    function toggleActiveEditingWeek(dateStr) {
-        if (currentEditingWeekState[dateStr]) {
-            currentEditingWeekState[dateStr].active = !currentEditingWeekState[dateStr].active;
-            renderWeeklyScheduleEditorFromMemory();
-        }
-    }
-
-    function removeSlotFromEditingWeek(dateStr, slotIdx) {
-        if (currentEditingWeekState[dateStr]) {
-            currentEditingWeekState[dateStr].slots.splice(slotIdx, 1);
-            renderWeeklyScheduleEditorFromMemory();
-        }
-    }
-
-    async function saveCurrentWeekSchedule() {
-        const monthVal = document.getElementById('admin-week-month').value;
-        const weekSelect = document.getElementById('admin-week-number');
-        const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-        if (!monthVal) {
-            showToast("Selecciona un mes primero.", "error");
-            return;
-        }
-
-        const weekKey = `${monthVal}-W${weekVal}`;
-        if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
-
-        config.weekCustomSchedules[weekKey] = JSON.parse(JSON.stringify(currentEditingWeekState));
-        
+    async function saveAdminDaySchedule() {
         const saved = await saveState();
         if (saved) {
             renderAllViews();
+            showToast("Horarios del día guardados correctamente.", "success");
         }
-    }
-
-    function buildDayOfWeekMapFromWeek(weekDates, weekState) {
-        const map = {};
-        weekDates.forEach(d => {
-            const dayData = weekState[d.dateStr] || { active: false, slots: [] };
-            map[d.dayOfWeek] = { active: dayData.active, slots: [...(dayData.slots || [])] };
-        });
-        return map;
-    }
-
-    function applyDayOfWeekMapToMonth(monthVal, dowMap, skipWeek = null) {
-        if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
-        for (let weekNum = 1; weekNum <= 5; weekNum++) {
-            if (skipWeek !== null && weekNum === skipWeek) continue;
-            const weekKey = `${monthVal}-W${weekNum}`;
-            const weekDates = getDatesForWeek(monthVal, weekNum);
-            const relevantDates = weekDates.filter(d => d.dateStr.startsWith(monthVal));
-            if (relevantDates.length === 0) continue;
-
-            if (!config.weekCustomSchedules[weekKey]) config.weekCustomSchedules[weekKey] = {};
-            relevantDates.forEach(d => {
-                const tpl = dowMap[d.dayOfWeek] || { active: false, slots: [] };
-                config.weekCustomSchedules[weekKey][d.dateStr] = { active: tpl.active, slots: [...(tpl.slots || [])] };
-            });
-        }
-    }
-
-    function cloneWeekToRestOfMonth() {
-        const monthVal = document.getElementById('admin-week-month').value;
-        const weekSelect = document.getElementById('admin-week-number');
-        const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-        if (!monthVal) return;
-
-        showConfirm(`Se copiará el patrón de esta semana hacia el resto de semanas de ${monthVal}. ¿Continuar?`, async () => {
-            const weekDates = getDatesForWeek(monthVal, weekVal);
-            const dowMap = buildDayOfWeekMapFromWeek(weekDates, currentEditingWeekState);
-            applyDayOfWeekMapToMonth(monthVal, dowMap, weekVal);
-            await saveState();
-            renderWeeklyScheduleEditor();
-            renderAllViews();
-            showToast("Semana clonada hacia el resto del mes.", "success");
-        });
-    }
-
-    const TEMPLATE_DOW_ORDER = [1, 2, 3, 4, 5, 6, 0];
-
-    function renderTemplateEditor() {
-        if (!config.weeklyBaseTemplate) config.weeklyBaseTemplate = {};
-        currentEditingTemplateState = JSON.parse(JSON.stringify(config.weeklyBaseTemplate));
-        TEMPLATE_DOW_ORDER.forEach(dow => {
-            if (!currentEditingTemplateState[dow]) currentEditingTemplateState[dow] = { active: false, slots: [] };
-        });
-        renderTemplateEditorFromMemory();
-    }
-
-    function renderTemplateEditorFromMemory() {
-        const container = document.getElementById('template-days-editor-container');
-        if (!container) return;
-        container.innerHTML = "";
-
-        TEMPLATE_DOW_ORDER.forEach(dow => {
-            const dayState = currentEditingTemplateState[dow] || { active: false, slots: [] };
-            const dayName = getDayName(dow);
-
-            const card = document.createElement('div');
-            card.className = "bg-studio/60 border border-white/5 rounded-xl p-3 space-y-2";
-
-            let slotsBadges = (dayState.slots || []).map((s, slotIdx) => `
-                <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-[10px] font-mono px-2 py-0.5 rounded">
-                    ${s}
-                    <button onclick="removeSlotFromTemplateDay(${dow}, ${slotIdx})" class="text-danger hover:text-red-400 ml-1 cursor-pointer font-bold">×</button>
-                </span>
-            `).join('');
-
-            card.innerHTML = `
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="font-medium text-xs text-bone">${dayName}</span>
-                    <div class="flex items-center gap-1.5 font-mono">
-                        <button onclick="openSingleSlotModal({type:'template', dow:${dow}}, 'Plantilla: ${dayName}')" ${!dayState.active ? 'disabled' : ''} class="text-[10px] bg-studio border border-white/10 text-bone px-2 py-1 rounded hover:bg-white/5 disabled:opacity-30 cursor-pointer flex items-center gap-1">
-                            <i class="fa-solid fa-plus text-[9px]"></i> Hora
-                        </button>
-                        <button onclick="openBulkSlotModal({type:'template', dow:${dow}}, 'Plantilla: ${dayName}', true)" ${!dayState.active ? 'disabled' : ''} class="text-[10px] bg-studio border border-white/10 text-bone px-2 py-1 rounded hover:bg-white/5 disabled:opacity-30 cursor-pointer flex items-center gap-1">
-                            <i class="fa-solid fa-bolt text-[9px]"></i> Masivo
-                        </button>
-                        <button onclick="toggleTemplateDayActive(${dow})" class="px-2.5 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${dayState.active ? 'bg-black text-bone border border-white/10' : 'bg-white/5 text-muted border border-white/5'}">
-                            ${dayState.active ? 'ACTIVO' : 'INACTIVO'}
-                        </button>
-                    </div>
-                </div>
-                ${dayState.active ? `<div class="flex flex-wrap gap-1.5 pt-0.5">${slotsBadges || '<span class="text-[9px] text-muted italic">Sin horarios, usa "+ Hora" o "Masivo"</span>'}</div>` : ''}
-            `;
-
-            container.appendChild(card);
-        });
-    }
-
-    function toggleTemplateDayActive(dow) {
-        if (currentEditingTemplateState[dow]) {
-            currentEditingTemplateState[dow].active = !currentEditingTemplateState[dow].active;
-            renderTemplateEditorFromMemory();
-        }
-    }
-
-    function removeSlotFromTemplateDay(dow, slotIdx) {
-        if (currentEditingTemplateState[dow]) {
-            currentEditingTemplateState[dow].slots.splice(slotIdx, 1);
-            renderTemplateEditorFromMemory();
-        }
-    }
-
-    async function saveWeeklyTemplate() {
-        config.weeklyBaseTemplate = JSON.parse(JSON.stringify(currentEditingTemplateState));
-        await saveState();
-    }
-
-    function applyTemplateToMonth() {
-        const monthVal = document.getElementById('template-target-month').value;
-        if (!monthVal) {
-            showToast("Selecciona un mes para aplicar la plantilla.", "error");
-            return;
-        }
-        showConfirm(`Esto sobrescribirá los horarios de todo ${monthVal} según la plantilla semanal base. ¿Continuar?`, async () => {
-            config.weeklyBaseTemplate = JSON.parse(JSON.stringify(currentEditingTemplateState));
-            applyDayOfWeekMapToMonth(monthVal, config.weeklyBaseTemplate);
-            await saveState();
-            renderWeeklyScheduleEditor();
-            renderAllViews();
-        });
-    }
-
-    function getWeeklyScheduleOnlyForDate(dateStr) {
-        if (config.weekCustomSchedules) {
-            for (let weekKey in config.weekCustomSchedules) {
-                if (config.weekCustomSchedules[weekKey] && config.weekCustomSchedules[weekKey][dateStr]) {
-                    return config.weekCustomSchedules[weekKey][dateStr];
-                }
-            }
-        }
-        return null;
-    }
-
-    function renderCustomDateEditor() {
-        const dateInput = document.getElementById('admin-custom-date');
-        const container = document.getElementById('custom-date-editor-container');
-        if (!dateInput || !container) return;
-
-        const dateStr = dateInput.value;
-        if (!dateStr) {
-            container.classList.add('hidden');
-            return;
-        }
-
-        container.classList.remove('hidden');
-
-        if (!config.dateExceptions) config.dateExceptions = {};
-
-        const savedException = config.dateExceptions[dateStr];
-        const hasSavedException = !!savedException;
-        const dateData = savedException || { active: true, slots: [], note: "", noteVisible: false };
-        if (dateData.note === undefined) dateData.note = "";
-        if (dateData.noteVisible === undefined) dateData.noteVisible = false;
-
-        const isBlocked = config.blockedDates && config.blockedDates.includes(dateStr);
-        const weeklySched = getWeeklyScheduleOnlyForDate(dateStr);
-
-        let warningHtml = "";
-        if (isBlocked) {
-            warningHtml = `
-                <div class="bg-danger/10 border border-danger/30 rounded-lg px-2.5 py-2 text-[10px] text-danger leading-relaxed">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                    Este día está <strong>bloqueado</strong>. El bloqueo tiene prioridad absoluta.
-                </div>`;
-        } else if (hasSavedException) {
-            warningHtml = `
-                <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-400 leading-relaxed">
-                    <i class="fa-solid fa-circle-info mr-1"></i>
-                    Este día tiene una <strong>excepción guardada</strong> que sobrescribe el horario semanal.
-                </div>`;
-        }
-
-        let slotsBadges = (dateData.slots || []).map((s, idx) => `
-            <span class="inline-flex items-center gap-1 bg-studio border border-white/10 text-bone text-[10px] font-mono px-2 py-0.5 rounded">
-                ${s}
-                <button onclick="removeSlotFromCustomDate('${dateStr}', ${idx})" class="text-danger hover:text-red-400 ml-1 cursor-pointer font-bold">×</button>
-            </span>
-        `).join('');
-
-        container.innerHTML = `
-            <div class="flex items-center justify-between pb-1 border-b border-white/5 flex-wrap gap-2">
-                <span class="font-semibold text-xs text-bone font-mono">${formatDateReadable(dateStr)}</span>
-                <div class="flex gap-1.5 font-mono">
-                    <button onclick="openSingleSlotModal({type:'exception', dateStr:'${dateStr}'}, 'Excepción: ${formatDateReadable(dateStr)}')" ${!dateData.active ? 'disabled' : ''} class="text-[10px] bg-accent/20 text-accent border border-accent/30 px-2 py-0.5 rounded hover:bg-accent/30 cursor-pointer disabled:opacity-30 flex items-center gap-1">
-                        <i class="fa-solid fa-plus text-[9px]"></i> Hora
-                    </button>
-                    <button onclick="openBulkSlotModal({type:'exception', dateStr:'${dateStr}'}, 'Excepción: ${formatDateReadable(dateStr)}', false)" ${!dateData.active ? 'disabled' : ''} class="text-[10px] bg-accent/20 text-accent border border-accent/30 px-2 py-0.5 rounded hover:bg-accent/30 cursor-pointer disabled:opacity-30 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt text-[9px]"></i> Masivo
-                    </button>
-                    <button onclick="toggleCustomDateActive('${dateStr}')" class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase transition cursor-pointer ${dateData.active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-muted border border-white/10'}">
-                        ${dateData.active ? 'Activo' : 'Inactivo'}
-                    </button>
-                </div>
-            </div>
-            ${warningHtml}
-            <div class="flex flex-wrap gap-1 py-1">
-                ${dateData.active ? (slotsBadges || '<span class="text-[10px] text-muted italic">No hay horas configuradas</span>') : '<span class="text-[10px] text-danger italic">Día inactivo</span>'}
-            </div>
-            <div class="pt-1 space-y-1.5 border-t border-white/5">
-                <label class="block text-[9px] text-muted uppercase tracking-wider font-semibold">Nota del día (opcional)</label>
-                <textarea id="custom-date-note-${dateStr.replace(/-/g,'')}" rows="2" placeholder="Ej: Horario especial"
-                          onchange="updateCustomDateNote('${dateStr}', this.value)"
-                          class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-[11px] focus:outline-none focus:border-accent">${dateData.note || ''}</textarea>
-                <label class="flex items-center gap-2 text-[10px] text-muted cursor-pointer pt-0.5">
-                    <input type="checkbox" ${dateData.noteVisible ? 'checked' : ''} onchange="toggleCustomDateNoteVisible('${dateStr}', this.checked)" class="accent-accent w-3 h-3 cursor-pointer">
-                    Mostrar esta nota a los clientes
-                </label>
-            </div>
-            ${hasSavedException ? `
-            <button onclick="removeCustomDateException('${dateStr}')" class="text-[10px] text-muted hover:text-danger underline pt-1 cursor-pointer font-mono">
-                Limpiar este día (volver al horario semanal)
-            </button>` : ''}
-        `;
-    }
-
-    async function toggleCustomDateActive(dateStr) {
-        if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
-        config.dateExceptions[dateStr].active = !config.dateExceptions[dateStr].active;
-        await saveState();
-        renderCustomDateEditor();
-        renderDateExceptionsList();
-        renderAllViews();
-    }
-
-    async function removeSlotFromCustomDate(dateStr, slotIdx) {
-        if (config.dateExceptions[dateStr]) {
-            config.dateExceptions[dateStr].slots.splice(slotIdx, 1);
-            await saveState();
-            renderCustomDateEditor();
-            renderDateExceptionsList();
-            renderAllViews();
-        }
-    }
-
-    async function updateCustomDateNote(dateStr, value) {
-        if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
-        config.dateExceptions[dateStr].note = value;
-        await saveState();
-        renderDateExceptionsList();
-    }
-
-    async function toggleCustomDateNoteVisible(dateStr, checked) {
-        if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
-        config.dateExceptions[dateStr].noteVisible = checked;
-        await saveState();
-        renderClientSlots();
-    }
-
-    async function removeCustomDateException(dateStr) {
-        if (config.dateExceptions && config.dateExceptions[dateStr]) {
-            delete config.dateExceptions[dateStr];
-            await saveState();
-            renderCustomDateEditor();
-            renderDateExceptionsList();
-            renderAllViews();
-            showToast("Excepción eliminada para ese día.", "success");
-        }
-    }
-
-    function renderDateExceptionsList() {
-        const container = document.getElementById('date-exceptions-list');
-        if (!container) return;
-
-        const exceptions = config.dateExceptions || {};
-        const dateKeys = Object.keys(exceptions).sort();
-
-        if (dateKeys.length === 0) {
-            container.innerHTML = `<p class="text-[10px] text-muted italic py-2">No hay excepciones guardadas actualmente.</p>`;
-            return;
-        }
-
-        container.innerHTML = dateKeys.map(dateStr => {
-            const data = exceptions[dateStr];
-            const summary = !data.active ? 'Inactivo' : (data.slots && data.slots.length > 0 ? data.slots.join(', ') : 'Activo sin horas');
-            return `
-            <div class="range-item flex items-center justify-between gap-2 bg-studio/60 border border-white/5 rounded-lg px-3 py-2">
-                <div class="min-w-0">
-                    <div class="text-[11px] text-bone font-mono">${formatDateReadable(dateStr)}</div>
-                    <div class="text-[9px] text-muted truncate">${summary}</div>
-                </div>
-                <div class="flex items-center gap-1 shrink-0">
-                    <button onclick="document.getElementById('admin-custom-date').value='${dateStr}'; renderCustomDateEditor(); document.getElementById('admin-custom-date').scrollIntoView({behavior:'smooth', block:'center'});" title="Editar" class="text-muted hover:text-accent border border-white/10 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
-                        <i class="fa-solid fa-pen text-[10px]"></i>
-                    </button>
-                    <button onclick="removeCustomDateException('${dateStr}')" title="Eliminar" class="text-danger hover:bg-danger/20 border border-danger/30 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
-                        <i class="fa-solid fa-trash text-[10px]"></i>
-                    </button>
-                </div>
-            </div>`;
-        }).join('');
     }
 
     async function toggleBlockDateRange(block) {
@@ -2892,7 +2188,8 @@
         await saveState();
         renderAllViews();
         renderBlockedRangesList();
-        showToast(block ? "Fechas bloqueadas en la nube." : "Fechas liberadas en la nube.", "success");
+        renderAdminCalendar();
+        showToast(block ? "Fechas bloqueadas con éxito." : "Fechas liberadas con éxito.", "success");
     }
 
     function getBlockedRangesGrouped() {
@@ -2967,33 +2264,9 @@
             await saveState();
             renderAllViews();
             renderBlockedRangesList();
-            showToast("Bloqueo eliminado del historial.", "success");
+            renderAdminCalendar();
+            showToast("Bloqueo eliminado.", "success");
         });
-    }
-
-    function openResetModal() {
-        document.getElementById('reset-modal').classList.remove('hidden');
-        document.getElementById('reset-modal').classList.add('flex');
-    }
-
-    function closeResetModal() {
-        document.getElementById('reset-modal').classList.remove('flex');
-        document.getElementById('reset-modal').classList.add('hidden');
-    }
-
-    async function confirmResetSystem() {
-        const monthVal = document.getElementById('admin-week-month').value;
-        const weekSelect = document.getElementById('admin-week-number');
-        const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-        if (monthVal && config.weekCustomSchedules) {
-            const weekKey = `${monthVal}-W${weekVal}`;
-            delete config.weekCustomSchedules[weekKey];
-            await saveState();
-            renderWeeklyScheduleEditor();
-            renderAllViews();
-        }
-        closeResetModal();
-        showToast("Semana restablecida a estado vacío.", "success");
     }
 
     function deleteBooking(id) {
@@ -3032,7 +2305,6 @@
         </a>`;
     }
 
-    // PANEL ADMIN: CÁLCULO EN VIVO DEL TIEMPO RESTANTE DE LOS 15 MINUTOS
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -3072,13 +2344,15 @@
                 const now = new Date().getTime();
                 const diff = expireTime - now;
 
+                let badgeText = "Expirado (15m)";
+                let badgeClass = "bg-danger/20 text-danger border border-danger/30";
                 if (diff > 0) {
                     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const secs = Math.floor((diff % (1000 * 60)) / 1000);
-                    statusBadge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">Falta ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</span>`;
-                } else {
-                    statusBadge = `<span class="bg-danger/20 text-danger border border-danger/30 px-1.5 py-0.5 rounded text-[9px]">Expirado (15m)</span>`;
+                    badgeText = `Falta ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                    badgeClass = "bg-amber-500/20 text-amber-400 border border-amber-500/30";
                 }
+                statusBadge = `<span class="admin-timer-badge ${badgeClass} px-1.5 py-0.5 rounded text-[9px]" data-created="${b.createdAt}">${badgeText}</span>`;
             }
 
             const gcalLink = getGoogleCalendarUrl(b);
@@ -3128,6 +2402,28 @@
                 </td>
             `;
             tbody.appendChild(tr);
+        });
+    }
+
+    function updateAdminTimersOnly() {
+        if (document.getElementById('admin-container').classList.contains('hidden')) return;
+        const badges = document.querySelectorAll('.admin-timer-badge');
+        badges.forEach(el => {
+            const createdAt = el.getAttribute('data-created');
+            if (!createdAt) return;
+            const createdAtTime = new Date(createdAt).getTime();
+            const expireTime = createdAtTime + (15 * 60 * 1000);
+            const now = new Date().getTime();
+            const diff = expireTime - now;
+
+            if (diff > 0) {
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                el.innerText = `Falta ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+            } else {
+                el.innerText = `Expirado (15m)`;
+                el.className = el.className.replace('bg-amber-500/20 text-amber-400 border-amber-500/30', 'bg-danger/20 text-danger border-danger/30');
+            }
         });
     }
 
@@ -3312,30 +2608,20 @@
 
         const today = getLocalDateString(new Date());
         selectedClientDate = today;
+        selectedAdminDate = today;
         document.getElementById('summary-date').innerText = formatDateReadable(today);
         clientCalendarViewDate = new Date();
         clientCalendarViewDate.setDate(1);
+        adminCalendarViewDate = new Date();
+        adminCalendarViewDate.setDate(1);
 
-        const currentMonth = today.slice(0, 7);
-        const monthFilter = document.getElementById('admin-month-filter');
-        if (monthFilter) monthFilter.value = currentMonth;
-
-        const weekMonth = document.getElementById('admin-week-month');
-        if (weekMonth) weekMonth.value = currentMonth;
-
-        const templateMonth = document.getElementById('template-target-month');
-        if (templateMonth) templateMonth.value = currentMonth;
-
-        populateWeekSelector();
         updateAuthUI();
         renderAllViews();
 
         startHeroBgRotation();
 
         setInterval(() => {
-            if (!document.getElementById('admin-container').classList.contains('hidden')) {
-                renderAdminBookingsTable();
-            }
+            updateAdminTimersOnly();
         }, 1000);
 
         supabaseClient
