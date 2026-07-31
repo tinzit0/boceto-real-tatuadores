@@ -860,7 +860,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN (ARQUITECTURA DE CALENDARIO MENSUAL POR DÍAS) -->
+<!-- PANEL ADMIN -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -935,7 +935,7 @@
         </div>
     </div>
 
-    <!-- TAB: CALENDARIO DE HORARIOS (POR DÍAS) -->
+    <!-- TAB: CALENDARIO DE HORARIOS (POR DÍAS - BLOQUEO DE DÍAS PASADOS) -->
     <div id="tab-config" class="admin-tab-panel">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- CALENDARIO MENSUAL DE ADMIN -->
@@ -1043,7 +1043,7 @@
 
 <script>
     // =====================================================================
-    // CREDENCIALES Y VARIABLES GLOBALES
+    // VARIABLES GLOBALES Y MESES EN ESPAÑOL
     // =====================================================================
     const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -1084,7 +1084,7 @@
         return `${year}-${month}-${day}`;
     }
 
-    // MODAL SUBIR COMPROBANTE CON CONTRARELOJ 15 MIN
+    // MODAL DE SUBIR COMPROBANTE CON CONTRARELOJ DE 15 MIN
     function openReceiptModal() {
         const modal = document.getElementById('receipt-upload-modal');
         const info = document.getElementById('receipt-booking-info');
@@ -1369,6 +1369,7 @@
 
             if (error) {
                 console.error("Error al subir archivo a Storage:", error);
+                showToast("Error al subir imagen a Storage: " + error.message, "error");
                 return null;
             }
 
@@ -1380,6 +1381,7 @@
             return publicUrlData.publicUrl;
         } catch (err) {
             console.error("Error inesperado en uploadClientImageToStorage:", err);
+            showToast("Error al procesar la imagen de referencia.", "error");
             return null;
         }
     }
@@ -1489,7 +1491,7 @@
                     clientEmail: b.client_email,
                     clientPhone: b.client_phone,
                     notes: b.notes,
-                    imageUrl: b.image_url || null,
+                    imageUrl: b.image_url || b.imageUrl || null,
                     paymentReceiptUrl: b.payment_receipt_url || null,
                     status: b.status || 'Pendiente de Comprobante',
                     createdAt: b.created_at
@@ -1906,9 +1908,13 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Procesando...</span>';
 
+        // LECTURA DIRECTA DE LA FOTO DE REFERENCIA
+        const clientFileInput = document.getElementById('client-image');
+        const referenceFile = (clientFileInput && clientFileInput.files && clientFileInput.files.length > 0) ? clientFileInput.files[0] : currentSelectedImageFile;
+
         let uploadedImageUrl = null;
-        if (currentSelectedImageFile) {
-            uploadedImageUrl = await uploadClientImageToStorage(currentSelectedImageFile);
+        if (referenceFile) {
+            uploadedImageUrl = await uploadClientImageToStorage(referenceFile);
         }
 
         pendingBookingData = {
@@ -2098,7 +2104,6 @@
         }
     }
 
-    // VALIDACIÓN ESTRICTA AL AGREGAR HORA EN EL ADMIN PARA EL DÍA DE HOY
     function addSlotToAdminDay(dateStr) {
         const input = document.getElementById('new-admin-slot-input');
         if (!input || !input.value) return;
@@ -2641,10 +2646,9 @@
         selectedClientDate = today;
         selectedAdminDate = today;
         document.getElementById('summary-date').innerText = formatDateReadable(today);
+        
         clientCalendarViewDate = new Date();
-        clientCalendarViewDate.setDate(1);
         adminCalendarViewDate = new Date();
-        adminCalendarViewDate.setDate(1);
 
         const currentMonth = today.slice(0, 7);
         const monthFilter = document.getElementById('admin-month-filter');
