@@ -9,13 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Tipografías Clásicas y Elegantes -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -55,7 +52,6 @@
         ::-webkit-scrollbar-thumb { background: #37443d; }
         ::-webkit-scrollbar-thumb:hover { background: #62776a; }
 
-        /* PANTALLA DE CARGA */
         #pantalla-carga {
             position: fixed;
             inset: 0;
@@ -80,7 +76,6 @@
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* ANIMACIÓN MASK REVEAL */
         .reveal-mask { overflow: hidden; display: block; width: 100%; }
         .reveal-mask.inline-mask { display: inline-block; width: auto; vertical-align: top; }
         .reveal-item {
@@ -91,11 +86,12 @@
         .page-ready .reveal-mask.in-view > .reveal-item { transform: translateY(0); opacity: 1; }
         .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
 
-        /* NAVBAR */
         .navbar { transition: all 0.5s ease; background-color: transparent; padding: 20px 0; }
         .navbar.scrolled {
-            background-color: rgba(22, 27, 24, 0.95); backdrop-filter: blur(10px);
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+            background-color: rgba(22, 27, 24, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         .nav-link { position: relative; padding-bottom: 4px; cursor: pointer; }
         .nav-link::after {
@@ -105,11 +101,9 @@
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #e0e6e2; }
 
-        /* ACORDEÓN */
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
@@ -122,7 +116,6 @@
             transform: scale(1.05);
         }
 
-        /* CARRUSEL DE PORTAFOLIO */
         .carousel-slide {
             display: none;
             animation: fadeEffect 0.8s ease-in-out;
@@ -142,7 +135,6 @@
         }
         .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
 
-        /* TARJETAS Y FOTOS */
         .portfolio-img-card {
             position: relative;
             overflow: hidden;
@@ -211,7 +203,6 @@
             text-decoration: line-through;
         }
 
-        /* CALENDARIO VISUAL CLIENTE */
         .cal-day {
             position: relative;
             aspect-ratio: 1 / 1;
@@ -257,7 +248,6 @@
         .cal-fade-enter { animation: calFade 0.35s ease; }
         @keyframes calFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TOASTS */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -294,7 +284,6 @@
         .toast-error .toast-icon { color: #f87171; }
         .toast-info .toast-icon { color: #62776a; }
 
-        /* TABS ADMIN */
         .admin-tab-btn {
             transition: all 0.25s ease;
             border-bottom: 2px solid transparent;
@@ -308,6 +297,41 @@
 
         .range-item { transition: all 0.2s ease; }
         .range-item:hover { background: rgba(255,255,255,0.03); }
+
+        .sync-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        .sync-indicator.syncing {
+            color: #facc15;
+            border-color: rgba(250, 204, 21, 0.3);
+            background: rgba(250, 204, 21, 0.1);
+        }
+        .sync-indicator .fa-spin {
+            animation: fa-spin 2s infinite linear;
+        }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #1f2622 25%, #2a332e 50%, #1f2622 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
     </style>
 </head>
 
@@ -317,6 +341,7 @@
 <div id="pantalla-carga">
     <div class="spinner"></div>
     <h2 class="font-serif text-lg tracking-widest text-bone uppercase font-light">Hipso Tattoo</h2>
+    <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Conectando con la nube...</p>
 </div>
 
 <!-- TOASTS -->
@@ -336,6 +361,10 @@
             <a href="#preparacion" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Info</a>
             <a href="#agendar" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Booking</a>
             <span class="w-px h-3 bg-white/10"></span>
+            <span id="sync-status-header" class="sync-indicator">
+                <i class="fa-solid fa-cloud"></i>
+                <span id="sync-status-text">Sincronizado</span>
+            </span>
         </div>
 
         <div id="auth-nav-slot">
@@ -366,7 +395,6 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
     <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
-        <!-- FONDOS DINÁMICOS CON IMAGEN 1, 2 Y 9 -->
         <div class="absolute inset-0 z-0">
             <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
             <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
@@ -394,7 +422,6 @@
               <div class="reveal-item delay-2 bg-panel w-full flex flex-col rounded-2xl overflow-hidden">
                   <div class="p-4 md:p-12 min-h-[350px] md:min-h-[480px] relative w-full overflow-hidden">
 
-                      <!-- SLIDE 1 -->
                       <div class="carousel-slide active grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen3.jpeg')">
                               <img src="assets/imagen3.jpeg" alt="Trabajo Tattoo 3">
@@ -406,7 +433,6 @@
                           </div>
                       </div>
 
-                      <!-- SLIDE 2 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen5.jpeg')">
                               <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
@@ -418,7 +444,6 @@
                           </div>
                       </div>
 
-                      <!-- SLIDE 3 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen7.jpeg')">
                               <img src="assets/imagen7.jpeg" alt="Trabajo Tattoo 7">
@@ -430,7 +455,6 @@
                           </div>
                       </div>
 
-                      <!-- SLIDE 4 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px] col-span-2 sm:col-span-1" onclick="openLightbox('assets/imagen10.jpeg')">
                               <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
@@ -538,9 +562,12 @@
                                   <span class="text-xs font-mono bg-accent/20 text-accent px-2 py-0.5 rounded border border-accent/20">01</span>
                                   Selecciona Fecha y Hora
                               </h3>
+                              <span id="client-sync-status" class="sync-indicator text-[8px]">
+                                  <i class="fa-solid fa-cloud"></i>
+                                  <span>En vivo</span>
+                              </span>
                           </div>
 
-                          <!-- CALENDARIO VISUAL -->
                           <div class="mb-5">
                               <div class="flex items-center justify-between mb-3">
                                   <button type="button" onclick="calNavigate(-1)" class="w-7 h-7 flex items-center justify-center rounded-full bg-studio border border-white/10 text-muted hover:text-bone hover:border-accent transition cursor-pointer">
@@ -567,6 +594,7 @@
                           <div>
                               <label class="block text-[11px] uppercase text-muted tracking-wider mb-3 font-semibold">Bloques Disponibles</label>
                               <div id="client-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                                  <div class="col-span-full text-center text-muted text-xs py-4 loading-shimmer h-10"></div>
                               </div>
                           </div>
                       </div>
@@ -639,7 +667,7 @@
     </footer>
 </div>
 
-<!-- VISOR LIGHTBOX DE IMÁGENES A PANTALLA COMPLETA -->
+<!-- VISOR LIGHTBOX -->
 <div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" onclick="closeLightbox()">
     <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white hover:text-accent text-2xl focus:outline-none transition">
         <i class="fa-solid fa-xmark"></i>
@@ -647,7 +675,7 @@
     <img id="lightbox-img" src="" alt="Ampliación Tattoo" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10" onclick="event.stopPropagation()">
 </div>
 
-<!-- MODAL DE ÉXITO DE RESERVA -->
+<!-- MODAL DE ÉXITO -->
 <div id="success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-white/10 space-y-4">
         <div class="text-emerald-400 text-3xl mb-1"><i class="fa-solid fa-circle-check"></i></div>
@@ -707,9 +735,13 @@
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
-            <div class="flex items-center gap-2 mb-1">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
                 <span class="text-accent text-[10px] md:text-xs tracking-[0.2em] uppercase font-semibold">Panel Admin</span>
                 <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] px-1.5 py-0.5 rounded font-mono">Conectado a Supabase</span>
+                <span id="admin-sync-status" class="sync-indicator text-[8px]">
+                    <i class="fa-solid fa-cloud"></i>
+                    <span>Sincronizado</span>
+                </span>
             </div>
             <h1 class="font-serif text-xl md:text-3xl text-bone font-light">Gestión de Horarios y Citas</h1>
         </div>
@@ -781,7 +813,7 @@
     <div id="tab-config" class="admin-tab-panel">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-            <!-- HORARIO SEMANAL BASE (PLANTILLA) -->
+            <!-- HORARIO SEMANAL BASE -->
             <div class="action-card rounded-2xl p-4 md:p-6 space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2 font-medium">
@@ -819,7 +851,6 @@
                     Ajusta manualmente los bloques de hora de una semana puntual, o clónala hacia el resto del mes.
                 </p>
 
-                <!-- SELECTOR DE RANGOS DE FECHAS AMIGABLES -->
                 <div class="bg-studio/80 p-3 rounded-xl border border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[9px] font-mono text-muted uppercase tracking-wider mb-1 font-semibold">SELECCIONAR MES:</label>
@@ -877,7 +908,7 @@
                 </div>
             </div>
 
-            <!-- BLOQUEO DE FECHAS / VACACIONES -->
+            <!-- BLOQUEO DE FECHAS -->
             <div class="action-card rounded-2xl p-4 md:p-6 space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="font-serif text-sm md:text-md text-bone flex items-center gap-2">
@@ -939,7 +970,7 @@
     </div>
 </div>
 
-<!-- MODAL DE CONFIRMACIÓN GENÉRICO -->
+<!-- MODAL CONFIRMACIÓN GENÉRICO -->
 <div id="confirm-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-5 md:p-7 max-w-xs w-full text-center shadow-2xl border border-white/10">
         <div class="text-accent text-2xl mb-2"><i class="fa-solid fa-circle-question"></i></div>
@@ -956,7 +987,7 @@
     </div>
 </div>
 
-<!-- MODAL GENERADOR MASIVO DE BLOQUES HORARIOS -->
+<!-- MODAL GENERADOR MASIVO -->
 <div id="bulk-slot-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-5 md:p-7 max-w-sm w-full shadow-2xl border border-white/10">
         <div class="flex items-center gap-2 mb-1">
@@ -1030,7 +1061,7 @@
 
 <script>
     // -----------------------------------------------------------------
-    // CREDENCIALES DE SUPABASE CONFIGURADAS
+    // CREDENCIALES DE SUPABASE
     // -----------------------------------------------------------------
     const SUPABASE_URL = 'https://kxldsjodgfonrrlwjbws.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_J5s_2YqtASIYSqu2k00SGA_copdr39x';
@@ -1055,6 +1086,9 @@
     let currentEditingWeekState = {};
     let currentEditingTemplateState = {};
     let clientCalendarViewDate = new Date();
+
+    let isSyncing = false;
+    let dataLoaded = false;
 
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
@@ -1089,7 +1123,7 @@
     }
 
     // =====================================================================
-    // MODAL DE CONFIRMACIÓN GENÉRICO
+    // MODAL DE CONFIRMACIÓN
     // =====================================================================
     let pendingConfirmAction = null;
     function showConfirm(message, onAccept) {
@@ -1109,119 +1143,107 @@
         if (typeof action === 'function') action();
     }
 
-    window.addEventListener('load', function() {
-        const loader = document.getElementById('pantalla-carga');
-        setTimeout(() => {
-            loader.classList.add('ocultar-carga');
-            setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-        }, 1000);
-    });
+    // =====================================================================
+    // FUNCIONES DE SINCRONIZACIÓN CON SUPABASE
+    // =====================================================================
+    function setSyncStatus(status, isAdmin = false) {
+        const statusText = document.getElementById('sync-status-text');
+        const headerEl = document.getElementById('sync-status-header');
+        const adminEl = document.getElementById('admin-sync-status');
+        const clientEl = document.getElementById('client-sync-status');
 
-    window.addEventListener('DOMContentLoaded', async () => {
-        await loadDataFromSupabase();
+        const texts = {
+            'synced': 'Sincronizado',
+            'syncing': 'Sincronizando...',
+            'error': 'Error de conexión'
+        };
 
-        const today = getLocalDateString(new Date());
-        selectedClientDate = today;
-        document.getElementById('summary-date').innerText = formatDateReadable(today);
-        clientCalendarViewDate = new Date();
-        clientCalendarViewDate.setDate(1);
+        const classes = {
+            'synced': '',
+            'syncing': 'syncing',
+            'error': 'syncing'
+        };
 
-        const currentMonth = today.slice(0, 7);
-        const monthFilter = document.getElementById('admin-month-filter');
-        if (monthFilter) monthFilter.value = currentMonth;
+        if (statusText) statusText.innerText = texts[status] || texts.synced;
 
-        const weekMonth = document.getElementById('admin-week-month');
-        if (weekMonth) weekMonth.value = currentMonth;
-
-        const templateMonth = document.getElementById('template-target-month');
-        if (templateMonth) templateMonth.value = currentMonth;
-
-        populateWeekSelector();
-        updateAuthUI();
-        renderClientCalendar();
-        renderClientSlots();
-        renderAdminDashboard();
-
-        // ROTACIÓN AUTOMÁTICA DEL FONDO HERO
-        startHeroBgRotation();
-
-        // REALTIME EN SUPABASE
-        supabaseClient
-            .channel('realtime_changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
-                await loadDataFromSupabase();
-                renderClientCalendar();
-                renderClientSlots();
-                if (!document.getElementById('admin-container').classList.contains('hidden')) {
-                    renderAdminDashboard();
+        [headerEl, adminEl, clientEl].forEach(el => {
+            if (el) {
+                el.className = `sync-indicator ${classes[status] || ''}`;
+                if (status === 'syncing') {
+                    const icon = el.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-cloud fa-spin';
+                } else if (status === 'synced') {
+                    const icon = el.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-cloud';
+                } else if (status === 'error') {
+                    const icon = el.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-triangle-exclamation';
                 }
-            })
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async () => {
-                await loadDataFromSupabase();
-                renderClientCalendar();
-                renderClientSlots();
-                if (!document.getElementById('admin-container').classList.contains('hidden')) {
-                    renderAdminBookingsTable();
-                }
-            })
-            .subscribe();
-    });
-
-    // SISTEMA DE ROTACIÓN HERO BACKGROUND
-    let currentHeroSlide = 0;
-    function startHeroBgRotation() {
-        const bgSlides = document.querySelectorAll('.hero-bg-slide');
-        if (!bgSlides.length) return;
-        setInterval(() => {
-            bgSlides[currentHeroSlide].classList.remove('active');
-            currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
-            bgSlides[currentHeroSlide].classList.add('active');
-        }, 5000);
+            }
+        });
     }
 
-    // LIGHTBOX / VISOR INTERACTIVO
-    function openLightbox(imgUrl) {
-        const modal = document.getElementById('lightbox-modal');
-        const img = document.getElementById('lightbox-img');
-        if (modal && img) {
-            img.src = imgUrl;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    async function loadDataFromSupabase(showLoading = true) {
+        if (isSyncing) return;
+        isSyncing = true;
+
+        if (showLoading) {
+            setSyncStatus('syncing');
+            document.getElementById('loading-status').innerText = 'Cargando datos desde la nube...';
         }
-    }
 
-    function closeLightbox() {
-        const modal = document.getElementById('lightbox-modal');
-        if (modal) {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeLightbox();
-    });
-
-    async function loadDataFromSupabase() {
         try {
-            const { data: settingsData } = await supabaseClient
+            // Cargar configuración
+            const { data: settingsData, error: settingsError } = await supabaseClient
                 .from('hipso_settings')
                 .select('value')
                 .eq('key', 'main_config')
-                .single();
+                .maybeSingle();
 
-            if (settingsData && settingsData.value) {
-                config = settingsData.value;
-                if (!config.blockedReasons) config.blockedReasons = {};
-                if (!config.weeklyBaseTemplate) config.weeklyBaseTemplate = {};
-                if (!config.blockedDates) config.blockedDates = [];
-                if (!config.dateExceptions) config.dateExceptions = {};
-                if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
+            if (settingsError) {
+                console.warn('Error al cargar settings:', settingsError);
+                // Intentar crear la configuración si no existe
+                if (settingsError.code === 'PGRST116') {
+                    const { error: insertError } = await supabaseClient
+                        .from('hipso_settings')
+                        .insert({ key: 'main_config', value: config });
+                    if (insertError) console.error('Error al crear configuración:', insertError);
+                }
             }
 
-            const { data: bookingsData } = await supabaseClient
+            if (settingsData && settingsData.value) {
+                const loadedConfig = settingsData.value;
+                // Asegurar que todas las propiedades existan
+                config = {
+                    weekCustomSchedules: loadedConfig.weekCustomSchedules || {},
+                    dateExceptions: loadedConfig.dateExceptions || {},
+                    blockedDates: loadedConfig.blockedDates || [],
+                    blockedReasons: loadedConfig.blockedReasons || {},
+                    weeklyBaseTemplate: loadedConfig.weeklyBaseTemplate || {},
+                };
+            } else {
+                // Configuración por defecto si no hay datos
+                config = {
+                    weekCustomSchedules: {},
+                    dateExceptions: {},
+                    blockedDates: [],
+                    blockedReasons: {},
+                    weeklyBaseTemplate: {},
+                };
+                // Guardar configuración por defecto
+                await supabaseClient
+                    .from('hipso_settings')
+                    .upsert({ key: 'main_config', value: config });
+            }
+
+            // Cargar reservas
+            const { data: bookingsData, error: bookingsError } = await supabaseClient
                 .from('hipso_bookings')
                 .select('*');
+
+            if (bookingsError) {
+                console.error('Error al cargar reservas:', bookingsError);
+            }
 
             if (bookingsData) {
                 bookings = bookingsData.map(b => ({
@@ -1232,29 +1254,58 @@
                     clientEmail: b.client_email,
                     clientPhone: b.client_phone,
                     notes: b.notes,
-                    status: b.status,
+                    status: b.status || 'Pendiente de Pago',
                     createdAt: b.created_at
                 }));
+            } else {
+                bookings = [];
             }
+
+            dataLoaded = true;
+            setSyncStatus('synced');
+            document.getElementById('loading-status').innerText = '¡Listo!';
+
         } catch (err) {
-            console.error("Error al cargar desde Supabase:", err);
+            console.error("Error crítico al cargar desde Supabase:", err);
+            setSyncStatus('error');
+            document.getElementById('loading-status').innerText = 'Error de conexión - usando datos locales';
+            showToast("Error al conectar con la base de datos. Usando datos locales.", "error");
+        } finally {
+            isSyncing = false;
         }
     }
 
     async function saveState() {
+        if (isSyncing) return;
+        isSyncing = true;
+        setSyncStatus('syncing');
+
         try {
-            await supabaseClient
+            const { error } = await supabaseClient
                 .from('hipso_settings')
                 .upsert({ key: 'main_config', value: config });
+
+            if (error) {
+                console.error("Error al guardar en Supabase:", error);
+                showToast("No se pudo guardar en la nube. Revisa tu conexión.", "error");
+                setSyncStatus('error');
+            } else {
+                setSyncStatus('synced');
+                // Refrescar todas las vistas después de guardar
+                renderAllViews();
+            }
         } catch (err) {
-            console.error("Error al guardar en Supabase:", err);
-            showToast("No se pudo guardar en Supabase. Revisa tu conexión.", "error");
+            console.error("Error al guardar:", err);
+            showToast("Error al guardar en la nube.", "error");
+            setSyncStatus('error');
+        } finally {
+            isSyncing = false;
         }
     }
 
     async function saveBookingToSupabase(b) {
         try {
-            await supabaseClient
+            const { error } = await supabaseClient
                 .from('hipso_bookings')
                 .upsert({
                     id: b.id,
@@ -1264,25 +1315,53 @@
                     client_email: b.clientEmail,
                     client_phone: b.clientPhone,
                     notes: b.notes,
-                    status: b.status,
-                    created_at: b.createdAt
+                    status: b.status || 'Pendiente de Pago',
+                    created_at: b.createdAt || new Date().toISOString()
                 });
+
+            if (error) {
+                console.error("Error al guardar reserva:", error);
+                showToast("Error al guardar la reserva en la nube.", "error");
+            } else {
+                showToast("Reserva guardada en la nube.", "success");
+            }
         } catch (err) {
             console.error("Error al guardar reserva:", err);
+            showToast("Error al guardar la reserva.", "error");
         }
     }
 
     async function deleteBookingFromSupabase(id) {
         try {
-            await supabaseClient
+            const { error } = await supabaseClient
                 .from('hipso_bookings')
                 .delete()
                 .eq('id', id);
+
+            if (error) {
+                console.error("Error al eliminar reserva:", error);
+                showToast("Error al eliminar la reserva.", "error");
+            }
         } catch (err) {
             console.error("Error al eliminar reserva:", err);
         }
     }
 
+    // =====================================================================
+    // FUNCIONES DE RENDERIZADO UNIFICADAS
+    // =====================================================================
+    function renderAllViews() {
+        renderClientCalendar();
+        renderClientSlots();
+        if (!document.getElementById('admin-container').classList.contains('hidden')) {
+            renderAdminDashboard();
+        }
+        updateAuthUI();
+    }
+
+    // =====================================================================
+    // AUTENTICACIÓN
+    // =====================================================================
     function processDirectLogin(e) {
         e.preventDefault();
         const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
@@ -1351,8 +1430,7 @@
         document.getElementById('admin-container').classList.add('hidden');
         document.getElementById('login-container').classList.add('hidden');
         document.getElementById('public-nav-links').classList.remove('hidden');
-        renderClientCalendar();
-        renderClientSlots();
+        renderAllViews();
     }
 
     function showLoginView() {
@@ -1416,7 +1494,6 @@
         const availableSlots = sched.slots.filter(slot => {
             return !bookings.some(b => b.date === dateStr && b.time === slot && b.status !== 'Cancelada');
         });
-
         return availableSlots.length === 0;
     }
 
@@ -1474,8 +1551,7 @@
         for (let day = 1; day <= lastDay; day++) {
             const cellDate = new Date(year, month, day);
             const dateStr = getLocalDateString(cellDate);
-            
-            // CORRECCIÓN: Permitir seleccionar hoy (dateStr < todayStr en lugar de <=)
+
             const isPast = dateStr < todayStr;
             const info = getDayAvailabilityStatus(dateStr, isPast);
             const isSelectable = !isPast && info.status !== 'gray' && info.status !== 'red';
@@ -1516,7 +1592,10 @@
         if (!container) return;
         container.innerHTML = "";
 
-        if (!selectedClientDate) return;
+        if (!selectedClientDate) {
+            container.innerHTML = `<p class="col-span-full text-center text-muted text-xs py-4">Selecciona una fecha en el calendario</p>`;
+            return;
+        }
 
         const sched = getEffectiveScheduleForDate(selectedClientDate);
         if (noteEl) {
@@ -1555,6 +1634,10 @@
 
             container.appendChild(btn);
         });
+
+        if (effectiveSchedule.slots.length === 0) {
+            container.innerHTML = `<p class="col-span-full text-center text-muted text-xs py-4">No hay horarios configurados para este día</p>`;
+        }
     }
 
     function validateBookingForm() {
@@ -1586,7 +1669,7 @@
         }
 
         pendingBookingData = {
-            id: 'RES-' + Date.now().toString().slice(-5),
+            id: 'RES-' + Date.now().toString().slice(-5) + '-' + Math.random().toString(36).slice(2, 6),
             date: selectedClientDate,
             time: selectedClientSlot,
             clientName: document.getElementById('client-name').value,
@@ -1599,7 +1682,7 @@
 
         bookings.push(pendingBookingData);
         await saveBookingToSupabase(pendingBookingData);
-        renderClientCalendar();
+        renderAllViews();
 
         document.getElementById('success-modal').classList.remove('hidden');
         document.getElementById('success-modal').classList.add('flex');
@@ -1618,6 +1701,9 @@
         validateBookingForm();
     }
 
+    // =====================================================================
+    // ADMIN DASHBOARD
+    // =====================================================================
     function renderAdminDashboard() {
         populateWeekSelector();
         renderWeeklyScheduleEditor();
@@ -1655,9 +1741,6 @@
         return weekDates;
     }
 
-    // =====================================================================
-    // POPULATE WEEK SELECTOR (RANGOS AMIGABLES DE FECHA)
-    // =====================================================================
     function populateWeekSelector() {
         const monthInput = document.getElementById('admin-week-month');
         const weekSelect = document.getElementById('admin-week-number');
@@ -1692,7 +1775,7 @@
     }
 
     // =====================================================================
-    // GENERADOR MASIVO DE BLOQUES HORARIOS Y AGREGAR HORA MANUAL
+    // GENERADOR DE BLOQUES HORARIOS
     // =====================================================================
     function generateTimeSlots(start, end, intervalMinutes) {
         const slots = [];
@@ -1776,8 +1859,7 @@
             mergeSlotsInto(config.dateExceptions[dateStr], generated);
             await saveState();
             renderCustomDateEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
         }
 
         closeBulkSlotModal();
@@ -1785,7 +1867,7 @@
     }
 
     // =====================================================================
-    // LÓGICA DE AGREGAR HORA MANUAL
+    // AGREGAR HORA MANUAL
     // =====================================================================
     function openSingleSlotModal(target, label) {
         singleSlotTarget = target;
@@ -1828,8 +1910,7 @@
             mergeSlotsInto(config.dateExceptions[dateStr], generated);
             await saveState();
             renderCustomDateEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
         }
 
         closeSingleSlotModal();
@@ -1849,7 +1930,7 @@
         const container = document.getElementById('weekly-days-editor-container');
         const monthVal = document.getElementById('admin-week-month').value;
         const weekSelect = document.getElementById('admin-week-number');
-        
+
         let weekVal = 1;
         if (weekSelect && weekSelect.value) {
             weekVal = parseInt(weekSelect.value) || 1;
@@ -1879,7 +1960,7 @@
         const monthVal = document.getElementById('admin-week-month').value;
         const weekSelect = document.getElementById('admin-week-number');
         const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-        
+
         if (!container) return;
 
         container.innerHTML = "";
@@ -1947,11 +2028,7 @@
 
         config.weekCustomSchedules[weekKey] = JSON.parse(JSON.stringify(currentEditingWeekState));
         await saveState();
-        
-        // CORRECCIÓN: Refrescar el calendario cliente y slots inmediatamente
-        renderClientCalendar();
-        renderClientSlots();
-        showToast(`Semana guardada con éxito en Supabase.`, "success");
+        showToast(`Semana guardada con éxito en la nube.`, "success");
     }
 
     function buildDayOfWeekMapFromWeek(weekDates, weekState) {
@@ -1992,14 +2069,13 @@
             applyDayOfWeekMapToMonth(monthVal, dowMap, weekVal);
             await saveState();
             renderWeeklyScheduleEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             showToast("Semana clonada hacia el resto del mes.", "success");
         });
     }
 
     // =====================================================================
-    // HORARIO SEMANAL BASE (PLANTILLA REUTILIZABLE)
+    // HORARIO SEMANAL BASE (PLANTILLA)
     // =====================================================================
     const TEMPLATE_DOW_ORDER = [1, 2, 3, 4, 5, 6, 0];
 
@@ -2084,14 +2160,13 @@
             applyDayOfWeekMapToMonth(monthVal, config.weeklyBaseTemplate);
             await saveState();
             renderWeeklyScheduleEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             showToast(`Plantilla aplicada a todo ${monthVal}.`, "success");
         });
     }
 
     // =====================================================================
-    // CAMBIAR HORARIO DE UN DÍA ESPECÍFICO (EXCEPCIONES)
+    // EXCEPCIONES POR DÍA
     // =====================================================================
     function renderCustomDateEditor() {
         const dateInput = document.getElementById('admin-custom-date');
@@ -2163,8 +2238,7 @@
         config.dateExceptions[dateStr].active = !config.dateExceptions[dateStr].active;
         await saveState();
         renderCustomDateEditor();
-        renderClientCalendar();
-        renderClientSlots();
+        renderAllViews();
     }
 
     async function removeSlotFromCustomDate(dateStr, slotIdx) {
@@ -2172,8 +2246,7 @@
             config.dateExceptions[dateStr].slots.splice(slotIdx, 1);
             await saveState();
             renderCustomDateEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
         }
     }
 
@@ -2196,14 +2269,13 @@
             delete config.dateExceptions[dateStr];
             await saveState();
             renderCustomDateEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             showToast("Excepción eliminada para ese día.", "success");
         }
     }
 
     // =====================================================================
-    // BLOQUEO DE FECHAS / VACACIONES
+    // BLOQUEO DE FECHAS
     // =====================================================================
     async function toggleBlockDateRange(block) {
         const start = document.getElementById('admin-block-start-date').value;
@@ -2239,8 +2311,7 @@
         }
 
         await saveState();
-        renderClientCalendar();
-        renderClientSlots();
+        renderAllViews();
         renderBlockedRangesList();
         showToast(block ? "Fechas bloqueadas en la nube." : "Fechas liberadas en la nube.", "success");
     }
@@ -2315,8 +2386,7 @@
                 cursor.setDate(cursor.getDate() + 1);
             }
             await saveState();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             renderBlockedRangesList();
             showToast("Bloqueo eliminado del historial.", "success");
         });
@@ -2341,8 +2411,7 @@
             delete config.weekCustomSchedules[weekKey];
             await saveState();
             renderWeeklyScheduleEditor();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
         }
         closeResetModal();
         showToast("Semana restablecida a estado vacío.", "success");
@@ -2353,8 +2422,7 @@
             bookings = bookings.filter(b => b.id !== id);
             await deleteBookingFromSupabase(id);
             renderAdminBookingsTable();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             showToast("Cita eliminada correctamente.", "success");
         });
     }
@@ -2398,7 +2466,7 @@
             return;
         }
 
-        const sorted = filteredBookings.reverse();
+        const sorted = [...filteredBookings].reverse();
 
         sorted.forEach(b => {
             const tr = document.createElement('tr');
@@ -2426,7 +2494,7 @@
                 </td>
                 <td class="py-2.5">${statusBadge}</td>
                 <td class="py-2.5 text-right">
-                    <div class="flex items-center justify-end gap-1.5">
+                    <div class="flex items-center justify-end gap-1.5 flex-wrap">
                         <a href="${gcalLink}" target="_blank" title="Añadir a Google Calendar" class="bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] transition flex items-center gap-1 font-semibold">
                             <i class="fa-brands fa-google text-[9px]"></i> Calendar
                         </a>
@@ -2451,8 +2519,7 @@
             item.status = newStatus;
             await saveBookingToSupabase(item);
             renderAdminBookingsTable();
-            renderClientCalendar();
-            renderClientSlots();
+            renderAllViews();
             showToast("Estado de la cita actualizado.", "success");
         }
     }
@@ -2468,6 +2535,9 @@
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
+    // =====================================================================
+    // CARRUSEL
+    // =====================================================================
     let currentSlide = 0;
     let isPlaying = true;
     let slideInterval;
@@ -2524,22 +2594,72 @@
 
     startInterval();
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-mask').forEach(el => { observer.observe(el); });
+    // =====================================================================
+    // HERO BACKGROUND ROTATION
+    // =====================================================================
+    let currentHeroSlide = 0;
+    function startHeroBgRotation() {
+        const bgSlides = document.querySelectorAll('.hero-bg-slide');
+        if (!bgSlides.length) return;
+        setInterval(() => {
+            bgSlides[currentHeroSlide].classList.remove('active');
+            currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
+            bgSlides[currentHeroSlide].classList.add('active');
+        }, 5000);
+    }
 
+    // =====================================================================
+    // LIGHTBOX
+    // =====================================================================
+    function openLightbox(imgUrl) {
+        const modal = document.getElementById('lightbox-modal');
+        const img = document.getElementById('lightbox-img');
+        if (modal && img) {
+            img.src = imgUrl;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('lightbox-modal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    // =====================================================================
+    // TOGGLE FAQ
+    // =====================================================================
+    function toggleFaq(btn) {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('i');
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    // =====================================================================
+    // NAVBAR SCROLL
+    // =====================================================================
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) { navbar.classList.add('scrolled'); }
         else { navbar.classList.remove('scrolled'); }
     });
 
+    // =====================================================================
+    // MOBILE MENU
+    // =====================================================================
     const mobileBtn = document.getElementById('mobileBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -2553,17 +2673,81 @@
     if (mobileBtn) mobileBtn.addEventListener('click', toggleMobileMenu);
     mobileLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
 
-    function toggleFaq(btn) {
-        const content = btn.nextElementSibling;
-        const icon = btn.querySelector('i');
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            icon.style.transform = 'rotate(180deg)';
-        }
-    }
+    // =====================================================================
+    // REVEAL ANIMATIONS
+    // =====================================================================
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-mask').forEach(el => { observer.observe(el); });
+
+    // =====================================================================
+    // INICIALIZACIÓN
+    // =====================================================================
+    window.addEventListener('load', async function() {
+        // Cargar datos desde Supabase
+        await loadDataFromSupabase(true);
+
+        const today = getLocalDateString(new Date());
+        selectedClientDate = today;
+        document.getElementById('summary-date').innerText = formatDateReadable(today);
+        clientCalendarViewDate = new Date();
+        clientCalendarViewDate.setDate(1);
+
+        const currentMonth = today.slice(0, 7);
+        const monthFilter = document.getElementById('admin-month-filter');
+        if (monthFilter) monthFilter.value = currentMonth;
+
+        const weekMonth = document.getElementById('admin-week-month');
+        if (weekMonth) weekMonth.value = currentMonth;
+
+        const templateMonth = document.getElementById('template-target-month');
+        if (templateMonth) templateMonth.value = currentMonth;
+
+        populateWeekSelector();
+        updateAuthUI();
+        renderAllViews();
+
+        startHeroBgRotation();
+
+        // Ocultar pantalla de carga
+        const loader = document.getElementById('pantalla-carga');
+        setTimeout(() => {
+            loader.classList.add('ocultar-carga');
+            setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
+        }, 500);
+
+        // =====================================================================
+        // REALTIME EN SUPABASE - Escuchar cambios en tiempo real
+        // =====================================================================
+        const channel = supabaseClient
+            .channel('realtime_changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async (payload) => {
+                console.log('Cambio en settings detectado:', payload);
+                await loadDataFromSupabase(false);
+                renderAllViews();
+                showToast("Cambios detectados en la nube. Actualizando vista...", "info");
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async (payload) => {
+                console.log('Cambio en bookings detectado:', payload);
+                await loadDataFromSupabase(false);
+                renderAllViews();
+                showToast("Nueva reserva detectada en la nube.", "info");
+            })
+            .subscribe((status) => {
+                console.log('Conexión Realtime:', status);
+                if (status === 'SUBSCRIBED') {
+                    setSyncStatus('synced');
+                }
+            });
+
+        console.log('Sistema inicializado con Realtime en vivo');
+    });
 </script>
 
 </body>
