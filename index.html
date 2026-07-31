@@ -2655,9 +2655,19 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-        setTimeout(hideLoadingScreen, 2000);
+        // FAIL-SAFE TIMEOUT: Fuerza la ocultación de la pantalla de carga tras 3 segundos máximos pase lo que pase
+        const safetyTimer = setTimeout(() => {
+            hideLoadingScreen();
+        }, 3000);
 
-        await loadDataFromSupabase(true);
+        try {
+            await loadDataFromSupabase(true);
+        } catch(e) {
+            console.error("Error al iniciar datos:", e);
+        } finally {
+            clearTimeout(safetyTimer);
+            hideLoadingScreen();
+        }
 
         const today = getLocalDateString(new Date());
         selectedClientDate = today;
@@ -2680,7 +2690,7 @@
             updateAdminTimersOnly();
         }, 1000);
 
-        // AUTO-SINCRONIZACIÓN SILENCIOSA CADA 3 SEGUNDOS
+        // AUTO-SINCRONIZACIÓN GLOBAL INSTANTÁNEA (CADA 3 SEGUNDOS)
         setInterval(async () => {
             try {
                 const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
@@ -2698,12 +2708,10 @@
                         status: b.status || 'Pendiente de Comprobante',
                         createdAt: b.created_at
                     }));
-                    if (!document.getElementById('admin-container').classList.contains('hidden')) {
-                        renderAdminBookingsTable();
-                    }
+                    renderAllViews();
                 }
             } catch (e) {
-                console.log("Error en auto-sync silenciosa:", e);
+                console.log("Error en auto-sync global:", e);
             }
         }, 3000);
 
