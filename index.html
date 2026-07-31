@@ -1248,6 +1248,12 @@
         activeFoundBookingForReceipt.paymentReceiptUrl = receiptUrl;
         activeFoundBookingForReceipt.status = 'Pendiente de Revisión';
 
+        const itemIdx = bookings.findIndex(b => b.id === activeFoundBookingForReceipt.id);
+        if (itemIdx !== -1) {
+            bookings[itemIdx].paymentReceiptUrl = receiptUrl;
+            bookings[itemIdx].status = 'Pendiente de Revisión';
+        }
+
         const success = await saveBookingToSupabase(activeFoundBookingForReceipt);
         if (success) {
             await loadDataFromSupabase(false);
@@ -2122,6 +2128,7 @@
         }
     }
 
+    // VALIDACIÓN ESTRICTA AL AGREGAR HORA EN EL ADMIN PARA EL DÍA DE HOY
     function addSlotToAdminDay(dateStr) {
         const input = document.getElementById('new-admin-slot-input');
         if (!input || !input.value) return;
@@ -2680,6 +2687,33 @@
         setInterval(() => {
             updateAdminTimersOnly();
         }, 1000);
+
+        // AUTO-SINCRONIZACIÓN SILENCIOSA CADA 3 SEGUNDOS
+        setInterval(async () => {
+            try {
+                const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
+                if (bookingsData) {
+                    bookings = bookingsData.map(b => ({
+                        id: b.id,
+                        date: b.date,
+                        time: b.time,
+                        clientName: b.client_name,
+                        clientEmail: b.client_email,
+                        clientPhone: b.client_phone,
+                        notes: b.notes,
+                        imageUrl: b.image_url || b.imageUrl || null,
+                        paymentReceiptUrl: b.payment_receipt_url || null,
+                        status: b.status || 'Pendiente de Comprobante',
+                        createdAt: b.created_at
+                    }));
+                    if (!document.getElementById('admin-container').classList.contains('hidden')) {
+                        renderAdminBookingsTable();
+                    }
+                }
+            } catch (e) {
+                console.log("Error en auto-sync silenciosa:", e);
+            }
+        }, 3000);
 
         supabaseClient
             .channel('realtime_changes')
