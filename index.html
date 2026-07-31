@@ -860,7 +860,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN -->
+<!-- PANEL ADMIN (ARQUITECTURA DE CALENDARIO MENSUAL POR DÍAS) -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -935,7 +935,7 @@
         </div>
     </div>
 
-    <!-- TAB: CALENDARIO DE HORARIOS (POR DÍAS - BLOQUEO DE DÍAS PASADOS) -->
+    <!-- TAB: CALENDARIO DE HORARIOS (POR DÍAS) -->
     <div id="tab-config" class="admin-tab-panel">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- CALENDARIO MENSUAL DE ADMIN -->
@@ -1895,25 +1895,43 @@
 
     let pendingBookingData = null;
 
+    // PROCESAR RESERVA CLIENTE CON VERIFICACIÓN PREVIA ANTI-DOBLE RESERVA
     async function processClientBooking(e) {
         e.preventDefault();
-
-        if (isDayFullyBookedOrClosed(selectedClientDate)) {
-            showToast("Lo sentimos, este día ya no cuenta con disponibilidad.", "error");
-            return;
-        }
 
         const submitBtn = document.getElementById('btn-submit-booking');
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Procesando...</span>';
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Verificando disponibilidad...</span>';
 
-        // LECTURA DIRECTA DE LA FOTO DE REFERENCIA
+        // 1. VERIFICACIÓN ATÓMICA EN TIEMPO REAL CON SUPABASE
+        const { data: existingBookings, error: checkError } = await supabaseClient
+            .from('hipso_bookings')
+            .select('id, status')
+            .eq('date', selectedClientDate)
+            .eq('time', selectedClientSlot)
+            .neq('status', 'Cancelada');
+
+        if (checkError) {
+            console.error("Error al consultar reservas en Supabase:", checkError);
+        }
+
+        if (existingBookings && existingBookings.length > 0) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+            showToast("Lo sentimos, alguien acaba de tomar este horario hace un instante. Elige otro por favor.", "error");
+            await loadDataFromSupabase(false);
+            renderAllViews();
+            return;
+        }
+
+        // 2. SUBIDA DE LA IMAGEN DE REFERENCIA
         const clientFileInput = document.getElementById('client-image');
         const referenceFile = (clientFileInput && clientFileInput.files && clientFileInput.files.length > 0) ? clientFileInput.files[0] : currentSelectedImageFile;
 
         let uploadedImageUrl = null;
         if (referenceFile) {
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Subiendo imagen...</span>';
             uploadedImageUrl = await uploadClientImageToStorage(referenceFile);
         }
 
