@@ -9,10 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- Tipografías Clásicas y Elegantes -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -52,6 +55,7 @@
         ::-webkit-scrollbar-thumb { background: #37443d; }
         ::-webkit-scrollbar-thumb:hover { background: #62776a; }
 
+        /* PANTALLA DE CARGA */
         #pantalla-carga {
             position: fixed;
             inset: 0;
@@ -76,6 +80,7 @@
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
+        /* ANIMACIÓN MASK REVEAL */
         .reveal-mask { overflow: hidden; display: block; width: 100%; }
         .reveal-mask.inline-mask { display: inline-block; width: auto; vertical-align: top; }
         .reveal-item {
@@ -86,12 +91,11 @@
         .page-ready .reveal-mask.in-view > .reveal-item { transform: translateY(0); opacity: 1; }
         .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
 
+        /* NAVBAR */
         .navbar { transition: all 0.5s ease; background-color: transparent; padding: 20px 0; }
         .navbar.scrolled {
-            background-color: rgba(22, 27, 24, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            background-color: rgba(22, 27, 24, 0.95); backdrop-filter: blur(10px);
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         .nav-link { position: relative; padding-bottom: 4px; cursor: pointer; }
         .nav-link::after {
@@ -101,9 +105,11 @@
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #e0e6e2; }
 
+        /* ACORDEÓN */
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
+        /* FONDO HERO INTERACTIVO */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
@@ -116,6 +122,7 @@
             transform: scale(1.05);
         }
 
+        /* CARRUSEL DE PORTAFOLIO */
         .carousel-slide {
             display: none;
             animation: fadeEffect 0.8s ease-in-out;
@@ -135,6 +142,7 @@
         }
         .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
 
+        /* TARJETAS Y FOTOS */
         .portfolio-img-card {
             position: relative;
             overflow: hidden;
@@ -203,6 +211,7 @@
             text-decoration: line-through;
         }
 
+        /* CALENDARIO VISUAL CLIENTE */
         .cal-day {
             position: relative;
             aspect-ratio: 1 / 1;
@@ -248,6 +257,7 @@
         .cal-fade-enter { animation: calFade 0.35s ease; }
         @keyframes calFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* TOASTS */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -284,6 +294,7 @@
         .toast-error .toast-icon { color: #f87171; }
         .toast-info .toast-icon { color: #62776a; }
 
+        /* TABS ADMIN */
         .admin-tab-btn {
             transition: all 0.25s ease;
             border-bottom: 2px solid transparent;
@@ -395,6 +406,7 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
     <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
+        <!-- FONDOS DINÁMICOS CON IMAGEN 1, 2 Y 9 -->
         <div class="absolute inset-0 z-0">
             <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
             <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
@@ -422,6 +434,7 @@
               <div class="reveal-item delay-2 bg-panel w-full flex flex-col rounded-2xl overflow-hidden">
                   <div class="p-4 md:p-12 min-h-[350px] md:min-h-[480px] relative w-full overflow-hidden">
 
+                      <!-- SLIDE 1 -->
                       <div class="carousel-slide active grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen3.jpeg')">
                               <img src="assets/imagen3.jpeg" alt="Trabajo Tattoo 3">
@@ -433,6 +446,7 @@
                           </div>
                       </div>
 
+                      <!-- SLIDE 2 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen5.jpeg')">
                               <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
@@ -444,6 +458,7 @@
                           </div>
                       </div>
 
+                      <!-- SLIDE 3 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen7.jpeg')">
                               <img src="assets/imagen7.jpeg" alt="Trabajo Tattoo 7">
@@ -455,6 +470,7 @@
                           </div>
                       </div>
 
+                      <!-- SLIDE 4 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px] col-span-2 sm:col-span-1" onclick="openLightbox('assets/imagen10.jpeg')">
                               <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
@@ -568,6 +584,7 @@
                               </span>
                           </div>
 
+                          <!-- CALENDARIO VISUAL -->
                           <div class="mb-5">
                               <div class="flex items-center justify-between mb-3">
                                   <button type="button" onclick="calNavigate(-1)" class="w-7 h-7 flex items-center justify-center rounded-full bg-studio border border-white/10 text-muted hover:text-bone hover:border-accent transition cursor-pointer">
@@ -625,18 +642,21 @@
                                   </div>
                                   <div>
                                       <label class="block text-[10px] uppercase text-muted tracking-wider mb-1">Idea / Estilo de Tatuaje</label>
-                                      <textarea id="client-notes" rows="2" placeholder="Detalla estilo, zona del cuerpo, tamaño aprox..."
-                                                class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm focus:outline-none focus:border-accent"></textarea>
+                                      <textarea id="client-notes" rows="3" placeholder="Detalla estilo, zona del cuerpo, tamaño aprox..."
+                                                class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm leading-relaxed focus:outline-none focus:border-accent resize-y min-h-[72px]"></textarea>
                                   </div>
+                                  
                                   <div class="bg-studio/50 p-3 rounded-lg border border-white/5 text-[11px] text-muted space-y-1 transition-all duration-300">
                                       <div class="flex justify-between"><span>Fecha:</span> <strong id="summary-date" class="text-bone">--</strong></div>
                                       <div class="flex justify-between"><span>Hora:</span> <strong id="summary-time" class="text-bone">--</strong></div>
                                       <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$20.000 CLP</strong></div>
                                   </div>
+                                  
+                                  <!-- BOTÓN PRINCIPAL ÚNICO PARA WEBPAY -->
                                   <button type="submit" id="btn-submit-booking" disabled
-                                          class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-3.5 rounded-xl uppercase cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
+                                          class="btn-primary-action mt-4 w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-3.5 rounded-xl uppercase cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
                                       <i class="fa-solid fa-credit-card text-xs"></i>
-                                      <span>Reservar & Pagar Abono</span>
+                                      <span id="btn-submit-booking-label">Confirmar & Ir a Pagar con Webpay</span>
                                   </button>
                               </form>
                           </div>
@@ -675,18 +695,18 @@
     <img id="lightbox-img" src="" alt="Ampliación Tattoo" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10" onclick="event.stopPropagation()">
 </div>
 
-<!-- MODAL DE ÉXITO -->
+<!-- MODAL DE ÉXITO DE RESERVA -->
 <div id="success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-white/10 space-y-4">
         <div class="text-emerald-400 text-3xl mb-1"><i class="fa-solid fa-circle-check"></i></div>
         <h3 class="font-serif text-xl text-bone">¡Cita Registrada!</h3>
-        <p class="text-xs text-muted leading-relaxed">
+        <p id="success-modal-message" class="text-xs text-muted leading-relaxed">
             Tu reserva ha quedado guardada con éxito. Haz clic en el botón para completar tu abono en Webpay Plus.
         </p>
-        <div class="space-y-2 pt-1">
+        <div id="success-modal-webpay-wrap" class="space-y-2 pt-1">
             <button onclick="proceedToWebpay()" class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold py-3 px-4 rounded-xl uppercase">
                 <i class="fa-solid fa-credit-card"></i>
-                <span>Continuar a Pago Webpay ($20.000)</span>
+                <span>Ir a Pagar Abono ($20.000)</span>
             </button>
         </div>
         <button onclick="closeSuccessModal()" class="text-[10px] text-muted hover:text-bone transition pt-1">
@@ -1060,9 +1080,9 @@
 </div>
 
 <script>
-    // -----------------------------------------------------------------
+    // =====================================================================
     // CREDENCIALES DE SUPABASE
-    // -----------------------------------------------------------------
+    // =====================================================================
     const SUPABASE_URL = 'https://kxldsjodgfonrrlwjbws.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_J5s_2YqtASIYSqu2k00SGA_copdr39x';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1083,6 +1103,7 @@
 
     let selectedClientDate = "";
     let selectedClientSlot = "";
+    let selectedPaymentMethod = "webpay";
     let currentEditingWeekState = {};
     let currentEditingTemplateState = {};
     let clientCalendarViewDate = new Date();
@@ -1183,37 +1204,33 @@
         });
     }
 
+    let isLoadingData = false;
+
     async function loadDataFromSupabase(showLoading = true) {
-        if (isSyncing) return;
-        isSyncing = true;
+        if (isLoadingData) return;
+        isLoadingData = true;
 
         if (showLoading) {
             setSyncStatus('syncing');
-            document.getElementById('loading-status').innerText = 'Cargando datos desde la nube...';
+            const loadingStatusEl = document.getElementById('loading-status');
+            if (loadingStatusEl) loadingStatusEl.innerText = 'Cargando datos desde la nube...';
         }
 
         try {
-            // Cargar configuración
-            const { data: settingsData, error: settingsError } = await supabaseClient
+            const { data: settingsRows, error: settingsError } = await supabaseClient
                 .from('hipso_settings')
-                .select('value')
-                .eq('key', 'main_config')
-                .maybeSingle();
+                .select('*')
+                .eq('key', 'main_config');
 
             if (settingsError) {
-                console.warn('Error al cargar settings:', settingsError);
-                // Intentar crear la configuración si no existe
-                if (settingsError.code === 'PGRST116') {
-                    const { error: insertError } = await supabaseClient
-                        .from('hipso_settings')
-                        .insert({ key: 'main_config', value: config });
-                    if (insertError) console.error('Error al crear configuración:', insertError);
-                }
+                console.error('Error al cargar settings:', settingsError);
+                showToast("No se pudo leer la configuración desde Supabase.", "error");
             }
 
-            if (settingsData && settingsData.value) {
-                const loadedConfig = settingsData.value;
-                // Asegurar que todas las propiedades existan
+            if (settingsRows && settingsRows.length > 0) {
+                const sortedRows = [...settingsRows].sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+                const loadedConfig = sortedRows[0].value || {};
+
                 config = {
                     weekCustomSchedules: loadedConfig.weekCustomSchedules || {},
                     dateExceptions: loadedConfig.dateExceptions || {},
@@ -1221,8 +1238,12 @@
                     blockedReasons: loadedConfig.blockedReasons || {},
                     weeklyBaseTemplate: loadedConfig.weeklyBaseTemplate || {},
                 };
+
+                const duplicateIds = sortedRows.slice(1).map(r => r.id).filter(id => id !== undefined && id !== null);
+                if (duplicateIds.length > 0) {
+                    await supabaseClient.from('hipso_settings').delete().in('id', duplicateIds);
+                }
             } else {
-                // Configuración por defecto si no hay datos
                 config = {
                     weekCustomSchedules: {},
                     dateExceptions: {},
@@ -1230,13 +1251,11 @@
                     blockedReasons: {},
                     weeklyBaseTemplate: {},
                 };
-                // Guardar configuración por defecto
                 await supabaseClient
                     .from('hipso_settings')
-                    .upsert({ key: 'main_config', value: config });
+                    .upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
             }
 
-            // Cargar reservas
             const { data: bookingsData, error: bookingsError } = await supabaseClient
                 .from('hipso_bookings')
                 .select('*');
@@ -1263,41 +1282,43 @@
 
             dataLoaded = true;
             setSyncStatus('synced');
-            document.getElementById('loading-status').innerText = '¡Listo!';
+            const loadingStatusEl2 = document.getElementById('loading-status');
+            if (loadingStatusEl2) loadingStatusEl2.innerText = '¡Listo!';
 
         } catch (err) {
             console.error("Error crítico al cargar desde Supabase:", err);
             setSyncStatus('error');
-            document.getElementById('loading-status').innerText = 'Error de conexión - usando datos locales';
-            showToast("Error al conectar con la base de datos. Usando datos locales.", "error");
+            showToast("Error al conectar con la base de datos.", "error");
         } finally {
-            isSyncing = false;
+            isLoadingData = false;
         }
     }
 
     async function saveState() {
-        if (isSyncing) return;
         isSyncing = true;
         setSyncStatus('syncing');
 
         try {
             const { error } = await supabaseClient
                 .from('hipso_settings')
-                .upsert({ key: 'main_config', value: config });
+                .upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
 
             if (error) {
                 console.error("Error al guardar en Supabase:", error);
-                showToast("No se pudo guardar en la nube. Revisa tu conexión.", "error");
+                showToast("No se pudo guardar en la nube: " + error.message, "error");
                 setSyncStatus('error');
+                return false;
             } else {
                 setSyncStatus('synced');
-                // Refrescar todas las vistas después de guardar
                 renderAllViews();
+                showToast("Cambios guardados en la nube.", "success");
+                return true;
             }
         } catch (err) {
             console.error("Error al guardar:", err);
             showToast("Error al guardar en la nube.", "error");
             setSyncStatus('error');
+            return false;
         } finally {
             isSyncing = false;
         }
@@ -1317,17 +1338,19 @@
                     notes: b.notes,
                     status: b.status || 'Pendiente de Pago',
                     created_at: b.createdAt || new Date().toISOString()
-                });
+                }, { onConflict: 'id' });
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
                 showToast("Error al guardar la reserva en la nube.", "error");
+                return false;
             } else {
-                showToast("Reserva guardada en la nube.", "success");
+                return true;
             }
         } catch (err) {
             console.error("Error al guardar reserva:", err);
             showToast("Error al guardar la reserva.", "error");
+            return false;
         }
     }
 
@@ -1341,9 +1364,12 @@
             if (error) {
                 console.error("Error al eliminar reserva:", error);
                 showToast("Error al eliminar la reserva.", "error");
+                return false;
             }
+            return true;
         } catch (err) {
             console.error("Error al eliminar reserva:", err);
+            return false;
         }
     }
 
@@ -1477,7 +1503,7 @@
 
         if (config.weekCustomSchedules) {
             for (let weekKey in config.weekCustomSchedules) {
-                if (config.weekCustomSchedules[weekKey][dateStr]) {
+                if (config.weekCustomSchedules[weekKey] && config.weekCustomSchedules[weekKey][dateStr]) {
                     return config.weekCustomSchedules[weekKey][dateStr];
                 }
             }
@@ -1486,12 +1512,42 @@
         return { active: false, slots: [] };
     }
 
+    // MODIFICADO: Esta función filtra de manera MATEMÁTICA ESTRICTA las horas.
+    // Solo oculta los bloques horarios que numéricamente ya pasaron.
+    function getRemainingSlotsForDate(dateStr) {
+        const sched = getEffectiveScheduleForDate(dateStr);
+        if (sched.blocked || !sched.active || !sched.slots) return [];
+
+        let slots = [...sched.slots];
+        const todayStr = getLocalDateString(new Date());
+
+        if (dateStr === todayStr) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMin = now.getMinutes();
+
+            slots = slots.filter(slot => {
+                const parts = slot.split(':');
+                if (parts.length !== 2) return true; 
+                const slotH = parseInt(parts[0], 10);
+                const slotM = parseInt(parts[1], 10);
+
+                if (slotH > currentHour) return true;
+                if (slotH === currentHour && slotM > currentMin) return true;
+                return false;
+            });
+        }
+        return slots;
+    }
+
     function isDayFullyBookedOrClosed(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
-        if (sched.blocked || !sched.active || !sched.slots || sched.slots.length === 0) {
-            return true;
-        }
-        const availableSlots = sched.slots.filter(slot => {
+        if (sched.blocked || !sched.active) return true;
+
+        const remainingSlots = getRemainingSlotsForDate(dateStr);
+        if (remainingSlots.length === 0) return true;
+
+        const availableSlots = remainingSlots.filter(slot => {
             return !bookings.some(b => b.date === dateStr && b.time === slot && b.status !== 'Cancelada');
         });
         return availableSlots.length === 0;
@@ -1499,12 +1555,17 @@
 
     function getDayAvailabilityStatus(dateStr, isPast) {
         if (isPast) return { status: 'gray', free: 0, total: 0 };
+        
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots || sched.slots.length === 0) {
             return { status: 'gray', free: 0, total: 0 };
         }
-        const total = sched.slots.length;
-        const free = sched.slots.filter(slot => !bookings.some(b => b.date === dateStr && b.time === slot && b.status !== 'Cancelada')).length;
+
+        const remainingSlots = getRemainingSlotsForDate(dateStr);
+        if (remainingSlots.length === 0) return { status: 'gray', free: 0, total: 0 };
+
+        const total = remainingSlots.length;
+        const free = remainingSlots.filter(slot => !bookings.some(b => b.date === dateStr && b.time === slot && b.status !== 'Cancelada')).length;
         if (free === 0) return { status: 'red', free, total };
         if (free <= 2) return { status: 'yellow', free, total };
         return { status: 'green', free, total };
@@ -1552,6 +1613,7 @@
             const cellDate = new Date(year, month, day);
             const dateStr = getLocalDateString(cellDate);
 
+            // CORRECCIÓN CLAVE 2: Para habilitar el día de hoy, dateStr debe ser MÁS CHICO estricto que hoy para ser pasado.
             const isPast = dateStr < todayStr;
             const info = getDayAvailabilityStatus(dateStr, isPast);
             const isSelectable = !isPast && info.status !== 'gray' && info.status !== 'red';
@@ -1607,14 +1669,18 @@
             }
         }
 
+        const remainingSlots = getRemainingSlotsForDate(selectedClientDate);
+        const todayStr = getLocalDateString(new Date());
+
         if (isDayFullyBookedOrClosed(selectedClientDate)) {
-            container.innerHTML = `<p class="col-span-full text-xs text-danger/80 italic py-3">Este día no tiene disponibilidad o está completo.</p>`;
+            const hadSlotsToday = selectedClientDate === todayStr && sched.active && sched.slots && sched.slots.length > 0 && remainingSlots.length === 0;
+            container.innerHTML = hadSlotsToday
+                ? `<p class="col-span-full text-xs text-danger/80 italic py-3">Ya no quedan horarios disponibles para hoy. Prueba con otro día.</p>`
+                : `<p class="col-span-full text-xs text-danger/80 italic py-3">Este día no tiene disponibilidad o está completo.</p>`;
             return;
         }
 
-        const effectiveSchedule = getEffectiveScheduleForDate(selectedClientDate);
-
-        effectiveSchedule.slots.forEach(slot => {
+        remainingSlots.forEach(slot => {
             const isBooked = bookings.some(b => b.date === selectedClientDate && b.time === slot && b.status !== 'Cancelada');
 
             const btn = document.createElement('button');
@@ -1634,10 +1700,6 @@
 
             container.appendChild(btn);
         });
-
-        if (effectiveSchedule.slots.length === 0) {
-            container.innerHTML = `<p class="col-span-full text-center text-muted text-xs py-4">No hay horarios configurados para este día</p>`;
-        }
     }
 
     function validateBookingForm() {
@@ -1677,6 +1739,7 @@
             clientPhone: document.getElementById('client-phone').value,
             notes: document.getElementById('client-notes').value,
             status: 'Pendiente de Pago',
+            paymentMethod: 'webpay',
             createdAt: new Date().toISOString()
         };
 
@@ -1775,7 +1838,7 @@
     }
 
     // =====================================================================
-    // GENERADOR DE BLOQUES HORARIOS
+    // GENERADOR MASIVO DE BLOQUES HORARIOS
     // =====================================================================
     function generateTimeSlots(start, end, intervalMinutes) {
         const slots = [];
@@ -2021,14 +2084,20 @@
         const monthVal = document.getElementById('admin-week-month').value;
         const weekSelect = document.getElementById('admin-week-number');
         const weekVal = (weekSelect && weekSelect.value) ? parseInt(weekSelect.value) : 1;
-        if (!monthVal) return;
+        if (!monthVal) {
+            showToast("Selecciona un mes primero.", "error");
+            return;
+        }
 
         const weekKey = `${monthVal}-W${weekVal}`;
         if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
 
         config.weekCustomSchedules[weekKey] = JSON.parse(JSON.stringify(currentEditingWeekState));
-        await saveState();
-        showToast(`Semana guardada con éxito en la nube.`, "success");
+        
+        const saved = await saveState();
+        if (saved) {
+            renderAllViews();
+        }
     }
 
     function buildDayOfWeekMapFromWeek(weekDates, weekState) {
@@ -2146,7 +2215,6 @@
     async function saveWeeklyTemplate() {
         config.weeklyBaseTemplate = JSON.parse(JSON.stringify(currentEditingTemplateState));
         await saveState();
-        showToast("Plantilla semanal guardada con éxito.", "success");
     }
 
     function applyTemplateToMonth() {
@@ -2161,7 +2229,6 @@
             await saveState();
             renderWeeklyScheduleEditor();
             renderAllViews();
-            showToast(`Plantilla aplicada a todo ${monthVal}.`, "success");
         });
     }
 
@@ -2254,7 +2321,6 @@
         if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
         config.dateExceptions[dateStr].note = value;
         await saveState();
-        showToast("Nota actualizada.", "success");
     }
 
     async function toggleCustomDateNoteVisible(dateStr, checked) {
@@ -2474,7 +2540,7 @@
 
             let statusBadge = "";
             if (b.status === 'Confirmada') statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px]">Confirmada</span>';
-            else if (b.status === 'Pendiente de Pago') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">Pendiente</span>';
+            else if (b.status === 'Pendiente de Pago') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">Pendiente (Webpay)</span>';
             else statusBadge = '<span class="bg-danger/20 text-danger border border-danger/30 px-1.5 py-0.5 rounded text-[9px]">Cancelada</span>';
 
             const gcalLink = getGoogleCalendarUrl(b);
@@ -2499,7 +2565,7 @@
                             <i class="fa-brands fa-google text-[9px]"></i> Calendar
                         </a>
                         <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-studio border border-white/10 rounded px-1 py-0.5 text-[10px] text-bone focus:outline-none cursor-pointer">
-                            <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente</option>
+                            <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente (Webpay)</option>
                             <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmar</option>
                             <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelar</option>
                         </select>
@@ -2520,7 +2586,6 @@
             await saveBookingToSupabase(item);
             renderAdminBookingsTable();
             renderAllViews();
-            showToast("Estado de la cita actualizado.", "success");
         }
     }
 
@@ -2535,9 +2600,6 @@
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
-    // =====================================================================
-    // CARRUSEL
-    // =====================================================================
     let currentSlide = 0;
     let isPlaying = true;
     let slideInterval;
@@ -2594,72 +2656,22 @@
 
     startInterval();
 
-    // =====================================================================
-    // HERO BACKGROUND ROTATION
-    // =====================================================================
-    let currentHeroSlide = 0;
-    function startHeroBgRotation() {
-        const bgSlides = document.querySelectorAll('.hero-bg-slide');
-        if (!bgSlides.length) return;
-        setInterval(() => {
-            bgSlides[currentHeroSlide].classList.remove('active');
-            currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
-            bgSlides[currentHeroSlide].classList.add('active');
-        }, 5000);
-    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-mask').forEach(el => { observer.observe(el); });
 
-    // =====================================================================
-    // LIGHTBOX
-    // =====================================================================
-    function openLightbox(imgUrl) {
-        const modal = document.getElementById('lightbox-modal');
-        const img = document.getElementById('lightbox-img');
-        if (modal && img) {
-            img.src = imgUrl;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-    }
-
-    function closeLightbox() {
-        const modal = document.getElementById('lightbox-modal');
-        if (modal) {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeLightbox();
-    });
-
-    // =====================================================================
-    // TOGGLE FAQ
-    // =====================================================================
-    function toggleFaq(btn) {
-        const content = btn.nextElementSibling;
-        const icon = btn.querySelector('i');
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            icon.style.transform = 'rotate(180deg)';
-        }
-    }
-
-    // =====================================================================
-    // NAVBAR SCROLL
-    // =====================================================================
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) { navbar.classList.add('scrolled'); }
         else { navbar.classList.remove('scrolled'); }
     });
 
-    // =====================================================================
-    // MOBILE MENU
-    // =====================================================================
     const mobileBtn = document.getElementById('mobileBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -2673,80 +2685,27 @@
     if (mobileBtn) mobileBtn.addEventListener('click', toggleMobileMenu);
     mobileLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
 
-    // =====================================================================
-    // REVEAL ANIMATIONS
-    // =====================================================================
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-mask').forEach(el => { observer.observe(el); });
+    function toggleFaq(btn) {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('i');
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
 
-    // =====================================================================
-    // INICIALIZACIÓN
-    // =====================================================================
-    window.addEventListener('load', async function() {
-        // Cargar datos desde Supabase
-        await loadDataFromSupabase(true);
-
-        const today = getLocalDateString(new Date());
-        selectedClientDate = today;
-        document.getElementById('summary-date').innerText = formatDateReadable(today);
-        clientCalendarViewDate = new Date();
-        clientCalendarViewDate.setDate(1);
-
-        const currentMonth = today.slice(0, 7);
-        const monthFilter = document.getElementById('admin-month-filter');
-        if (monthFilter) monthFilter.value = currentMonth;
-
-        const weekMonth = document.getElementById('admin-week-month');
-        if (weekMonth) weekMonth.value = currentMonth;
-
-        const templateMonth = document.getElementById('template-target-month');
-        if (templateMonth) templateMonth.value = currentMonth;
-
-        populateWeekSelector();
-        updateAuthUI();
-        renderAllViews();
-
-        startHeroBgRotation();
-
-        // Ocultar pantalla de carga
-        const loader = document.getElementById('pantalla-carga');
+    // Al finalizar la carga, quitar pantalla
+    window.addEventListener('load', () => {
         setTimeout(() => {
-            loader.classList.add('ocultar-carga');
-            setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-        }, 500);
-
-        // =====================================================================
-        // REALTIME EN SUPABASE - Escuchar cambios en tiempo real
-        // =====================================================================
-        const channel = supabaseClient
-            .channel('realtime_changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async (payload) => {
-                console.log('Cambio en settings detectado:', payload);
-                await loadDataFromSupabase(false);
-                renderAllViews();
-                showToast("Cambios detectados en la nube. Actualizando vista...", "info");
-            })
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async (payload) => {
-                console.log('Cambio en bookings detectado:', payload);
-                await loadDataFromSupabase(false);
-                renderAllViews();
-                showToast("Nueva reserva detectada en la nube.", "info");
-            })
-            .subscribe((status) => {
-                console.log('Conexión Realtime:', status);
-                if (status === 'SUBSCRIBED') {
-                    setSyncStatus('synced');
-                }
-            });
-
-        console.log('Sistema inicializado con Realtime en vivo');
+            const loader = document.getElementById('pantalla-carga');
+            if (loader && !loader.classList.contains('ocultar-carga')) {
+                loader.classList.add('ocultar-carga');
+                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
+            }
+        }, 1200);
     });
 </script>
 
