@@ -611,6 +611,7 @@
                           <div>
                               <label class="block text-[11px] uppercase text-muted tracking-wider mb-3 font-semibold">Bloques Disponibles</label>
                               <div id="client-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                                  <!-- Fallback de carga, se limpiará en JS -->
                                   <div class="col-span-full text-center text-muted text-xs py-4 loading-shimmer h-10"></div>
                               </div>
                           </div>
@@ -1228,7 +1229,7 @@
             }
 
             if (settingsRows && settingsRows.length > 0) {
-                const sortedRows = [...settingsRows].sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+                const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
                 const loadedConfig = sortedRows[0].value || {};
 
                 config = {
@@ -1282,12 +1283,22 @@
 
             dataLoaded = true;
             setSyncStatus('synced');
-            const loadingStatusEl2 = document.getElementById('loading-status');
-            if (loadingStatusEl2) loadingStatusEl2.innerText = '¡Listo!';
+            
+            // Ocultamos la pantalla de carga tan pronto los datos estén listos
+            const loader = document.getElementById('pantalla-carga');
+            if (loader) {
+                loader.classList.add('ocultar-carga');
+                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
+            }
 
         } catch (err) {
             console.error("Error crítico al cargar desde Supabase:", err);
             setSyncStatus('error');
+            const loader = document.getElementById('pantalla-carga');
+            if (loader) {
+                loader.classList.add('ocultar-carga');
+                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
+            }
             showToast("Error al conectar con la base de datos.", "error");
         } finally {
             isLoadingData = false;
@@ -1342,14 +1353,14 @@
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error al guardar la reserva en la nube.", "error");
+                showToast("Error BD: Revisa que la tabla 'hipso_bookings' tenga todas las columnas requeridas (client_name, client_email, etc).", "error");
                 return false;
             } else {
                 return true;
             }
         } catch (err) {
             console.error("Error al guardar reserva:", err);
-            showToast("Error al guardar la reserva.", "error");
+            showToast("Error fatal al procesar la reserva.", "error");
             return false;
         }
     }
@@ -1512,8 +1523,6 @@
         return { active: false, slots: [] };
     }
 
-    // MODIFICADO: Esta función filtra de manera MATEMÁTICA ESTRICTA las horas.
-    // Solo oculta los bloques horarios que numéricamente ya pasaron.
     function getRemainingSlotsForDate(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots) return [];
@@ -1533,7 +1542,7 @@
                 const slotM = parseInt(parts[1], 10);
 
                 if (slotH > currentHour) return true;
-                if (slotH === currentHour && slotM > currentMin) return true;
+                if (slotH === currentHour && slotM >= currentMin) return true;
                 return false;
             });
         }
@@ -1613,7 +1622,6 @@
             const cellDate = new Date(year, month, day);
             const dateStr = getLocalDateString(cellDate);
 
-            // CORRECCIÓN CLAVE 2: Para habilitar el día de hoy, dateStr debe ser MÁS CHICO estricto que hoy para ser pasado.
             const isPast = dateStr < todayStr;
             const info = getDayAvailabilityStatus(dateStr, isPast);
             const isSelectable = !isPast && info.status !== 'gray' && info.status !== 'red';
@@ -1743,8 +1751,12 @@
             createdAt: new Date().toISOString()
         };
 
+        const success = await saveBookingToSupabase(pendingBookingData);
+        if (!success) {
+            return;
+        }
+
         bookings.push(pendingBookingData);
-        await saveBookingToSupabase(pendingBookingData);
         renderAllViews();
 
         document.getElementById('success-modal').classList.remove('hidden');
@@ -2696,17 +2708,6 @@
             icon.style.transform = 'rotate(180deg)';
         }
     }
-
-    // Al finalizar la carga, quitar pantalla
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const loader = document.getElementById('pantalla-carga');
-            if (loader && !loader.classList.contains('ocultar-carga')) {
-                loader.classList.add('ocultar-carga');
-                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-            }
-        }, 1200);
-    });
 </script>
 
 </body>
