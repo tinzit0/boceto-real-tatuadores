@@ -592,7 +592,7 @@
                               </span>
                           </div>
 
-                          <!-- CALENDARIO VISUAL -->
+                          <!-- CALENDARIO VISUAL CLIENTE -->
                           <div class="mb-5">
                               <div class="flex items-center justify-between mb-3">
                                   <button type="button" onclick="calNavigate(-1)" class="w-7 h-7 flex items-center justify-center rounded-full bg-studio border border-white/10 text-muted hover:text-bone hover:border-accent transition cursor-pointer">
@@ -732,7 +732,7 @@
     </footer>
 </div>
 
-<!-- MODAL SUBIR COMPROBANTE DE TRANSFERENCIA (CON CONTRARELOJ DE 15 MIN) -->
+<!-- MODAL SUBIR COMPROBANTE DE TRANSFERENCIA -->
 <div id="receipt-upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-6 max-w-md w-full shadow-2xl border border-white/10 space-y-4">
         <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -860,7 +860,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN -->
+<!-- PANEL ADMIN (ARQUITECTURA DE CALENDARIO MENSUAL POR DÍAS) -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -1043,7 +1043,7 @@
 
 <script>
     // =====================================================================
-    // VARIABLES GLOBALES Y MESES EN ESPAÑOL
+    // CREDENCIALES Y VARIABLES GLOBALES
     // =====================================================================
     const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -1084,7 +1084,7 @@
         return `${year}-${month}-${day}`;
     }
 
-    // MODAL DE SUBIR COMPROBANTE CON CONTRARELOJ DE 15 MIN
+    // MODAL SUBIR COMPROBANTE CON CONTRARELOJ 15 MIN
     function openReceiptModal() {
         const modal = document.getElementById('receipt-upload-modal');
         const info = document.getElementById('receipt-booking-info');
@@ -1952,7 +1952,7 @@
         validateBookingForm();
     }
 
-    // CALENDARIO ADMIN (MENSUAL POR DÍAS)
+    // CALENDARIO ADMIN (MENSUAL POR DÍAS - BLOQUEO ESTRICTO DE DÍAS PASADOS)
     function renderAdminDashboard() {
         renderAdminCalendar();
         renderAdminDayEditor();
@@ -2098,10 +2098,25 @@
         }
     }
 
+    // VALIDACIÓN ESTRICTA AL AGREGAR HORA EN EL ADMIN PARA EL DÍA DE HOY
     function addSlotToAdminDay(dateStr) {
         const input = document.getElementById('new-admin-slot-input');
         if (!input || !input.value) return;
         const timeVal = input.value;
+
+        const todayStr = getLocalDateString(new Date());
+        if (dateStr === todayStr) {
+            const now = new Date();
+            const [sH, sM] = timeVal.split(':').map(Number);
+            const currentH = now.getHours();
+            const currentM = now.getMinutes();
+
+            if (sH < currentH || (sH === currentH && sM <= currentM)) {
+                const currentFormatted = `${String(currentH).padStart(2,'0')}:${String(currentM).padStart(2,'0')}`;
+                showToast(`No puedes agregar la hora ${timeVal} para hoy ya que es anterior o igual a la hora actual (${currentFormatted}).`, "error");
+                return;
+            }
+        }
 
         if (!config.daySchedules[dateStr].slots) config.daySchedules[dateStr].slots = [];
         if (!config.daySchedules[dateStr].slots.includes(timeVal)) {
@@ -2136,12 +2151,28 @@
     }
 
     function generateBulkForAdminDay(dateStr) {
-        const slots = generateTimeSlots("10:00", "19:00", 60);
+        let slots = generateTimeSlots("10:00", "19:00", 60);
+        const todayStr = getLocalDateString(new Date());
+
+        if (dateStr === todayStr) {
+            const now = new Date();
+            const currentH = now.getHours();
+            const currentM = now.getMinutes();
+            slots = slots.filter(s => {
+                const [sH, sM] = s.split(':').map(Number);
+                return (sH > currentH) || (sH === currentH && sM > currentM);
+            });
+            if (slots.length === 0) {
+                showToast("Ya transcurrieron todos los bloques de 10:00 a 19:00 para hoy.", "error");
+                return;
+            }
+        }
+
         config.daySchedules[dateStr].slots = slots;
         config.daySchedules[dateStr].active = true;
         renderAdminDayEditor();
         renderAdminCalendar();
-        showToast("Horarios generados de 10:00 a 19:00.", "success");
+        showToast("Horarios generados con éxito.", "success");
     }
 
     async function saveAdminDaySchedule() {
@@ -2614,6 +2645,10 @@
         clientCalendarViewDate.setDate(1);
         adminCalendarViewDate = new Date();
         adminCalendarViewDate.setDate(1);
+
+        const currentMonth = today.slice(0, 7);
+        const monthFilter = document.getElementById('admin-month-filter');
+        if (monthFilter) monthFilter.value = currentMonth;
 
         updateAuthUI();
         renderAllViews();
