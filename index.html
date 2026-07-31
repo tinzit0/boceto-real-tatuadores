@@ -109,7 +109,7 @@
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO (AJUSTADO A TRANSICIÓN DE 1 SEG) */
+        /* FONDO HERO INTERACTIVO */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
@@ -142,7 +142,7 @@
         }
         .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
 
-        /* TARJETAS DE PORTAFOLIO CON VISTA COMPLETA */
+        /* TARJETAS DE PORTAFOLIO */
         .portfolio-img-card {
             position: relative;
             overflow: hidden;
@@ -330,7 +330,6 @@
             background: rgba(250, 204, 21, 0.1);
         }
 
-        /* ESTILOS DE ZOOM EN LIGHTBOX */
         #lightbox-img {
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             transform-origin: center center;
@@ -398,7 +397,6 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
     <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
-        <!-- FONDOS DINÁMICOS CON ROTACIÓN DE 2 SEGUNDOS: IMAGEN 1, IMAGEN 2 E IMAGEN 3 -->
         <div class="absolute inset-0 z-0">
             <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
             <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
@@ -641,6 +639,19 @@
                                       <textarea id="client-notes" rows="3" placeholder="Detalla estilo, zona del cuerpo, tamaño aprox..."
                                                 class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm leading-relaxed focus:outline-none focus:border-accent resize-y min-h-[72px]"></textarea>
                                   </div>
+
+                                  <!-- CAMPO DE SUBIDA DE IMAGEN DE REFERENCIA -->
+                                  <div>
+                                      <label class="block text-[10px] uppercase text-muted tracking-wider mb-1">Imagen de Referencia (Opcional)</label>
+                                      <div class="relative flex items-center">
+                                          <input type="file" id="client-image" accept="image/*" onchange="previewSelectedImage(event)"
+                                                 class="w-full text-xs text-muted bg-studio border border-white/10 rounded-lg p-1.5 focus:outline-none focus:border-accent file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-accent/20 file:text-accent hover:file:bg-accent/30 cursor-pointer">
+                                      </div>
+                                      <div id="image-preview-container" class="hidden mt-2 relative w-16 h-16 rounded-lg overflow-hidden border border-white/10">
+                                          <img id="image-preview" src="" class="w-full h-full object-cover">
+                                          <button type="button" onclick="removeSelectedImage()" class="absolute top-0 right-0 bg-black/70 text-white w-4 h-4 text-[9px] flex items-center justify-center rounded-bl">×</button>
+                                      </div>
+                                  </div>
                                   
                                   <div class="bg-studio/50 p-3 rounded-lg border border-white/5 text-[11px] text-muted space-y-1 transition-all duration-300">
                                       <div class="flex justify-between"><span>Fecha:</span> <strong id="summary-date" class="text-bone">--</strong></div>
@@ -702,7 +713,7 @@
     </footer>
 </div>
 
-<!-- VISOR LIGHTBOX -->
+<!-- VISOR LIGHTBOX CON CONTROLES DE ZOOM -->
 <div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
     <div class="absolute top-6 right-6 flex items-center gap-3 z-10">
         <button onclick="event.stopPropagation(); changeZoom(0.25)" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-sm transition" title="Acercar (+)">
@@ -1140,6 +1151,7 @@
     let isSyncing = false;
     let dataLoaded = false;
     let currentZoomScale = 1;
+    let currentSelectedImageFile = null;
 
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
@@ -1148,9 +1160,63 @@
         return `${year}-${month}-${day}`;
     }
 
-    // =====================================================================
+    // PREVISUALIZACIÓN DE IMAGEN SELECCIONADA POR EL CLIENTE
+    function previewSelectedImage(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImg = document.getElementById('image-preview');
+
+        if (file) {
+            currentSelectedImageFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            removeSelectedImage();
+        }
+    }
+
+    function removeSelectedImage() {
+        currentSelectedImageFile = null;
+        const fileInput = document.getElementById('client-image');
+        const previewContainer = document.getElementById('image-preview-container');
+        if (fileInput) fileInput.value = "";
+        if (previewContainer) previewContainer.classList.add('hidden');
+    }
+
+    // SUBIR IMAGEN A SUPABASE STORAGE BUCKET 'tattoo-ideas'
+    async function uploadClientImageToStorage(file) {
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+            const filePath = `references/${fileName}`;
+
+            const { data, error } = await supabaseClient
+                .storage
+                .from('tattoo-ideas')
+                .upload(filePath, file);
+
+            if (error) {
+                console.error("Error al subir archivo a Storage:", error);
+                return null;
+            }
+
+            const { data: publicUrlData } = supabaseClient
+                .storage
+                .from('tattoo-ideas')
+                .getPublicUrl(filePath);
+
+            return publicUrlData.publicUrl;
+        } catch (err) {
+            console.error("Error inesperado en uploadClientImageToStorage:", err);
+            return null;
+        }
+    }
+
     // TOASTS
-    // =====================================================================
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         if (!container) return;
@@ -1173,9 +1239,7 @@
         }, 3800);
     }
 
-    // =====================================================================
     // MODAL DE CONFIRMACIÓN
-    // =====================================================================
     let pendingConfirmAction = null;
     function showConfirm(message, onAccept) {
         document.getElementById('confirm-modal-message').innerText = message;
@@ -1194,9 +1258,7 @@
         if (typeof action === 'function') action();
     }
 
-    // =====================================================================
-    // FUNCIONES DE SINCRONIZACIÓN CON SUPABASE
-    // =====================================================================
+    // SINCRONIZACIÓN SUPABASE
     function setSyncStatus(status, isAdmin = false) {
         const statusText = document.getElementById('sync-status-text');
         const headerEl = document.getElementById('sync-status-header');
@@ -1311,6 +1373,7 @@
                     clientEmail: b.client_email,
                     clientPhone: b.client_phone,
                     notes: b.notes,
+                    imageUrl: b.image_url || null,
                     status: b.status || 'Pendiente de Pago',
                     createdAt: b.created_at
                 }));
@@ -1374,13 +1437,14 @@
                     client_email: b.clientEmail,
                     client_phone: b.clientPhone,
                     notes: b.notes,
+                    image_url: b.imageUrl || null,
                     status: b.status || 'Pendiente de Pago',
                     created_at: b.createdAt || new Date().toISOString()
                 }, { onConflict: 'id' });
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error Supabase: Faltan columnas en 'hipso_bookings' (client_name, client_email, etc). Revisa la base de datos.", "error");
+                showToast("Error Supabase: Verifica las columnas de 'hipso_bookings' (incluyendo 'image_url').", "error");
                 return false;
             } else {
                 return true;
@@ -1411,9 +1475,6 @@
         }
     }
 
-    // =====================================================================
-    // FUNCIONES DE RENDERIZADO UNIFICADAS
-    // =====================================================================
     function renderAllViews() {
         renderClientCalendar();
         renderClientSlots();
@@ -1423,9 +1484,6 @@
         updateAuthUI();
     }
 
-    // =====================================================================
-    // AUTENTICACIÓN
-    // =====================================================================
     function processDirectLogin(e) {
         e.preventDefault();
         const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
@@ -1525,9 +1583,6 @@
         document.querySelector(`.admin-tab-btn[data-tab="${tabName}"]`).classList.add('active');
     }
 
-    // =====================================================================
-    // DISPONIBILIDAD / HORARIOS EFECTIVOS
-    // =====================================================================
     function getEffectiveScheduleForDate(dateStr) {
         if (!dateStr) return { active: false, slots: [] };
 
@@ -1607,9 +1662,6 @@
         return { status: 'green', free, total };
     }
 
-    // =====================================================================
-    // CALENDARIO VISUAL DEL CLIENTE
-    // =====================================================================
     const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     function calNavigate(delta) {
@@ -1765,6 +1817,16 @@
             return;
         }
 
+        const submitBtn = document.getElementById('btn-submit-booking');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Procesando...</span>';
+
+        let uploadedImageUrl = null;
+        if (currentSelectedImageFile) {
+            uploadedImageUrl = await uploadClientImageToStorage(currentSelectedImageFile);
+        }
+
         pendingBookingData = {
             id: 'RES-' + Date.now().toString().slice(-5) + '-' + Math.random().toString(36).slice(2, 6),
             date: selectedClientDate,
@@ -1773,17 +1835,22 @@
             clientEmail: document.getElementById('client-email').value,
             clientPhone: document.getElementById('client-phone').value,
             notes: document.getElementById('client-notes').value,
+            imageUrl: uploadedImageUrl,
             status: 'Pendiente de Pago',
             paymentMethod: 'webpay',
             createdAt: new Date().toISOString()
         };
 
         const success = await saveBookingToSupabase(pendingBookingData);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+
         if (!success) {
             return;
         }
 
         bookings.push(pendingBookingData);
+        removeSelectedImage();
         renderAllViews();
 
         document.getElementById('success-modal').classList.remove('hidden');
@@ -1798,14 +1865,12 @@
         document.getElementById('success-modal').classList.remove('flex');
         document.getElementById('success-modal').classList.add('hidden');
         document.getElementById('booking-form').reset();
+        removeSelectedImage();
         selectedClientSlot = "";
         renderClientSlots();
         validateBookingForm();
     }
 
-    // =====================================================================
-    // ADMIN DASHBOARD
-    // =====================================================================
     function renderAdminDashboard() {
         populateWeekSelector();
         renderWeeklyScheduleEditor();
@@ -1876,9 +1941,6 @@
         }
     }
 
-    // =====================================================================
-    // GENERADOR MASIVO DE BLOQUES HORARIOS
-    // =====================================================================
     function generateTimeSlots(start, end, intervalMinutes) {
         const slots = [];
         const [sh, sm] = start.split(':').map(Number);
@@ -1968,9 +2030,6 @@
         showToast(`${generated.length} horarios generados y agregados.`, "success");
     }
 
-    // =====================================================================
-    // AGREGAR HORA MANUAL
-    // =====================================================================
     function openSingleSlotModal(target, label) {
         singleSlotTarget = target;
         document.getElementById('single-slot-target-label').innerText = label;
@@ -2025,9 +2084,6 @@
         dayObj.slots.sort();
     }
 
-    // =====================================================================
-    // HORARIOS SEMANA POR SEMANA
-    // =====================================================================
     function renderWeeklyScheduleEditor() {
         const container = document.getElementById('weekly-days-editor-container');
         const monthVal = document.getElementById('admin-week-month').value;
@@ -2132,7 +2188,7 @@
         if (!config.weekCustomSchedules) config.weekCustomSchedules = {};
 
         config.weekCustomSchedules[weekKey] = JSON.parse(JSON.stringify(currentEditingWeekState));
-        
+
         const saved = await saveState();
         if (saved) {
             renderAllViews();
@@ -2182,9 +2238,6 @@
         });
     }
 
-    // =====================================================================
-    // HORARIO SEMANAL BASE (PLANTILLA)
-    // =====================================================================
     const TEMPLATE_DOW_ORDER = [1, 2, 3, 4, 5, 6, 0];
 
     function renderTemplateEditor() {
@@ -2271,9 +2324,6 @@
         });
     }
 
-    // =====================================================================
-    // EXCEPCIONES POR DÍA
-    // =====================================================================
     function renderCustomDateEditor() {
         const dateInput = document.getElementById('admin-custom-date');
         const container = document.getElementById('custom-date-editor-container');
@@ -2379,9 +2429,6 @@
         }
     }
 
-    // =====================================================================
-    // BLOQUEO DE FECHAS
-    // =====================================================================
     async function toggleBlockDateRange(block) {
         const start = document.getElementById('admin-block-start-date').value;
         const end = document.getElementById('admin-block-end-date').value || start;
@@ -2550,7 +2597,7 @@
         renderAdminBookingsTable();
     }
 
-    // RENDERIZADO DE TABLA CORREGIDO SIN RECORTES DE TEXTO
+    // RENDERIZADO DE TABLA ADMIN CON VISUALIZADOR DE IMAGEN DEL CLIENTE
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -2585,6 +2632,12 @@
 
             const gcalLink = getGoogleCalendarUrl(b);
 
+            const imageButton = b.imageUrl ? `
+                <button onclick="openLightbox('${b.imageUrl}')" class="mt-1 bg-accent/20 hover:bg-accent/40 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] font-mono flex items-center gap-1 transition cursor-pointer">
+                    <i class="fa-solid fa-image text-[9px]"></i> Ver Foto
+                </button>
+            ` : '';
+
             tr.innerHTML = `
                 <td class="py-3 font-mono align-top">
                     <div class="text-bone font-semibold text-[10px] md:text-[11px]">${b.date}</div>
@@ -2593,6 +2646,7 @@
                 <td class="py-3 align-top">
                     <div class="text-bone font-medium text-[10px] md:text-[11px] break-words">${b.clientName}</div>
                     <div class="text-muted text-[10px] leading-relaxed break-words whitespace-pre-wrap mt-0.5">${b.notes || 'Sin detalles'}</div>
+                    ${imageButton}
                 </td>
                 <td class="py-3 text-[10px] align-top break-words">
                     <div class="font-mono text-bone">${b.clientPhone}</div>
@@ -2737,7 +2791,6 @@
         }
     }
 
-    // ROTACIÓN DE PORTADA A 2 SEGUNDOS (2000 ms)
     let currentHeroSlide = 0;
     function startHeroBgRotation() {
         const bgSlides = document.querySelectorAll('.hero-bg-slide');
@@ -2749,9 +2802,6 @@
         }, 2000);
     }
 
-    // =====================================================================
-    // LÓGICA DE LIGHTBOX Y ZOOM
-    // =====================================================================
     function openLightbox(imgUrl) {
         const modal = document.getElementById('lightbox-modal');
         const img = document.getElementById('lightbox-img');
@@ -2797,7 +2847,6 @@
         }
     }
 
-    // EVENTO PRINCIPAL UNIFICADO
     window.addEventListener('DOMContentLoaded', async () => {
         setTimeout(hideLoadingScreen, 2000);
 
@@ -2825,7 +2874,6 @@
 
         startHeroBgRotation();
 
-        // REALTIME EN SUPABASE
         supabaseClient
             .channel('realtime_changes')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
