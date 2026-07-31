@@ -860,7 +860,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN (ARQUITECTURA DE CALENDARIO MENSUAL POR DÍAS) -->
+<!-- PANEL ADMIN -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -1452,14 +1452,6 @@
     }
 
     let isLoadingData = false;
-
-    function hideLoadingScreen() {
-        const loader = document.getElementById('pantalla-carga');
-        if (loader) {
-            loader.classList.add('ocultar-carga');
-            setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-        }
-    }
 
     async function loadDataFromSupabase(showLoading = true) {
         if (isLoadingData) return;
