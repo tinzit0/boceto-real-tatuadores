@@ -67,9 +67,9 @@
             align-items: center;
             justify-content: center;
             z-index: 999999;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
         }
-        .ocultar-carga { opacity: 0; visibility: hidden; }
+        .ocultar-carga { opacity: 0; visibility: hidden; pointer-events: none; }
         .spinner {
             width: 40px; height: 40px;
             border: 1px solid rgba(224, 230, 226, 0.05);
@@ -611,7 +611,6 @@
                           <div>
                               <label class="block text-[11px] uppercase text-muted tracking-wider mb-3 font-semibold">Bloques Disponibles</label>
                               <div id="client-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                                  <!-- Fallback de carga, se limpiará en JS -->
                                   <div class="col-span-full text-center text-muted text-xs py-4 loading-shimmer h-10"></div>
                               </div>
                           </div>
@@ -1207,6 +1206,14 @@
 
     let isLoadingData = false;
 
+    function hideLoadingScreen() {
+        const loader = document.getElementById('pantalla-carga');
+        if (loader) {
+            loader.classList.add('ocultar-carga');
+            setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
+        }
+    }
+
     async function loadDataFromSupabase(showLoading = true) {
         if (isLoadingData) return;
         isLoadingData = true;
@@ -1284,21 +1291,13 @@
             dataLoaded = true;
             setSyncStatus('synced');
             
-            // Ocultamos la pantalla de carga tan pronto los datos estén listos
-            const loader = document.getElementById('pantalla-carga');
-            if (loader) {
-                loader.classList.add('ocultar-carga');
-                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-            }
+            // Forzar ocultar pantalla de carga inmediatamente
+            hideLoadingScreen();
 
         } catch (err) {
             console.error("Error crítico al cargar desde Supabase:", err);
             setSyncStatus('error');
-            const loader = document.getElementById('pantalla-carga');
-            if (loader) {
-                loader.classList.add('ocultar-carga');
-                setTimeout(() => { document.body.classList.add('page-ready'); }, 800);
-            }
+            hideLoadingScreen();
             showToast("Error al conectar con la base de datos.", "error");
         } finally {
             isLoadingData = false;
@@ -1353,14 +1352,14 @@
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error BD: Revisa que la tabla 'hipso_bookings' tenga todas las columnas requeridas (client_name, client_email, etc).", "error");
+                showToast("Error Supabase: Faltan columnas en 'hipso_bookings' (client_name, client_email, etc). Revisa la base de datos.", "error");
                 return false;
             } else {
                 return true;
             }
         } catch (err) {
             console.error("Error al guardar reserva:", err);
-            showToast("Error fatal al procesar la reserva.", "error");
+            showToast("Error al procesar la reserva.", "error");
             return false;
         }
     }
@@ -1523,6 +1522,7 @@
         return { active: false, slots: [] };
     }
 
+    // CORRECCIÓN MATEMÁTICA ESTRICTA DE HORARIOS
     function getRemainingSlotsForDate(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots) return [];
@@ -2708,6 +2708,49 @@
             icon.style.transform = 'rotate(180deg)';
         }
     }
+
+    // EVENTO PRINCIPAL UNIFICADO DE INICIALIZACIÓN
+    window.addEventListener('DOMContentLoaded', async () => {
+        // Fallback de seguridad: Si pasan 2.5s y la pantalla de carga no se ocultó, forzar cierre
+        setTimeout(hideLoadingScreen, 2500);
+
+        await loadDataFromSupabase(true);
+
+        const today = getLocalDateString(new Date());
+        selectedClientDate = today;
+        document.getElementById('summary-date').innerText = formatDateReadable(today);
+        clientCalendarViewDate = new Date();
+        clientCalendarViewDate.setDate(1);
+
+        const currentMonth = today.slice(0, 7);
+        const monthFilter = document.getElementById('admin-month-filter');
+        if (monthFilter) monthFilter.value = currentMonth;
+
+        const weekMonth = document.getElementById('admin-week-month');
+        if (weekMonth) weekMonth.value = currentMonth;
+
+        const templateMonth = document.getElementById('template-target-month');
+        if (templateMonth) templateMonth.value = currentMonth;
+
+        populateWeekSelector();
+        updateAuthUI();
+        renderAllViews();
+
+        startHeroBgRotation();
+
+        // REALTIME EN SUPABASE
+        supabaseClient
+            .channel('realtime_changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
+                await loadDataFromSupabase(false);
+                renderAllViews();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async () => {
+                await loadDataFromSupabase(false);
+                renderAllViews();
+            })
+            .subscribe();
+    });
 </script>
 
 </body>
