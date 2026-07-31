@@ -67,7 +67,7 @@
             align-items: center;
             justify-content: center;
             z-index: 999999;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
         }
         .ocultar-carga { opacity: 0; visibility: hidden; pointer-events: none; }
         .spinner {
@@ -343,7 +343,7 @@
 <div id="pantalla-carga">
     <div class="spinner"></div>
     <h2 class="font-serif text-lg tracking-widest text-bone uppercase font-light">Hipso Tattoo</h2>
-    <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Conectando con la nube...</p>
+    <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Cargando aplicación...</p>
 </div>
 
 <!-- TOASTS -->
@@ -1453,7 +1453,7 @@
 
     let isLoadingData = false;
 
-    async function loadDataFromSupabase(showLoading = true) {
+    async function loadDataFromSupabase(showLoading = false) {
         if (isLoadingData) return;
         isLoadingData = true;
 
@@ -1476,7 +1476,6 @@
                 };
             } else {
                 config = { daySchedules: {}, blockedDates: [], blockedReasons: {} };
-                await supabaseClient.from('hipso_settings').upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
             }
 
             const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
@@ -1500,10 +1499,9 @@
 
             dataLoaded = true;
             setSyncStatus('synced');
-            hideLoadingScreen();
         } catch (err) {
+            console.error("Error al cargar de Supabase:", err);
             setSyncStatus('error');
-            hideLoadingScreen();
         } finally {
             isLoadingData = false;
         }
@@ -1974,7 +1972,7 @@
         validateBookingForm();
     }
 
-    // CALENDARIO ADMIN (MENSUAL POR DÍAS - BLOQUEO ESTRICTO DE DÍAS PASADOS)
+    // CALENDARIO ADMIN (MENSUAL POR DÍAS)
     function renderAdminDashboard() {
         renderAdminCalendar();
         renderAdminDayEditor();
@@ -2120,7 +2118,6 @@
         }
     }
 
-    // VALIDACIÓN ESTRICTA AL AGREGAR HORA EN EL ADMIN PARA EL DÍA DE HOY
     function addSlotToAdminDay(dateStr) {
         const input = document.getElementById('new-admin-slot-input');
         if (!input || !input.value) return;
@@ -2655,13 +2652,13 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-        // FAIL-SAFE TIMEOUT: Fuerza la ocultación de la pantalla de carga tras 3 segundos máximos pase lo que pase
+        // FAIL-SAFE INMEDIATO DE 1.5 SEGUNDOS PARA EVITAR CUALQUIER BUCLE O BLOQUEO DE CARGA
         const safetyTimer = setTimeout(() => {
             hideLoadingScreen();
-        }, 3000);
+        }, 1500);
 
         try {
-            await loadDataFromSupabase(true);
+            await loadDataFromSupabase(false);
         } catch(e) {
             console.error("Error al iniciar datos:", e);
         } finally {
@@ -2690,12 +2687,15 @@
             updateAdminTimersOnly();
         }, 1000);
 
-        // AUTO-SINCRONIZACIÓN GLOBAL INSTANTÁNEA (CADA 3 SEGUNDOS)
+        // AUTO-SINCRONIZACIÓN GLOBAL INSTANTÁNEA (CADA 3 SEGUNDOS) EN SEGUNDO PLANO
         setInterval(async () => {
             try {
                 const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
+                const { data: settingsRows } = await supabaseClient.from('hipso_settings').select('*').eq('key', 'main_config');
+
+                let shouldUpdate = false;
                 if (bookingsData) {
-                    bookings = bookingsData.map(b => ({
+                    const newBookings = bookingsData.map(b => ({
                         id: b.id,
                         date: b.date,
                         time: b.time,
@@ -2708,6 +2708,27 @@
                         status: b.status || 'Pendiente de Comprobante',
                         createdAt: b.created_at
                     }));
+                    if (JSON.stringify(newBookings) !== JSON.stringify(bookings)) {
+                        bookings = newBookings;
+                        shouldUpdate = true;
+                    }
+                }
+
+                if (settingsRows && settingsRows.length > 0) {
+                    const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
+                    const loadedConfig = sortedRows[0].value || {};
+                    const newConfig = {
+                        daySchedules: loadedConfig.daySchedules || {},
+                        blockedDates: loadedConfig.blockedDates || [],
+                        blockedReasons: loadedConfig.blockedReasons || {},
+                    };
+                    if (JSON.stringify(newConfig) !== JSON.stringify(config)) {
+                        config = newConfig;
+                        shouldUpdate = true;
+                    }
+                }
+
+                if (shouldUpdate) {
                     renderAllViews();
                 }
             } catch (e) {
