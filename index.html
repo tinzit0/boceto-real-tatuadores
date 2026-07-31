@@ -109,12 +109,12 @@
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO */
+        /* FONDO HERO INTERACTIVO (AJUSTADO A TRANSICIÓN DE 1 SEG) */
         .hero-bg-slide {
             position: absolute;
             inset: 0;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out, transform 8s ease;
+            transition: opacity 1s ease-in-out, transform 4s ease;
             transform: scale(1);
         }
         .hero-bg-slide.active {
@@ -142,28 +142,32 @@
         }
         .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
 
-        /* TARJETAS Y FOTOS */
+        /* TARJETAS DE PORTAFOLIO CON VISTA COMPLETA */
         .portfolio-img-card {
             position: relative;
             overflow: hidden;
             border-radius: 12px;
             cursor: pointer;
             border: 1px solid rgba(98, 119, 106, 0.2);
+            background-color: #121614;
             transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .portfolio-img-card img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .portfolio-img-card:hover img {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
         .portfolio-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(22, 27, 24, 0.6);
+            background: rgba(22, 27, 24, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -325,23 +329,11 @@
             border-color: rgba(250, 204, 21, 0.3);
             background: rgba(250, 204, 21, 0.1);
         }
-        .sync-indicator .fa-spin {
-            animation: fa-spin 2s infinite linear;
-        }
-        @keyframes fa-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
 
-        .loading-shimmer {
-            background: linear-gradient(90deg, #1f2622 25%, #2a332e 50%, #1f2622 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* ESTILOS DE ZOOM EN LIGHTBOX */
+        #lightbox-img {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center center;
         }
     </style>
 </head>
@@ -406,11 +398,11 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
     <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
-        <!-- FONDOS DINÁMICOS CON IMAGEN 1, 2 Y 9 -->
+        <!-- FONDOS DINÁMICOS CON ROTACIÓN DE 2 SEGUNDOS: IMAGEN 1, IMAGEN 2 E IMAGEN 3 -->
         <div class="absolute inset-0 z-0">
             <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
             <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
-            <img src="assets/imagen9.jpeg" alt="Hipso Tattoo Fondo 3" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
+            <img src="assets/imagen3.jpeg" alt="Hipso Tattoo Fondo 3" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
             <div class="absolute inset-0 bg-gradient-to-t from-studio via-studio/60 to-studio"></div>
         </div>
         <div class="relative z-10 w-full px-6">
@@ -470,7 +462,7 @@
                           </div>
                       </div>
 
-                      <!-- SLIDE 4: INCLUYE IMAGEN 10 E IMAGEN 11 -->
+                      <!-- SLIDE 4 -->
                       <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
                           <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen10.jpeg')">
                               <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
@@ -680,7 +672,7 @@
         </div>
       </section>
 
-      <!-- NUEVA SECCIÓN DE PAGO DIRECTO WEBPAY AL FINAL -->
+      <!-- SECCIÓN DE PAGO DIRECTO WEBPAY -->
       <section id="pago-directo" class="py-12 bg-panel border-t border-[rgba(255,255,255,0.03)]">
           <div class="max-w-3xl mx-auto px-6 text-center space-y-4">
               <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20 border border-accent/30 text-accent mb-1">
@@ -711,11 +703,25 @@
 </div>
 
 <!-- VISOR LIGHTBOX -->
-<div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" onclick="closeLightbox()">
-    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white hover:text-accent text-2xl focus:outline-none transition">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-    <img id="lightbox-img" src="" alt="Ampliación Tattoo" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10" onclick="event.stopPropagation()">
+<div id="lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+    <div class="absolute top-6 right-6 flex items-center gap-3 z-10">
+        <button onclick="event.stopPropagation(); changeZoom(0.25)" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-sm transition" title="Acercar (+)">
+            <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </button>
+        <button onclick="event.stopPropagation(); changeZoom(-0.25)" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-sm transition" title="Alejar (-)">
+            <i class="fa-solid fa-magnifying-glass-minus"></i>
+        </button>
+        <button onclick="event.stopPropagation(); resetZoom()" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-xs font-mono transition" title="Restablecer">
+            1:1
+        </button>
+        <button onclick="closeLightbox()" class="w-10 h-10 rounded-full bg-studio/80 border border-white/10 text-white hover:text-accent flex items-center justify-center text-lg transition" title="Cerrar (Esc)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="overflow-auto max-w-[95vw] max-h-[85vh] flex items-center justify-center" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="Ampliación Tattoo" class="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10 cursor-zoom-in" onclick="toggleZoomClick()">
+    </div>
 </div>
 
 <!-- MODAL DE ÉXITO DE RESERVA -->
@@ -903,7 +909,7 @@
                     <div>
                         <label class="block text-[9px] font-mono text-muted uppercase tracking-wider mb-1 font-semibold">SEMANA A CONFIGURAR:</label>
                         <select id="admin-week-number" onchange="renderWeeklyScheduleEditor()"
-                                class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-xs focus:outline-none focus:border-accent cursor-pointer">
+                                class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-xs font-mono focus:outline-none focus:border-accent cursor-pointer">
                         </select>
                     </div>
                 </div>
@@ -1133,6 +1139,7 @@
 
     let isSyncing = false;
     let dataLoaded = false;
+    let currentZoomScale = 1;
 
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
@@ -1373,7 +1380,7 @@
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error de la BD: Verifica las columnas en Supabase.", "error");
+                showToast("Error Supabase: Faltan columnas en 'hipso_bookings' (client_name, client_email, etc). Revisa la base de datos.", "error");
                 return false;
             } else {
                 return true;
@@ -2543,7 +2550,7 @@
         renderAdminBookingsTable();
     }
 
-    // RENDERIZADO DE TABLA CORREGIDO: MUESTRA DATOS COMPLETOS SIN RECORTAR
+    // RENDERIZADO DE TABLA CORREGIDO SIN RECORTES DE TEXTO
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -2730,9 +2737,68 @@
         }
     }
 
+    // ROTACIÓN DE PORTADA A 2 SEGUNDOS (2000 ms)
+    let currentHeroSlide = 0;
+    function startHeroBgRotation() {
+        const bgSlides = document.querySelectorAll('.hero-bg-slide');
+        if (!bgSlides.length) return;
+        setInterval(() => {
+            bgSlides[currentHeroSlide].classList.remove('active');
+            currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
+            bgSlides[currentHeroSlide].classList.add('active');
+        }, 2000);
+    }
+
+    // =====================================================================
+    // LÓGICA DE LIGHTBOX Y ZOOM
+    // =====================================================================
+    function openLightbox(imgUrl) {
+        const modal = document.getElementById('lightbox-modal');
+        const img = document.getElementById('lightbox-img');
+        if (modal && img) {
+            img.src = imgUrl;
+            resetZoom();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('lightbox-modal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            resetZoom();
+        }
+    }
+
+    function changeZoom(delta) {
+        const img = document.getElementById('lightbox-img');
+        if (!img) return;
+        currentZoomScale = Math.min(Math.max(0.75, currentZoomScale + delta), 3.0);
+        img.style.transform = `scale(${currentZoomScale})`;
+        img.className = currentZoomScale > 1 ? "max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10 cursor-zoom-out" : "max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10 cursor-zoom-in";
+    }
+
+    function resetZoom() {
+        const img = document.getElementById('lightbox-img');
+        currentZoomScale = 1;
+        if (img) {
+            img.style.transform = `scale(1)`;
+            img.className = "max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-white/10 cursor-zoom-in";
+        }
+    }
+
+    function toggleZoomClick() {
+        if (currentZoomScale > 1) {
+            resetZoom();
+        } else {
+            changeZoom(0.75);
+        }
+    }
+
     // EVENTO PRINCIPAL UNIFICADO
     window.addEventListener('DOMContentLoaded', async () => {
-        // Garantizar ocultar la pantalla de carga tras 2 segundos si hay demoras
         setTimeout(hideLoadingScreen, 2000);
 
         await loadDataFromSupabase(true);
