@@ -356,14 +356,17 @@
     </div>
     <a href="#" onclick="showPublicLanding()" class="font-serif text-2xl md:text-4xl text-bone tracking-wide font-normal mb-3 md:mb-5">Hipso Tattoo</a>
 
-    <div class="hidden md:flex items-center gap-8 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-muted">
-        <div id="public-nav-links" class="flex items-center gap-8">
+    <div class="hidden md:flex items-center gap-6 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-muted">
+        <div id="public-nav-links" class="flex items-center gap-6">
             <a href="#estudio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Estudio</a>
             <a href="#portafolio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Portafolio</a>
             <a href="#preparacion" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Info</a>
             <a href="#agendar" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Booking</a>
             <button onclick="openClientManageModal()" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
                 <i class="fa-solid fa-calendar-check text-xs"></i> Mis Citas
+            </button>
+            <button onclick="openReceiptModal()" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-receipt text-xs"></i> Subir Comprobante
             </button>
             <span class="w-px h-3 bg-white/10"></span>
             <span id="sync-status-header" class="sync-indicator">
@@ -386,16 +389,20 @@
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed inset-0 bg-studio z-50 hidden flex-col justify-center items-center gap-8 font-serif text-xl text-bone">
+<div id="mobileMenu" class="fixed inset-0 bg-studio z-50 hidden flex-col justify-center items-center gap-6 font-serif text-lg text-bone">
     <a href="#estudio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Estudio</a>
     <a href="#portafolio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Portafolio</a>
     <a href="#preparacion" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Info</a>
     <a href="#agendar" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Booking</a>
-    <button onclick="openClientManageModal(); toggleMobileMenu();" class="hover:text-accent text-accent transition-colors flex items-center gap-2 text-lg">
+    <button onclick="openClientManageModal(); toggleMobileMenu();" class="hover:text-accent text-accent transition-colors flex items-center gap-2">
         <i class="fa-solid fa-calendar-check"></i>
         <span>Mis Citas</span>
     </button>
-    <button onclick="handleAdminNavClick()" class="hover:text-accent mobile-link text-muted transition-colors flex items-center gap-2 text-lg">
+    <button onclick="openReceiptModal(); toggleMobileMenu();" class="hover:text-accent text-accent transition-colors flex items-center gap-2">
+        <i class="fa-solid fa-receipt"></i>
+        <span>Subir Comprobante</span>
+    </button>
+    <button onclick="handleAdminNavClick()" class="hover:text-accent mobile-link text-muted transition-colors flex items-center gap-2">
         <i class="fa-solid fa-user-gear"></i>
         <span id="mobile-admin-label">Panel Admin</span>
     </button>
@@ -566,7 +573,7 @@
               <p class="reveal-item delay-2 font-sans text-accent text-[10px] md:text-xs tracking-[0.25em] uppercase mb-2 font-semibold">Tucapel 391, Concepción</p>
               <div class="w-12 h-px bg-accent/30 mx-auto my-4 md:my-6"></div>
               <p class="reveal-item delay-3 font-sans text-muted text-xs mx-auto max-w-lg leading-relaxed">
-                  Selecciona la fecha y el bloque de horario disponible. Al completar tus datos serás redirigido al portal oficial de pago Webpay Plus.
+                  Selecciona la fecha y el bloque de horario disponible. Al reservar tendrás 15 minutos para subir tu comprobante de transferencia o pagar con Webpay.
               </p>
           </div>
 
@@ -668,15 +675,15 @@
                                   
                                   <button type="submit" id="btn-submit-booking" disabled
                                           class="btn-primary-action mt-4 w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold tracking-widest py-3.5 rounded-xl uppercase cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
-                                      <i class="fa-solid fa-credit-card text-xs"></i>
-                                      <span id="btn-submit-booking-label">Confirmar & Ir a Pagar con Webpay</span>
+                                      <i class="fa-solid fa-calendar-plus text-xs"></i>
+                                      <span>Reservar Cita (Tienes 15 min para pagar)</span>
                                   </button>
                               </form>
                           </div>
                           <div class="mt-5 pt-3 border-t border-white/[0.04] flex flex-col gap-1 text-muted text-[10px]">
                               <div class="flex items-center gap-1.5">
                                   <i class="fa-solid fa-shield-halved text-accent text-xs"></i>
-                                  <span>Pagos procesados con Webpay Plus.</span>
+                                  <span>Reserva segura por tiempo limitado.</span>
                               </div>
                               <div class="flex items-center gap-1.5 opacity-80">
                                   <i class="fa-regular fa-envelope text-accent text-xs"></i>
@@ -696,16 +703,21 @@
               <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20 border border-accent/30 text-accent mb-1">
                   <i class="fa-solid fa-credit-card text-xl"></i>
               </div>
-              <h3 class="font-serif text-xl md:text-2xl text-bone font-light">¿Ya agendaste y necesitas pagar tu abono?</h3>
+              <h3 class="font-serif text-xl md:text-2xl text-bone font-light">¿Prefieres pagar con Tarjeta (Webpay)?</h3>
               <p class="text-xs text-muted leading-relaxed max-w-lg mx-auto">
-                  Si no pudiste completar el pago de tu abono al momento de agendar o necesitas realizar un pago posterior de tu sesión, puedes hacerlo directamente desde aquí a través del portal oficial de Webpay Plus.
+                  Puedes realizar el pago de tu abono de forma rápida y segura a través de la pasarela oficial de Webpay Plus.
               </p>
-              <div class="pt-2">
+              <div class="pt-2 flex flex-wrap items-center justify-center gap-4">
                   <a href="https://www.webpay.cl/company/158953" target="_blank" rel="noopener noreferrer" 
                      class="btn-primary-action inline-flex items-center justify-center gap-3 text-white font-sans text-xs font-semibold tracking-widest py-3.5 px-8 rounded-xl uppercase shadow-xl hover:scale-105 transition-transform">
                       <i class="fa-solid fa-lock text-sm"></i>
                       <span>Pagar Abono en Webpay Plus</span>
                   </a>
+                  <button onclick="openReceiptModal()" 
+                          class="bg-panel hover:bg-accent/20 border border-accent/40 text-bone font-sans text-xs font-semibold tracking-widest py-3.5 px-8 rounded-xl uppercase shadow-xl transition cursor-pointer">
+                      <i class="fa-solid fa-receipt text-accent text-sm mr-2"></i>
+                      <span>Subir Comprobante</span>
+                  </button>
               </div>
           </div>
       </section>
@@ -718,6 +730,34 @@
         <p class="font-sans text-[9px] md:text-[10px] text-muted uppercase tracking-widest">© 2026. Arte Corporal.</p>
       </div>
     </footer>
+</div>
+
+<!-- MODAL SUBIR COMPROBANTE DE TRANSFERENCIA (CON CONTRARELOJ DE 15 MIN) -->
+<div id="receipt-upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="action-card rounded-2xl p-6 max-w-md w-full shadow-2xl border border-white/10 space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 class="font-serif text-lg text-bone flex items-center gap-2">
+                <i class="fa-solid fa-receipt text-accent"></i>
+                Subir Comprobante de Transferencia
+            </h3>
+            <button onclick="closeReceiptModal()" class="text-muted hover:text-bone text-lg cursor-pointer">×</button>
+        </div>
+        <p class="text-xs text-muted leading-relaxed">
+            Ingresa tu usuario de Instagram o teléfono para buscar tu reserva activa. Tienes un límite de 15 minutos desde que reservaste para subir el comprobante.
+        </p>
+        <form onsubmit="verifyBookingForReceipt(event)" class="space-y-3">
+            <div>
+                <input type="text" id="receipt-search-input" required placeholder="Ej: @tu_instagram o +56912345678"
+                       class="w-full bg-studio border border-white/10 rounded-xl px-3 py-2 text-bone text-xs focus:outline-none focus:border-accent">
+            </div>
+            <button type="submit" class="btn-primary-action w-full py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-white cursor-pointer">
+                Verificar Reserva
+            </button>
+        </form>
+
+        <div id="receipt-booking-info" class="space-y-3 pt-2">
+        </div>
+    </div>
 </div>
 
 <!-- MODAL CONSULTAR / CANCELAR CITAS (CLIENTE) -->
@@ -774,18 +814,12 @@
 <div id="success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="action-card rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-white/10 space-y-4">
         <div class="text-emerald-400 text-3xl mb-1"><i class="fa-solid fa-circle-check"></i></div>
-        <h3 class="font-serif text-xl text-bone">¡Cita Registrada!</h3>
+        <h3 class="font-serif text-xl text-bone">¡Cita Reservada!</h3>
         <p id="success-modal-message" class="text-xs text-muted leading-relaxed">
-            Tu reserva ha quedado guardada con éxito. Haz clic en el botón para completar tu abono en Webpay Plus.
+            Tu reserva ha quedado guardada temporalmente. Tienes 15 minutos para ir a la opción **"Subir Comprobante"** en el menú superior.
         </p>
-        <div id="success-modal-webpay-wrap" class="space-y-2 pt-1">
-            <button onclick="proceedToWebpay()" class="btn-primary-action w-full flex items-center justify-center gap-2 text-white font-sans text-xs font-semibold py-3 px-4 rounded-xl uppercase">
-                <i class="fa-solid fa-credit-card"></i>
-                <span>Ir a Pagar Abono ($20.000)</span>
-            </button>
-        </div>
-        <button onclick="closeSuccessModal()" class="text-[10px] text-muted hover:text-bone transition pt-1">
-            Cerrar ventana
+        <button onclick="closeSuccessModal()" class="btn-primary-action w-full text-white text-xs font-semibold py-2.5 rounded-xl uppercase cursor-pointer">
+            Entendido
         </button>
     </div>
 </div>
@@ -1184,7 +1218,6 @@
 
     let selectedClientDate = "";
     let selectedClientSlot = "";
-    let selectedPaymentMethod = "webpay";
     let currentEditingWeekState = {};
     let currentEditingTemplateState = {};
     let clientCalendarViewDate = new Date();
@@ -1193,12 +1226,189 @@
     let dataLoaded = false;
     let currentZoomScale = 1;
     let currentSelectedImageFile = null;
+    let currentSelectedReceiptFile = null;
+    let activeFoundBookingForReceipt = null;
+    let receiptCountdownInterval = null;
 
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    // MODAL DE SUBIR COMPROBANTE CON CONTRARELOJ DE 15 MIN
+    function openReceiptModal() {
+        const modal = document.getElementById('receipt-upload-modal');
+        const info = document.getElementById('receipt-booking-info');
+        if (modal) {
+            if (info) info.innerHTML = "";
+            document.getElementById('receipt-search-input').value = "";
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeReceiptModal() {
+        const modal = document.getElementById('receipt-upload-modal');
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            if (receiptCountdownInterval) clearInterval(receiptCountdownInterval);
+            activeFoundBookingForReceipt = null;
+            currentSelectedReceiptFile = null;
+        }
+    }
+
+    function verifyBookingForReceipt(e) {
+        e.preventDefault();
+        const inputVal = document.getElementById('receipt-search-input').value.trim().toLowerCase().replace('@', '');
+        const infoDiv = document.getElementById('receipt-booking-info');
+        if (!infoDiv) return;
+        infoDiv.innerHTML = "";
+
+        const found = bookings.find(b => {
+            const phoneMatch = b.clientPhone && b.clientPhone.toLowerCase().includes(inputVal);
+            const igMatch = b.clientEmail && b.clientEmail.toLowerCase().replace('@', '').includes(inputVal);
+            return (phoneMatch || igMatch) && (b.status === 'Pendiente de Comprobante' || b.status === 'Pendiente de Revisión');
+        });
+
+        if (!found) {
+            infoDiv.innerHTML = `<p class="text-xs text-danger italic text-center py-2">No se encontró ninguna reserva pendiente con esos datos.</p>`;
+            return;
+        }
+
+        const createdAtTime = new Date(found.createdAt).getTime();
+        const now = new Date().getTime();
+        const diffMs = now - createdAtTime;
+        const fifteenMinutesMs = 15 * 60 * 1000;
+
+        if (diffMs > fifteenMinutesMs && found.status === 'Pendiente de Comprobante') {
+            deleteBookingFromSupabase(found.id);
+            bookings = bookings.filter(b => b.id !== found.id);
+            renderAllViews();
+            infoDiv.innerHTML = `<p class="text-xs text-danger text-center">El tiempo límite de 15 minutos ha expirado. Tu reserva fue eliminada automáticamente y el horario ha quedado libre.</p>`;
+            return;
+        }
+
+        activeFoundBookingForReceipt = found;
+        
+        // Renderizamos la estructura del formulario una sola vez para evitar que el input se reinicie cada segundo
+        infoDiv.innerHTML = `
+            <div class="bg-studio p-3.5 rounded-xl border border-white/10 space-y-3 text-xs">
+                <div class="flex justify-between text-bone border-b border-white/5 pb-1"><span>Cliente:</span> <strong>${found.clientName}</strong></div>
+                <div class="flex justify-between text-bone border-b border-white/5 pb-1"><span>Cita:</span> <strong>${formatDateReadable(found.date)} a las ${found.time}</strong></div>
+                <div class="flex justify-between text-bone border-b border-white/5 pb-1"><span>Estado:</span> <strong class="text-amber-400">${found.status}</strong></div>
+                
+                <div class="bg-danger/20 border border-danger/30 text-danger p-2.5 rounded-lg text-center font-mono font-bold text-sm">
+                    ⏱️ Tiempo restante para subir comprobante:<br>
+                    <span id="countdown-timer-text" class="text-base">--:--</span>
+                </div>
+
+                ${found.status === 'Pendiente de Comprobante' ? `
+                    <div class="space-y-2 pt-1">
+                        <label class="block text-[10px] uppercase text-muted tracking-wider">Adjuntar Comprobante (Captura)</label>
+                        <input type="file" id="upload-receipt-file" accept="image/*" onchange="previewReceiptFile(event)"
+                               class="w-full text-xs text-muted bg-panel border border-white/10 rounded-lg p-1.5 focus:outline-none file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-semibold file:bg-accent/20 file:text-accent cursor-pointer">
+                        <div id="receipt-preview-container" class="hidden mt-1 relative w-14 h-14 rounded-lg overflow-hidden border border-white/10">
+                            <img id="receipt-preview" src="" class="w-full h-full object-cover">
+                            <button type="button" onclick="removeReceiptFile()" class="absolute top-0 right-0 bg-black/70 text-white w-4 h-4 text-[9px] flex items-center justify-center rounded-bl">×</button>
+                        </div>
+                        <button onclick="submitReceiptUpload()" class="btn-primary-action w-full py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-white cursor-pointer mt-1">
+                            Enviar Comprobante al Estudio
+                        </button>
+                    </div>
+                ` : '<p class="text-emerald-400 text-center font-mono text-xs pt-1"><i class="fa-solid fa-circle-check"></i> Comprobante ya enviado. En revisión por el administrador.</p>'}
+            </div>
+        `;
+
+        startReceiptCountdown(createdAtTime + fifteenMinutesMs);
+    }
+
+    function previewReceiptFile(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('receipt-preview-container');
+        const previewImg = document.getElementById('receipt-preview');
+
+        if (file) {
+            currentSelectedReceiptFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if(previewImg) previewImg.src = e.target.result;
+                if(previewContainer) previewContainer.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            removeReceiptFile();
+        }
+    }
+
+    function removeReceiptFile() {
+        currentSelectedReceiptFile = null;
+        const fileInput = document.getElementById('upload-receipt-file');
+        const previewContainer = document.getElementById('receipt-preview-container');
+        if (fileInput) fileInput.value = "";
+        if (previewContainer) previewContainer.classList.add('hidden');
+    }
+
+    function startReceiptCountdown(expireTimestamp) {
+        if (receiptCountdownInterval) clearInterval(receiptCountdownInterval);
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = expireTimestamp - now;
+            const timerSpan = document.getElementById('countdown-timer-text');
+
+            if (distance <= 0) {
+                clearInterval(receiptCountdownInterval);
+                if (timerSpan) timerSpan.innerText = "00:00";
+                if (activeFoundBookingForReceipt) {
+                    deleteBookingFromSupabase(activeFoundBookingForReceipt.id);
+                    bookings = bookings.filter(b => b.id !== activeFoundBookingForReceipt.id);
+                    renderAllViews();
+                }
+                const infoDiv = document.getElementById('receipt-booking-info');
+                if (infoDiv) infoDiv.innerHTML = `<p class="text-xs text-danger text-center">¡El tiempo ha expirado (15 min)! La reserva fue eliminada automáticamente.</p>`;
+                return;
+            }
+
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (timerSpan) {
+                timerSpan.innerText = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            }
+        }
+
+        updateTimer();
+        receiptCountdownInterval = setInterval(updateTimer, 1000);
+    }
+
+    async function submitReceiptUpload() {
+        if (!currentSelectedReceiptFile) {
+            showToast("Selecciona la imagen de tu comprobante.", "error");
+            return;
+        }
+        if (!activeFoundBookingForReceipt) return;
+
+        showToast("Subiendo comprobante...", "info");
+        const receiptUrl = await uploadClientImageToStorage(currentSelectedReceiptFile);
+
+        if (!receiptUrl) {
+            showToast("Error al subir la imagen a la nube.", "error");
+            return;
+        }
+
+        activeFoundBookingForReceipt.paymentReceiptUrl = receiptUrl;
+        activeFoundBookingForReceipt.status = 'Pendiente de Revisión';
+
+        const success = await saveBookingToSupabase(activeFoundBookingForReceipt);
+        if (success) {
+            await loadDataFromSupabase(false);
+            renderAllViews();
+            showToast("¡Comprobante enviado con éxito!", "success");
+            closeReceiptModal();
+        }
     }
 
     // GESTIÓN DEL MODAL "MIS CITAS" PARA CLIENTES
@@ -1241,7 +1451,7 @@
         });
 
         if (userBookings.length === 0) {
-            container.innerHTML = `<p class="text-xs text-muted italic text-center py-2">No se encontraron citas activas asociadas a esa búsqueda.</p>`;
+            container.innerHTML = `<p class="text-xs text-muted italic text-center py-2">No se encontraron citas asociadas a esa búsqueda.</p>`;
             return;
         }
 
@@ -1252,7 +1462,7 @@
                 <div>
                     <div class="font-mono text-xs font-semibold text-bone">${formatDateReadable(b.date)} a las ${b.time}</div>
                     <div class="text-[10px] text-accent">${b.clientName} (${b.clientEmail})</div>
-                    <div class="text-[9px] text-muted truncate max-w-[200px]">${b.notes || 'Sin especificaciones'}</div>
+                    <div class="text-[9px] text-amber-400">Estado: ${b.status}</div>
                 </div>
                 <button onclick="cancelClientBooking('${b.id}')" class="bg-danger/20 hover:bg-danger/40 border border-danger/30 text-danger text-[10px] px-3 py-1.5 rounded-lg transition font-mono self-start sm:self-auto cursor-pointer">
                     Cancelar Cita
@@ -1262,7 +1472,6 @@
         });
     }
 
-    // ELIMINACIÓN DEFINITIVA DESDE EL CLIENTE
     function cancelClientBooking(id) {
         showConfirm("¿Estás seguro de cancelar tu reserva? Se eliminará de la agenda y el horario quedará libre.", async () => {
             const success = await deleteBookingFromSupabase(id);
@@ -1488,7 +1697,8 @@
                     clientPhone: b.client_phone,
                     notes: b.notes,
                     imageUrl: b.image_url || null,
-                    status: b.status || 'Pendiente de Pago',
+                    paymentReceiptUrl: b.payment_receipt_url || null,
+                    status: b.status || 'Pendiente de Comprobante',
                     createdAt: b.created_at
                 }));
             } else {
@@ -1552,13 +1762,14 @@
                     client_phone: b.clientPhone,
                     notes: b.notes,
                     image_url: b.imageUrl || null,
-                    status: b.status || 'Pendiente de Pago',
+                    payment_receipt_url: b.paymentReceiptUrl || null,
+                    status: b.status || 'Pendiente de Comprobante',
                     created_at: b.createdAt || new Date().toISOString()
                 }, { onConflict: 'id' });
 
             if (error) {
                 console.error("Error al guardar reserva:", error);
-                showToast("Error Supabase: Verifica las columnas de 'hipso_bookings' (incluyendo 'image_url').", "error");
+                showToast("Error Supabase: Verifica las columnas de 'hipso_bookings'.", "error");
                 return false;
             } else {
                 return true;
@@ -1719,11 +1930,30 @@
         return { active: false, slots: [] };
     }
 
-    // CORRECCIÓN: Se entregan todos los bloques sin filtrar por hora del reloj
     function getRemainingSlotsForDate(dateStr) {
         const sched = getEffectiveScheduleForDate(dateStr);
         if (sched.blocked || !sched.active || !sched.slots) return [];
-        return [...sched.slots];
+
+        let slots = [...sched.slots];
+        const todayStr = getLocalDateString(new Date());
+
+        if (dateStr === todayStr) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMin = now.getMinutes();
+
+            slots = slots.filter(slot => {
+                const parts = slot.split(':');
+                if (parts.length !== 2) return true; 
+                const slotH = parseInt(parts[0], 10);
+                const slotM = parseInt(parts[1], 10);
+
+                if (slotH > currentHour) return true;
+                if (slotH === currentHour && slotM > currentMin) return true;
+                return false;
+            });
+        }
+        return slots;
     }
 
     function isDayFullyBookedOrClosed(dateStr) {
@@ -1931,8 +2161,9 @@
             clientPhone: document.getElementById('client-phone').value,
             notes: document.getElementById('client-notes').value,
             imageUrl: uploadedImageUrl,
-            status: 'Pendiente de Pago',
-            paymentMethod: 'webpay',
+            paymentReceiptUrl: null,
+            status: 'Pendiente de Comprobante',
+            paymentMethod: 'transferencia',
             createdAt: new Date().toISOString()
         };
 
@@ -1950,10 +2181,6 @@
 
         document.getElementById('success-modal').classList.remove('hidden');
         document.getElementById('success-modal').classList.add('flex');
-    }
-
-    function proceedToWebpay() {
-        window.location.href = WEBPAY_URL;
     }
 
     function closeSuccessModal() {
@@ -2090,13 +2317,13 @@
             if (applyToWholeWeek) {
                 Object.keys(currentEditingWeekState).forEach(dateStr => {
                     if (currentEditingWeekState[dateStr].active) {
-                        mergeSlotsInto(currentEditingWeekState[dateStr], generated);
+                        mergeSlotsInto(currentEditingWeekState[dateStr], generated, dateStr);
                     }
                 });
             } else {
                 const day = currentEditingWeekState[bulkSlotTarget.dateStr];
                 day.active = true;
-                mergeSlotsInto(day, generated);
+                mergeSlotsInto(day, generated, bulkSlotTarget.dateStr);
             }
             renderWeeklyScheduleEditorFromMemory();
         } else if (bulkSlotTarget.type === 'template') {
@@ -2116,7 +2343,7 @@
             const dateStr = bulkSlotTarget.dateStr;
             if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
             config.dateExceptions[dateStr].active = true;
-            mergeSlotsInto(config.dateExceptions[dateStr], generated);
+            mergeSlotsInto(config.dateExceptions[dateStr], generated, dateStr);
             await saveState();
             renderCustomDateEditor();
             renderDateExceptionsList();
@@ -2154,7 +2381,8 @@
         if (singleSlotTarget.type === 'week') {
             const day = currentEditingWeekState[singleSlotTarget.dateStr];
             day.active = true;
-            mergeSlotsInto(day, generated);
+            const added = mergeSlotsInto(day, generated, singleSlotTarget.dateStr);
+            if (!added) return;
             renderWeeklyScheduleEditorFromMemory();
         } else if (singleSlotTarget.type === 'template') {
             const dayTpl = currentEditingTemplateState[singleSlotTarget.dow];
@@ -2165,7 +2393,8 @@
             const dateStr = singleSlotTarget.dateStr;
             if (!config.dateExceptions[dateStr]) config.dateExceptions[dateStr] = { active: true, slots: [], note: "", noteVisible: false };
             config.dateExceptions[dateStr].active = true;
-            mergeSlotsInto(config.dateExceptions[dateStr], generated);
+            const added = mergeSlotsInto(config.dateExceptions[dateStr], generated, dateStr);
+            if (!added) return;
             await saveState();
             renderCustomDateEditor();
             renderDateExceptionsList();
@@ -2176,10 +2405,31 @@
         showToast(`Hora ${timeVal} agregada.`, "success");
     }
 
-    function mergeSlotsInto(dayObj, newSlots) {
+    function mergeSlotsInto(dayObj, newSlots, targetDateStr = null) {
         if (!dayObj.slots) dayObj.slots = [];
-        newSlots.forEach(s => { if (!dayObj.slots.includes(s)) dayObj.slots.push(s); });
+        const todayStr = getLocalDateString(new Date());
+
+        let addedCount = 0;
+        for (const s of newSlots) {
+            if (targetDateStr === todayStr) {
+                const now = new Date();
+                const [sH, sM] = s.split(':').map(Number);
+                const currentH = now.getHours();
+                const currentM = now.getMinutes();
+
+                if (sH < currentH || (sH === currentH && sM <= currentM)) {
+                    const currentFormatted = `${String(currentH).padStart(2,'0')}:${String(currentM).padStart(2,'0')}`;
+                    showToast(`No puedes agregar la hora ${s} para hoy ya que es anterior o igual a la hora actual (${currentFormatted}).`, "error");
+                    continue;
+                }
+            }
+            if (!dayObj.slots.includes(s)) {
+                dayObj.slots.push(s);
+                addedCount++;
+            }
+        }
         dayObj.slots.sort();
+        return addedCount > 0;
     }
 
     function renderWeeklyScheduleEditor() {
@@ -2211,8 +2461,6 @@
         renderWeeklyScheduleEditorFromMemory();
     }
 
-    // Indica si una fecha tiene un bloqueo o una excepción guardada que sobrescribirá
-    // lo que se configure para ella en el horario semanal.
     function getDateOverrideWarning(dateStr) {
         if (config.blockedDates && config.blockedDates.includes(dateStr)) return 'blocked';
         if (config.dateExceptions && config.dateExceptions[dateStr]) return 'exception';
@@ -2249,7 +2497,7 @@
             const overrideBadge = overrideType === 'blocked'
                 ? `<div class="text-[9px] text-danger font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Bloqueado: este horario no se mostrará a clientes mientras el bloqueo exista.</div>`
                 : overrideType === 'exception'
-                    ? `<div class="text-[9px] text-amber-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Tiene una excepción propia (pestaña "Bloqueos y Excepciones") que sobrescribe este horario para esta fecha.</div>`
+                    ? `<div class="text-[9px] text-amber-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Tiene una excepción propia que sobrescribe este horario.</div>`
                     : '';
 
             card.innerHTML = `
@@ -2438,9 +2686,6 @@
         });
     }
 
-    // Devuelve el horario que aplicaría a una fecha SIN considerar dateExceptions,
-    // es decir, lo que definiría el horario semanal (weekCustomSchedules). Se usa
-    // solo para mostrarle contexto al admin en el editor de excepciones.
     function getWeeklyScheduleOnlyForDate(dateStr) {
         if (config.weekCustomSchedules) {
             for (let weekKey in config.weekCustomSchedules) {
@@ -2467,15 +2712,6 @@
 
         if (!config.dateExceptions) config.dateExceptions = {};
 
-        // CORRECCIÓN CRÍTICA: antes, con solo seleccionar/mirar una fecha en este campo,
-        // se creaba y guardaba una excepción "activa" (active:true, slots:[]) para ese día.
-        // Como las excepciones tienen prioridad sobre el horario semanal, esto anulaba
-        // silenciosamente horarios ya configurados (ej: un día marcado ACTIVO con 12:00 en
-        // "Configuración de Agenda" aparecía como "sin disponibilidad" para el cliente).
-        // Ahora solo se usa un objeto temporal en memoria para mostrar la vista previa;
-        // la excepción real recién se crea/guarda cuando el admin ejecuta una acción explícita
-        // (agregar hora, activar/desactivar, escribir nota), lo cual ya manejan las funciones
-        // toggleCustomDateActive / updateCustomDateNote / etc. más abajo.
         const savedException = config.dateExceptions[dateStr];
         const hasSavedException = !!savedException;
         const dateData = savedException || { active: true, slots: [], note: "", noteVisible: false };
@@ -2490,25 +2726,13 @@
             warningHtml = `
                 <div class="bg-danger/10 border border-danger/30 rounded-lg px-2.5 py-2 text-[10px] text-danger leading-relaxed">
                     <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                    Este día está <strong>bloqueado</strong> (pestaña "Bloqueo de Fechas"). El bloqueo tiene prioridad
-                    absoluta: aunque configures horas aquí o en la agenda semanal, el cliente NO verá disponibilidad
-                    hasta que liberes el bloqueo.
+                    Este día está <strong>bloqueado</strong>. El bloqueo tiene prioridad absoluta.
                 </div>`;
         } else if (hasSavedException) {
             warningHtml = `
                 <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-400 leading-relaxed">
                     <i class="fa-solid fa-circle-info mr-1"></i>
-                    Este día tiene una <strong>excepción guardada</strong>. Mientras exista, ella manda sobre el horario
-                    semanal de "Configuración de Agenda" para esta fecha específica.
-                    ${weeklySched ? `El horario semanal para este día es <strong>${weeklySched.active ? (weeklySched.slots || []).join(', ') || 'activo sin horas' : 'inactivo'}</strong>, pero no se usará mientras la excepción exista.` : ''}
-                    Usa "Limpiar este día" si quieres volver a usar el horario semanal.
-                </div>`;
-        } else if (weeklySched) {
-            warningHtml = `
-                <div class="bg-white/5 border border-white/10 rounded-lg px-2.5 py-2 text-[10px] text-muted leading-relaxed">
-                    <i class="fa-solid fa-circle-info mr-1"></i>
-                    Sin excepción, hoy se usa el horario semanal (<strong>${weeklySched.active ? (weeklySched.slots || []).join(', ') || 'activo sin horas' : 'inactivo'}</strong>).
-                    Si agregas una hora o activas/desactivas algo aquí, se creará una excepción que sobrescribirá ese horario solo para esta fecha.
+                    Este día tiene una <strong>excepción guardada</strong> que sobrescribe el horario semanal.
                 </div>`;
         }
 
@@ -2540,7 +2764,7 @@
             </div>
             <div class="pt-1 space-y-1.5 border-t border-white/5">
                 <label class="block text-[9px] text-muted uppercase tracking-wider font-semibold">Nota del día (opcional)</label>
-                <textarea id="custom-date-note-${dateStr.replace(/-/g,'')}" rows="2" placeholder="Ej: Día con horario especial por feria de arte"
+                <textarea id="custom-date-note-${dateStr.replace(/-/g,'')}" rows="2" placeholder="Ej: Horario especial"
                           onchange="updateCustomDateNote('${dateStr}', this.value)"
                           class="w-full bg-studio border border-white/10 rounded-lg px-2.5 py-1.5 text-bone text-[11px] focus:outline-none focus:border-accent">${dateData.note || ''}</textarea>
                 <label class="flex items-center gap-2 text-[10px] text-muted cursor-pointer pt-0.5">
@@ -2550,7 +2774,7 @@
             </div>
             ${hasSavedException ? `
             <button onclick="removeCustomDateException('${dateStr}')" class="text-[10px] text-muted hover:text-danger underline pt-1 cursor-pointer font-mono">
-                Limpiar este día (eliminar excepción y volver al horario semanal)
+                Limpiar este día (volver al horario semanal)
             </button>` : ''}
         `;
     }
@@ -2613,23 +2837,18 @@
 
         container.innerHTML = dateKeys.map(dateStr => {
             const data = exceptions[dateStr];
-            const isEmptyActive = data.active && (!data.slots || data.slots.length === 0);
-            const summary = !data.active
-                ? 'Inactivo (bloquea este día)'
-                : (data.slots && data.slots.length > 0)
-                    ? data.slots.join(', ')
-                    : 'Activo, sin horas (bloquea este día por falta de horas)';
+            const summary = !data.active ? 'Inactivo' : (data.slots && data.slots.length > 0 ? data.slots.join(', ') : 'Activo sin horas');
             return `
             <div class="range-item flex items-center justify-between gap-2 bg-studio/60 border border-white/5 rounded-lg px-3 py-2">
                 <div class="min-w-0">
                     <div class="text-[11px] text-bone font-mono">${formatDateReadable(dateStr)}</div>
-                    <div class="text-[9px] ${isEmptyActive || !data.active ? 'text-danger' : 'text-muted'} truncate">${summary}</div>
+                    <div class="text-[9px] text-muted truncate">${summary}</div>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
-                    <button onclick="document.getElementById('admin-custom-date').value='${dateStr}'; renderCustomDateEditor(); document.getElementById('admin-custom-date').scrollIntoView({behavior:'smooth', block:'center'});" title="Editar esta fecha" class="text-muted hover:text-accent hover:bg-accent/10 border border-white/10 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
+                    <button onclick="document.getElementById('admin-custom-date').value='${dateStr}'; renderCustomDateEditor(); document.getElementById('admin-custom-date').scrollIntoView({behavior:'smooth', block:'center'});" title="Editar" class="text-muted hover:text-accent border border-white/10 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                     </button>
-                    <button onclick="removeCustomDateException('${dateStr}')" title="Eliminar excepción" class="text-danger hover:bg-danger/20 border border-danger/30 bg-danger/5 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
+                    <button onclick="removeCustomDateException('${dateStr}')" title="Eliminar" class="text-danger hover:bg-danger/20 border border-danger/30 w-6 h-6 rounded flex items-center justify-center transition cursor-pointer">
                         <i class="fa-solid fa-trash text-[10px]"></i>
                     </button>
                 </div>
@@ -2805,6 +3024,15 @@
         renderAdminBookingsTable();
     }
 
+    function formatInstagramHandle(emailOrIg) {
+        if (!emailOrIg) return '--';
+        const cleanHandle = emailOrIg.trim().replace(/^@+/, '');
+        return `<a href="https://instagram.com/${cleanHandle}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline flex items-center gap-1 font-semibold">
+            <i class="fa-brands fa-instagram text-[10px]"></i> @${cleanHandle}
+        </a>`;
+    }
+
+    // PANEL ADMIN: CÁLCULO EN VIVO DEL TIEMPO RESTANTE DE LOS 15 MINUTOS
     function renderAdminBookingsTable() {
         const tbody = document.getElementById('admin-bookings-table');
         const counter = document.getElementById('booking-counter');
@@ -2833,15 +3061,37 @@
             tr.className = "hover:bg-white/[0.02] border-b border-white/5";
 
             let statusBadge = "";
-            if (b.status === 'Confirmada') statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px]">Confirmada</span>';
-            else if (b.status === 'Pendiente de Pago') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">Pendiente (Webpay)</span>';
-            else statusBadge = '<span class="bg-danger/20 text-danger border border-danger/30 px-1.5 py-0.5 rounded text-[9px]">Cancelada</span>';
+
+            if (b.status === 'Confirmada') {
+                statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px]">Confirmada</span>';
+            } else if (b.status === 'Pendiente de Revisión') {
+                statusBadge = '<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 rounded text-[9px]">En Revisión</span>';
+            } else {
+                const createdAtTime = new Date(b.createdAt).getTime();
+                const expireTime = createdAtTime + (15 * 60 * 1000);
+                const now = new Date().getTime();
+                const diff = expireTime - now;
+
+                if (diff > 0) {
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                    statusBadge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">Falta ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</span>`;
+                } else {
+                    statusBadge = `<span class="bg-danger/20 text-danger border border-danger/30 px-1.5 py-0.5 rounded text-[9px]">Expirado (15m)</span>`;
+                }
+            }
 
             const gcalLink = getGoogleCalendarUrl(b);
 
             const imageButton = b.imageUrl ? `
                 <button onclick="openLightbox('${b.imageUrl}')" class="mt-1.5 bg-accent/20 hover:bg-accent/40 text-accent border border-accent/30 px-2 py-0.5 rounded text-[9px] font-mono flex items-center gap-1 transition cursor-pointer w-fit">
                     <i class="fa-solid fa-image text-[9px]"></i> Ver Foto Ref
+                </button>
+            ` : '';
+
+            const receiptButton = b.paymentReceiptUrl ? `
+                <button onclick="openLightbox('${b.paymentReceiptUrl}')" class="mt-1.5 ml-1 bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[9px] font-mono flex items-center gap-1 transition cursor-pointer w-fit">
+                    <i class="fa-solid fa-receipt text-[9px]"></i> Ver Comprobante
                 </button>
             ` : '';
 
@@ -2853,10 +3103,10 @@
                 <td class="py-3 align-top">
                     <div class="text-bone font-medium text-[10px] md:text-[11px] break-words">${b.clientName}</div>
                     <div class="text-muted text-[10px] leading-relaxed break-words whitespace-pre-wrap mt-0.5">${b.notes || 'Sin detalles'}</div>
-                    ${imageButton}
+                    <div class="flex flex-wrap gap-1">${imageButton}${receiptButton}</div>
                 </td>
                 <td class="py-3 text-[10px] align-top break-words">
-                    <div class="font-mono text-accent font-semibold">${b.clientEmail}</div>
+                    <div class="font-mono text-accent font-semibold">${formatInstagramHandle(b.clientEmail)}</div>
                     <div class="text-muted mt-0.5">${b.clientPhone}</div>
                 </td>
                 <td class="py-3 align-top">${statusBadge}</td>
@@ -2866,7 +3116,8 @@
                             <i class="fa-brands fa-google text-[9px]"></i> Calendar
                         </a>
                         <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-studio border border-white/10 rounded px-1 py-0.5 text-[10px] text-bone focus:outline-none cursor-pointer">
-                            <option value="Pendiente de Pago" ${b.status === 'Pendiente de Pago' ? 'selected' : ''}>Pendiente (Webpay)</option>
+                            <option value="Pendiente de Comprobante" ${b.status === 'Pendiente de Comprobante' ? 'selected' : ''}>Pendiente Comprobante</option>
+                            <option value="Pendiente de Revisión" ${b.status === 'Pendiente de Revisión' ? 'selected' : ''}>En Revisión</option>
                             <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmar</option>
                             <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelar</option>
                         </select>
@@ -3080,6 +3331,12 @@
         renderAllViews();
 
         startHeroBgRotation();
+
+        setInterval(() => {
+            if (!document.getElementById('admin-container').classList.contains('hidden')) {
+                renderAdminBookingsTable();
+            }
+        }, 1000);
 
         supabaseClient
             .channel('realtime_changes')
