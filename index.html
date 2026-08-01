@@ -1086,10 +1086,7 @@
 
     // =====================================================================
     // ANTI-BUCLE DE CARGA (FAIL-SAFE)
-    // Oculta la pantalla de carga pase lo que pase con la red/Supabase.
-    // Antes esta función se invocaba pero nunca estaba definida, lo que
-    // provocaba un ReferenceError que abortaba silenciosamente el resto del
-    // arranque (suscripción realtime, polling, calendarios, etc).
+    // Oculta la pantalla de carga de forma garantizada a los 1.8 segundos.
     // =====================================================================
     let loadingScreenHidden = false;
     function hideLoadingScreen() {
@@ -1104,9 +1101,8 @@
     }
 
     // =====================================================================
-    // GUARDA DE INTERACCIÓN — evita que la sincronización silenciosa (polling
-    // cada 3s / Realtime) cierre un <select> abierto o borre un campo que el
-    // administrador está editando en ese instante.
+    // GUARDA DE INTERACCIÓN — evita que la sincronización silenciosa (polling)
+    // cierre un <select> activo o borre un campo que el admin está editando.
     // =====================================================================
     function isEditingProtectedAdminArea() {
         const active = document.activeElement;
@@ -1116,8 +1112,6 @@
         return !!(active.closest && (active.closest('#admin-bookings-table') || active.closest('#admin-day-editor-content')));
     }
 
-    // Re-renderiza todo, mientras conserva selects/inputs activos del admin.
-    // Usada por el polling silencioso y por los callbacks de Supabase Realtime.
     function renderAllViewsSilent() {
         renderClientCalendar();
         renderClientSlots();
@@ -1441,7 +1435,6 @@
         }
     }
 
-    // Compatibilidad con el nombre anterior (imágenes de referencia del tatuaje)
     async function uploadClientImageToStorage(file) {
         return uploadFileToStorage(file, 'references');
     }
@@ -1612,24 +1605,6 @@
         }
     }
 
-    // =====================================================================
-    // INSERCIÓN ATÓMICA DE UNA RESERVA NUEVA (PREVENCIÓN REAL DE DOBLE RESERVA)
-    //
-    // IMPORTANTE: esto depende de un índice único parcial en la base de datos.
-    // Sin él, dos clientes pueden reservar el mismo horario si ambos insertan
-    // en la misma fracción de segundo, sin importar cuántas verificaciones se
-    // hagan antes en el navegador (el pre-chequeo de disponibilidad NO es
-    // suficiente por sí solo: solo reduce la ventana de colisión).
-    // Ejecutar UNA VEZ en el SQL Editor de Supabase:
-    //
-    //   CREATE UNIQUE INDEX IF NOT EXISTS uniq_active_booking_slot
-    //   ON hipso_bookings (date, time)
-    //   WHERE status <> 'Cancelada';
-    //
-    // Con ese índice, si dos inserts llegan casi simultáneos para el mismo
-    // date+time, Postgres garantiza que solo UNO tenga éxito; el otro recibe
-    // el código de error 23505 (unique_violation), que capturamos abajo.
-    // =====================================================================
     async function insertNewBookingAtomic(b) {
         try {
             const { error } = await supabaseClient
@@ -1649,8 +1624,6 @@
                 });
 
             if (error) {
-                // 23505 = unique_violation -> alguien más reservó ese mismo horario
-                // en el mismo instante. Cualquier otro código es un error genérico.
                 const isConflict = error.code === '23505' || (error.message && error.message.toLowerCase().includes('duplicate'));
                 return { success: false, conflict: isConflict, error };
             }
@@ -1669,12 +1642,6 @@
         }
     }
 
-    // =====================================================================
-    // BARRIDO GLOBAL DE EXPIRACIÓN (15 MIN)
-    // Se ejecuta en el polling de cualquier pestaña abierta (cliente o admin),
-    // así el horario se libera de verdad aunque nadie haya abierto el modal
-    // de "Subir Comprobante" para esa reserva puntual.
-    // =====================================================================
     let cleanupInProgress = false;
     async function cleanupExpiredBookings() {
         if (cleanupInProgress) return false;
@@ -2024,7 +1991,6 @@
 
     let pendingBookingData = null;
 
-    // PROCESAR RESERVA CLIENTE CON VERIFICACIÓN PREVIA ANTI-DOBLE RESERVA
     async function processClientBooking(e) {
         e.preventDefault();
 
@@ -2033,7 +1999,6 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Verificando disponibilidad...</span>';
 
-        // 1. VERIFICACIÓN ATÓMICA EN TIEMPO REAL CON SUPABASE
         const { data: existingBookings, error: checkError } = await supabaseClient
             .from('hipso_bookings')
             .select('id, status')
@@ -2054,7 +2019,6 @@
             return;
         }
 
-        // 2. SUBIDA DE LA IMAGEN DE REFERENCIA
         const clientFileInput = document.getElementById('client-image');
         const referenceFile = (clientFileInput && clientFileInput.files && clientFileInput.files.length > 0) ? clientFileInput.files[0] : currentSelectedImageFile;
 
@@ -2081,9 +2045,6 @@
 
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Confirmando reserva...</span>';
 
-        // 3. INSERCIÓN ATÓMICA REAL (protegida por índice único en Supabase).
-        // Esta es la verdadera barrera anti-doble-reserva; el chequeo del
-        // paso 1 solo mejora la experiencia evitando pasos innecesarios.
         const result = await insertNewBookingAtomic(pendingBookingData);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
@@ -2118,7 +2079,6 @@
         validateBookingForm();
     }
 
-    // CALENDARIO ADMIN (MENSUAL POR DÍAS)
     function renderAdminDashboard() {
         renderAdminCalendar();
         renderAdminDayEditor();
@@ -2629,11 +2589,11 @@
 
         const previousStatus = item.status;
         item.status = newStatus;
-        renderAdminBookingsTable(); // feedback visual inmediato
+        renderAdminBookingsTable();
 
         const success = await saveBookingToSupabase(item);
         if (!success) {
-            item.status = previousStatus; // revertir si Supabase rechazó el cambio
+            item.status = previousStatus;
             await loadDataFromSupabase(false);
         }
         renderAllViews();
@@ -2804,30 +2764,24 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-        // ---------------------------------------------------------------
-        // FAIL-SAFE ANTI-BUCLE: pase lo que pase con la red o con Supabase,
-        // la app se muestra igual dentro de 1.8s como máximo. Este timer es
-        // completamente independiente del resto de la inicialización.
-        // ---------------------------------------------------------------
+        // FAIL-SAFE CRÍTICO: Remueve la pantalla de carga tras 1.8 segundos pase lo que pase
         const safetyTimer = setTimeout(hideLoadingScreen, 1800);
 
-        // Carga inicial de datos (no bloquea el resto del arranque si falla)
         try {
             await loadDataFromSupabase(false);
-        } catch (e) {
+        } catch(e) {
             console.error("Error al iniciar datos:", e);
         }
         clearTimeout(safetyTimer);
         hideLoadingScreen();
 
-        // Estado inicial de calendarios/fecha (aislado en su propio try)
         try {
             const today = getLocalDateString(new Date());
             selectedClientDate = today;
             selectedAdminDate = today;
             const summaryDateEl = document.getElementById('summary-date');
             if (summaryDateEl) summaryDateEl.innerText = formatDateReadable(today);
-
+            
             clientCalendarViewDate = new Date();
             adminCalendarViewDate = new Date();
 
@@ -2837,24 +2791,18 @@
 
             updateAuthUI();
             renderAllViews();
-        } catch (e) {
-            console.error("Error al pintar la vista inicial:", e);
+        } catch(e) {
+            console.error("Error renderizando vistas iniciales:", e);
         }
 
-        try { startHeroBgRotation(); } catch (e) { console.error(e); }
+        try { startHeroBgRotation(); } catch(e) { console.error(e); }
 
-        // Refresca los contadores regresivos cada segundo sin tocar el resto del DOM
         setInterval(() => {
-            try { updateAdminTimersOnly(); } catch (e) { console.error(e); }
+            try { updateAdminTimersOnly(); } catch(e) { console.error(e); }
         }, 1000);
 
-        // =================================================================
-        // SINCRONIZACIÓN SILENCIOSA (POLLING DE RESPALDO CADA 3 SEGUNDOS)
-        // Actúa como respaldo robusto de Supabase Realtime: si el WebSocket
-        // se cae o tarda, el polling igual mantiene todo al día. También es
-        // responsable del barrido automático de reservas expiradas (15 min).
-        // =================================================================
-        async function silentSync() {
+        // AUTO-SINCRONIZACIÓN GLOBAL SILENCIOSA CADA 3 SEGUNDOS
+        setInterval(async () => {
             try {
                 const { data: bookingsData, error: bErr } = await supabaseClient.from('hipso_bookings').select('*');
                 const { data: settingsRows, error: sErr } = await supabaseClient.from('hipso_settings').select('*').eq('key', 'main_config');
@@ -2895,9 +2843,6 @@
                     }
                 }
 
-                // Barrido de reservas "Pendiente de Comprobante" con más de 15 min:
-                // corre en CUALQUIER pestaña abierta, no solo si alguien abrió el
-                // modal de "Subir Comprobante" de esa reserva en particular.
                 const cleaned = await cleanupExpiredBookings();
                 if (cleaned) shouldUpdate = true;
 
@@ -2905,35 +2850,25 @@
                     renderAllViewsSilent();
                 }
             } catch (e) {
-                console.log("Error en auto-sync silencioso:", e);
+                console.log("Error en auto-sync global:", e);
             }
-        }
-        setInterval(silentSync, 3000);
+        }, 3000);
 
-        // =================================================================
-        // SUPABASE REALTIME (WebSockets) — actualización instantánea.
-        // Combinado con el polling de arriba como respaldo robusto.
-        // =================================================================
         try {
             supabaseClient
                 .channel('realtime_changes')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_settings' }, async () => {
-                    try {
-                        await loadDataFromSupabase(false);
-                        await cleanupExpiredBookings();
-                        renderAllViewsSilent();
-                    } catch (e) { console.error(e); }
+                    await loadDataFromSupabase(false);
+                    renderAllViewsSilent();
                 })
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'hipso_bookings' }, async () => {
-                    try {
-                        await loadDataFromSupabase(false);
-                        await cleanupExpiredBookings();
-                        renderAllViewsSilent();
-                    } catch (e) { console.error(e); }
+                    await loadDataFromSupabase(false);
+                    await cleanupExpiredBookings();
+                    renderAllViewsSilent();
                 })
                 .subscribe();
         } catch (e) {
-            console.error("No se pudo iniciar Supabase Realtime, se seguirá usando el polling de respaldo:", e);
+            console.error("Error al suscribirse a Realtime:", e);
         }
     });
 </script>
