@@ -110,19 +110,6 @@
         .faq-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
 
-        /* FONDO HERO INTERACTIVO */
-        .hero-bg-slide {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out, transform 8s cubic-bezier(0.25, 1, 0.5, 1);
-            transform: scale(1);
-        }
-        .hero-bg-slide.active {
-            opacity: 0.45;
-            transform: scale(1.08);
-        }
-
         /* TARJETAS DE PORTAFOLIO PREMIUM */
         .gallery-card {
             position: relative;
@@ -159,19 +146,6 @@
         }
         .gallery-card:hover .gallery-overlay {
             opacity: 1;
-        }
-
-        .portfolio-img-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid rgba(98, 119, 106, 0.2);
-            background-color: #121614;
-            transition: all 0.4s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .action-card {
@@ -211,7 +185,7 @@
             text-decoration: line-through;
         }
 
-        /* CALENDARIO VISUAL (ADMIN Y CLIENTE) */
+        /* CALENDARIO VISUAL */
         .cal-day {
             position: relative;
             aspect-ratio: 1 / 1;
@@ -240,15 +214,9 @@
             box-shadow: 0 6px 18px rgba(98, 119, 106, 0.4);
         }
         .cal-day.cal-today:not(.cal-selected) { border-color: rgba(224,230,226,0.4); }
-        .cal-day.cal-disabled {
-            opacity: 0.28;
-            cursor: not-allowed;
-        }
+        .cal-day.cal-disabled { opacity: 0.28; cursor: not-allowed; }
         .cal-day.cal-empty { visibility: hidden; cursor: default; }
-        .cal-dot {
-            width: 5px; height: 5px; border-radius: 50%;
-            position: absolute; bottom: 5px;
-        }
+        .cal-dot { width: 5px; height: 5px; border-radius: 50%; position: absolute; bottom: 5px; }
         .cal-dot-green { background: #4ade80; }
         .cal-dot-yellow { background: #facc15; }
         .cal-dot-red { background: #f87171; }
@@ -259,31 +227,10 @@
 
         /* TOASTS */
         #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999998;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: calc(100vw - 40px);
+            position: fixed; bottom: 20px; right: 20px; z-index: 999998; display: flex; flex-direction: column; gap: 10px; max-width: calc(100vw - 40px);
         }
         .toast {
-            background: #1f2622;
-            border: 1px solid rgba(98, 119, 106, 0.35);
-            color: #e0e6e2;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            min-width: 240px;
-            max-width: 340px;
-            transform: translateX(120%);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #1f2622; border: 1px solid rgba(98, 119, 106, 0.35); color: #e0e6e2; padding: 12px 16px; border-radius: 12px; font-size: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); min-width: 240px; max-width: 340px; transform: translateX(120%); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .toast.toast-show { transform: translateX(0); opacity: 1; }
         .toast.toast-success { border-color: rgba(74, 222, 128, 0.4); }
@@ -295,47 +242,22 @@
         .toast-info .toast-icon { color: #62776a; }
 
         /* TABS ADMIN */
-        .admin-tab-btn {
-            transition: all 0.25s ease;
-            border-bottom: 2px solid transparent;
-        }
-        .admin-tab-btn.active {
-            color: #e0e6e2;
-            border-bottom-color: #62776a;
-        }
+        .admin-tab-btn { transition: all 0.25s ease; border-bottom: 2px solid transparent; }
+        .admin-tab-btn.active { color: #e0e6e2; border-bottom-color: #62776a; }
         .admin-tab-panel { display: none; animation: calFade 0.35s ease; }
         .admin-tab-panel.active { display: block; }
-
         .range-item { transition: all 0.2s ease; }
         .range-item:hover { background: rgba(255,255,255,0.03); }
 
         .sync-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.2);
-            padding: 2px 10px;
-            border-radius: 20px;
+            display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2); padding: 2px 10px; border-radius: 20px;
         }
-        .sync-indicator.syncing {
-            color: #facc15;
-            border-color: rgba(250, 204, 21, 0.3);
-            background: rgba(250, 204, 21, 0.1);
-        }
+        .sync-indicator.syncing { color: #facc15; border-color: rgba(250, 204, 21, 0.3); background: rgba(250, 204, 21, 0.1); }
+        #lightbox-img { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: center center; }
 
-        #lightbox-img {
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-origin: center center;
-        }
-
-        /* EFECTO LUXURY GLOW PARA HERO */
         .gold-accent-text {
             background: linear-gradient(135deg, #e0e6e2 0%, #a4b4a9 50%, #62776a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -414,12 +336,19 @@
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
 
-    <!-- PORTADA DE ALTA GAMA / LUXURY HERO -->
+    <!-- PORTADA DE ALTA GAMA CON VIDEO2.MOV DE FONDO E INSPIRACIÓN -->
     <header class="relative min-h-screen flex items-center justify-center text-center pt-24 pb-12 overflow-hidden bg-studio">
-        <div class="absolute inset-0 z-0">
-            <img src="assets/imagen1.jpeg" alt="Hipso Tatto Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
-            <img src="assets/imagen2.jpeg" alt="Hipso Tatto Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
-            <img src="assets/imagen3.jpeg" alt="Hipso Tatto Fondo 3" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
+        <!-- VIDEO2.MOV DE FONDO AUTOMÁTICO, SILENCIOSO Y EN BUCLE -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <video 
+                autoplay 
+                muted 
+                loop 
+                playsinline 
+                class="w-full h-full object-cover grayscale mix-blend-overlay opacity-40 scale-105">
+                <source src="assets/video2.mov" type="video/quicktime">
+                <source src="assets/video2.mov" type="video/mp4">
+            </video>
             <div class="absolute inset-0 bg-gradient-to-b from-studio via-studio/70 to-studio"></div>
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#161b18_85%)]"></div>
         </div>
@@ -446,9 +375,13 @@
                 </div>
             </div>
 
+            <!-- PALABRAS INSPIRADORAS: TU CONFIANZA, MI ARTE -->
             <div class="reveal-mask inline-mask max-w-xl mb-10">
-                <p class="reveal-item delay-3 font-sans text-muted text-xs sm:text-sm md:text-base font-light tracking-wide leading-relaxed">
-                    Arte corporal exclusivo y personalizado. Un entorno concebido para transformar tus ideas en piezas eternas de alto nivel estético.
+                <p class="reveal-item delay-3 font-serif italic text-sm sm:text-base md:text-lg text-bone tracking-wide leading-relaxed">
+                    "Tu confianza es el lienzo; mi arte, la huella eterna en tu piel."
+                </p>
+                <p class="reveal-item delay-3 font-sans text-muted text-xs mt-2 font-light tracking-widest uppercase">
+                    Compromiso, pulso y absoluta dedicación en cada sesión.
                 </p>
             </div>
 
@@ -586,52 +519,6 @@
                   </div>
               </div>
 
-          </div>
-        </div>
-      </section>
-
-      <!-- SECCIÓN VIDEOS EN MOVIMIENTO (video1.mp4 y video2.mov) -->
-      <section id="en-movimiento" class="py-16 md:py-24 bg-studio">
-        <div class="max-w-6xl mx-auto px-4 md:px-6">
-          <div class="reveal-mask mb-8 md:mb-12 text-center">
-              <h2 class="reveal-item delay-1 font-serif text-xl md:text-3xl text-bone border-b border-accent inline-block pb-2 px-4">
-                El Estudio en Movimiento
-              </h2>
-          </div>
-          <div class="reveal-mask mb-10 md:mb-14 text-center">
-              <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm leading-relaxed max-w-2xl mx-auto font-light">
-                  Un vistazo en video a nuestro proceso, ambiente y detalle en cada sesión.
-              </p>
-          </div>
-          <div class="reveal-mask">
-              <div class="reveal-item delay-2 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <!-- PRIMER VIDEO: video1.mp4 -->
-                  <div class="portfolio-img-card rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.4)] bg-panel">
-                      <video
-                          class="w-full h-auto max-h-[480px] object-cover bg-black"
-                          controls
-                          playsinline
-                          muted
-                          preload="metadata"
-                          controlslist="nodownload">
-                          <source src="assets/video1.mp4" type="video/mp4">
-                          Tu navegador no soporta la reproducción de este video.
-                      </video>
-                  </div>
-                  <!-- SEGUNDO VIDEO: video2.mov -->
-                  <div class="portfolio-img-card rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.4)] bg-panel">
-                      <video
-                          class="w-full h-auto max-h-[480px] object-cover bg-black"
-                          controls
-                          playsinline
-                          preload="metadata"
-                          controlslist="nodownload">
-                          <source src="assets/video2.mov" type="video/quicktime">
-                          <source src="assets/video2.mov" type="video/mp4">
-                          Tu navegador no soporta la reproducción de este video.
-                      </video>
-                  </div>
-              </div>
           </div>
         </div>
       </section>
@@ -2783,17 +2670,6 @@
         }
     }
 
-    let currentHeroSlide = 0;
-    function startHeroBgRotation() {
-        const bgSlides = document.querySelectorAll('.hero-bg-slide');
-        if (!bgSlides.length) return;
-        setInterval(() => {
-            bgSlides[currentHeroSlide].classList.remove('active');
-            currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
-            bgSlides[currentHeroSlide].classList.add('active');
-        }, 4000);
-    }
-
     function openLightbox(imgUrl) {
         const modal = document.getElementById('lightbox-modal');
         const img = document.getElementById('lightbox-img');
@@ -2871,8 +2747,6 @@
         } catch (e) {
             console.error("Error al pintar la vista inicial:", e);
         }
-
-        try { startHeroBgRotation(); } catch (e) { console.error(e); }
 
         setInterval(() => {
             try { updateAdminTimersOnly(); } catch (e) { console.error(e); }
