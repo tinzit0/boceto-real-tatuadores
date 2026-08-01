@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Hipso Tattoo | Estudio Privado & Agendamiento</title>
+    <title>Hipso Tatto | Estudio Privado & Agendamiento</title>
     <meta name="description" content="Estudio de tatuajes y arte corporal. Tucapel 391, Concepción.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Tipografías Clásicas y Elegantes -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Tailwind CSS -->
@@ -32,6 +32,7 @@
                         danger: '#9e4242',
                     },
                     fontFamily: {
+                        cinzel: ['"Cinzel"', 'serif'],
                         serif: ['"Playfair Display"', 'serif'],
                         sans: ['"Inter"', 'sans-serif'],
                     }
@@ -114,67 +115,49 @@
             position: absolute;
             inset: 0;
             opacity: 0;
-            transition: opacity 1s ease-in-out, transform 4s ease;
+            transition: opacity 1.5s ease-in-out, transform 8s cubic-bezier(0.25, 1, 0.5, 1);
             transform: scale(1);
         }
         .hero-bg-slide.active {
-            opacity: 0.35;
-            transform: scale(1.05);
+            opacity: 0.45;
+            transform: scale(1.08);
         }
 
-        /* CARRUSEL DE PORTAFOLIO */
-        .carousel-slide {
-            display: none;
-            animation: fadeEffect 0.8s ease-in-out;
-        }
-        .carousel-slide.active { display: grid; }
-        @keyframes fadeEffect {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .carousel-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            border: 1px solid #8b9690;
-            background-color: transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .carousel-dot.active { background-color: #e0e6e2; border-color: #e0e6e2; }
-
-        /* TARJETAS DE PORTAFOLIO */
-        .portfolio-img-card {
+        /* TARJETAS DE PORTAFOLIO PREMIUM */
+        .gallery-card {
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid rgba(98, 119, 106, 0.2);
-            background-color: #121614;
-            transition: all 0.4s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: #121614;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .portfolio-img-card img {
+        .gallery-card:hover {
+            border-color: rgba(98, 119, 106, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+        .gallery-card img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
         }
-        .portfolio-img-card:hover img {
-            transform: scale(1.05);
+        .gallery-card:hover img {
+            transform: scale(1.07);
         }
-        .portfolio-overlay {
+        .gallery-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(22, 27, 24, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(to top, rgba(22, 27, 24, 0.95) 0%, rgba(22, 27, 24, 0.3) 60%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
         }
-        .portfolio-img-card:hover .portfolio-overlay {
+        .gallery-card:hover .gallery-overlay {
             opacity: 1;
         }
 
@@ -334,6 +317,13 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             transform-origin: center center;
         }
+
+        /* EFECTO LUXURY GLOW PARA HERO */
+        .gold-accent-text {
+            background: linear-gradient(135deg, #e0e6e2 0%, #a4b4a9 50%, #62776a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 
@@ -342,8 +332,8 @@
 <!-- PANTALLA DE CARGA -->
 <div id="pantalla-carga">
     <div class="spinner"></div>
-    <h2 class="font-serif text-lg tracking-widest text-bone uppercase font-light">Hipso Tattoo</h2>
-    <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Cargando aplicación...</p>
+    <h2 class="font-cinzel text-xl tracking-[0.2em] text-bone uppercase font-light">Hipso Tatto</h2>
+    <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Cargando experiencia...</p>
 </div>
 
 <!-- TOASTS -->
@@ -354,7 +344,7 @@
     <div class="text-muted text-lg md:text-xl mb-2 hover:text-accent transition-colors cursor-pointer" onclick="showPublicLanding()">
         <i class="fa-solid fa-leaf"></i>
     </div>
-    <a href="#" onclick="showPublicLanding()" class="font-serif text-2xl md:text-4xl text-bone tracking-wide font-normal mb-3 md:mb-5">Hipso Tattoo</a>
+    <a href="#" onclick="showPublicLanding()" class="font-cinzel text-2xl md:text-3xl text-bone tracking-[0.15em] font-normal mb-3 md:mb-4 uppercase">Hipso Tatto</a>
 
     <div class="hidden md:flex items-center gap-6 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-muted">
         <div id="public-nav-links" class="flex items-center gap-6">
@@ -410,95 +400,245 @@
 
 <!-- VISTA PÚBLICA -->
 <div id="landing-container">
-    <header class="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center text-center pt-20 overflow-hidden">
+
+    <!-- PORTADA DE ALTA GAMA / LUXURY HERO -->
+    <header class="relative min-h-screen flex items-center justify-center text-center pt-24 pb-12 overflow-hidden bg-studio">
         <div class="absolute inset-0 z-0">
-            <img src="assets/imagen1.jpeg" alt="Hipso Tattoo Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
-            <img src="assets/imagen2.jpeg" alt="Hipso Tattoo Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
-            <img src="assets/imagen3.jpeg" alt="Hipso Tattoo Fondo 3" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
-            <div class="absolute inset-0 bg-gradient-to-t from-studio via-studio/60 to-studio"></div>
+            <img src="assets/imagen1.jpeg" alt="Hipso Tatto Fondo 1" class="hero-bg-slide active w-full h-full object-cover grayscale mix-blend-overlay">
+            <img src="assets/imagen2.jpeg" alt="Hipso Tatto Fondo 2" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
+            <img src="assets/imagen3.jpeg" alt="Hipso Tatto Fondo 3" class="hero-bg-slide w-full h-full object-cover grayscale mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-b from-studio via-studio/70 to-studio"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#161b18_85%)]"></div>
         </div>
-        <div class="relative z-10 w-full px-6">
-            <span class="reveal-mask inline-mask">
-                <h2 class="reveal-item delay-2 font-serif text-2xl md:text-4xl text-bone font-light tracking-wide">
-                    Estudio Privado & Arte Corporal
-                </h2>
-            </span>
+
+        <div class="relative z-10 max-w-4xl px-6 flex flex-col items-center">
+            <div class="reveal-mask inline-mask mb-4">
+                <span class="reveal-item delay-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md text-accent text-[9px] md:text-[10px] tracking-[0.25em] uppercase font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+                    Estudio Privado — Concepción, Chile
+                </span>
+            </div>
+
+            <div class="reveal-mask inline-mask mb-3">
+                <h1 class="reveal-item delay-2 font-cinzel text-4xl sm:text-6xl md:text-7xl font-normal tracking-[0.12em] uppercase text-bone">
+                    HIPSO <span class="gold-accent-text italic font-serif">Tatto</span>
+                </h1>
+            </div>
+
+            <div class="reveal-mask inline-mask mb-6">
+                <div class="reveal-item delay-2 flex items-center gap-3 opacity-60">
+                    <div class="w-10 md:w-16 h-px bg-gradient-to-r from-transparent to-accent"></div>
+                    <i class="fa-solid fa-gem text-accent text-[8px]"></i>
+                    <div class="w-10 md:w-16 h-px bg-gradient-to-l from-transparent to-accent"></div>
+                </div>
+            </div>
+
+            <div class="reveal-mask inline-mask max-w-xl mb-10">
+                <p class="reveal-item delay-3 font-sans text-muted text-xs sm:text-sm md:text-base font-light tracking-wide leading-relaxed">
+                    Arte corporal exclusivo y personalizado. Un entorno concebido para transformar tus ideas en piezas eternas de alto nivel estético.
+                </p>
+            </div>
+
+            <div class="reveal-mask inline-mask">
+                <div class="reveal-item delay-3 flex flex-col sm:flex-row items-center gap-4">
+                    <a href="#agendar" onclick="showPublicLanding()" 
+                       class="btn-primary-action px-8 py-3.5 rounded-xl text-xs font-sans font-semibold uppercase tracking-[0.2em] text-white border border-accent/40 shadow-2xl flex items-center gap-2">
+                        <span>Reservar Cita</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                    <a href="#portafolio" onclick="showPublicLanding()" 
+                       class="px-8 py-3.5 rounded-xl text-xs font-sans font-semibold uppercase tracking-[0.2em] text-bone bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 backdrop-blur-md transition-all">
+                        Ver Galería
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
+            <span class="text-[8px] tracking-[0.25em] text-muted uppercase font-sans">Explorar</span>
+            <div class="w-4 h-7 border border-white/20 rounded-full flex justify-center p-1">
+                <div class="w-1 h-1.5 bg-accent rounded-full animate-bounce"></div>
+            </div>
         </div>
     </header>
 
     <main>
-      <section id="portafolio" class="py-16 md:py-24 bg-studio border-y border-[rgba(255,255,255,0.02)]">
-        <div class="max-w-6xl mx-auto px-4 md:px-6">
-          <div class="reveal-mask mb-8 md:mb-12 text-center">
-              <h2 class="reveal-item delay-1 font-serif text-xl md:text-3xl text-bone border-b border-accent inline-block pb-2 px-4">
+      <!-- SECCIÓN PORTAFOLIO DE ALTA GAMA (GALERÍA EDITORIAL REDISEÑADA) -->
+      <section id="portafolio" class="py-24 md:py-32 bg-studio relative border-y border-[rgba(255,255,255,0.02)]">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="reveal-mask text-center mb-16">
+              <span class="reveal-item delay-1 text-accent text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-semibold block mb-2">Galería Seleccionada</span>
+              <h2 class="reveal-item delay-1 font-cinzel text-2xl md:text-4xl text-bone tracking-widest font-normal uppercase">
                 Trabajos Recientes
               </h2>
+              <div class="w-12 h-px bg-accent/40 mx-auto mt-4"></div>
           </div>
-          <div class="reveal-mask w-full shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
-              <div class="reveal-item delay-2 bg-panel w-full flex flex-col rounded-2xl overflow-hidden">
-                  <div class="p-4 md:p-12 min-h-[350px] md:min-h-[480px] relative w-full overflow-hidden">
 
-                      <!-- SLIDE 1 -->
-                      <div class="carousel-slide active grid-cols-2 gap-3 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen3.jpeg')">
-                              <img src="assets/imagen3.jpeg" alt="Trabajo Tattoo 3">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen4.jpeg')">
-                              <img src="assets/imagen4.jpeg" alt="Trabajo Tattoo 4">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
+          <!-- GRID EDITORIAL MASONRY DENSITY -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              
+              <!-- ITEM 1 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-1 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen3.jpeg')">
+                      <img src="assets/imagen3.jpeg" alt="Trabajo Tattoo 3">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Autoría Hipso</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Diseño de Autor</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Trazos finos & sombras botánicas.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
                           </div>
                       </div>
-
-                      <!-- SLIDE 2 -->
-                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen5.jpeg')">
-                              <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen6.jpeg')">
-                              <img src="assets/imagen6.jpeg" alt="Trabajo Tattoo 6">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                      </div>
-
-                      <!-- SLIDE 3 -->
-                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen7.jpeg')">
-                              <img src="assets/imagen7.jpeg" alt="Trabajo Tattoo 7">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen8.jpeg')">
-                              <img src="assets/imagen8.jpeg" alt="Trabajo Tattoo 8">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                      </div>
-
-                      <!-- SLIDE 4 -->
-                      <div class="carousel-slide grid-cols-2 gap-3 md:gap-6 h-full items-center">
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen10.jpeg')">
-                              <img src="assets/imagen10.jpeg" alt="Trabajo Tattoo 10">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                          <div class="portfolio-img-card h-[220px] sm:h-[320px] md:h-[400px]" onclick="openLightbox('assets/imagen11.jpeg')">
-                              <img src="assets/imagen11.jpeg" alt="Trabajo Tattoo 11">
-                              <div class="portfolio-overlay"><i class="fa-solid fa-magnifying-glass-plus text-bone text-xl md:text-2xl"></i></div>
-                          </div>
-                      </div>
-
                   </div>
-                  <div class="bg-[#1b211e] border-t border-[rgba(255,255,255,0.03)] py-4 px-6 flex justify-center items-center gap-6 text-muted text-sm font-sans tracking-widest">
-                      <button onclick="prevSlide()" class="hover:text-bone transition cursor-pointer p-2">&lt;</button>
-                      <div class="flex gap-3 items-center">
-                          <button onclick="goToSlide(0)" class="carousel-dot active"></button>
-                          <button onclick="goToSlide(1)" class="carousel-dot"></button>
-                          <button onclick="goToSlide(2)" class="carousel-dot"></button>
-                          <button onclick="goToSlide(3)" class="carousel-dot"></button>
+              </div>
+
+              <!-- ITEM 2 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-2 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen4.jpeg')">
+                      <img src="assets/imagen4.jpeg" alt="Trabajo Tattoo 4">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Detalle Anatómico</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Blackwork Minimal</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Contrasts & precisión milimétrica.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
                       </div>
-                      <button onclick="nextSlide()" class="hover:text-bone transition cursor-pointer p-2">&gt;</button>
-                      <div class="w-px h-4 bg-muted mx-1 opacity-30"></div>
-                      <button id="playPauseBtn" onclick="togglePlay()" class="hover:text-bone transition cursor-pointer font-bold p-2 text-xs">||</button>
                   </div>
+              </div>
+
+              <!-- ITEM 3 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-3 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen5.jpeg')">
+                      <img src="assets/imagen5.jpeg" alt="Trabajo Tattoo 5">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Textura & Sombra</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Pieza Conceptual</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Composición adaptada a extremidad.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- ITEM 4 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-1 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen6.jpeg')">
+                      <img src="assets/imagen6.jpeg" alt="Trabajo Tattoo 6">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Fine Line</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Geometría Orgánica</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Líneas delicadas de alta resistencia.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- ITEM 5 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-2 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen7.jpeg')">
+                      <img src="assets/imagen7.jpeg" alt="Trabajo Tattoo 7">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Custom Art</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Proyecto Exclusivo</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Desarrollo ilustrativo personalizado.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- ITEM 6 -->
+              <div class="reveal-mask">
+                  <div class="reveal-item delay-3 gallery-card h-[380px] md:h-[440px]" onclick="openLightbox('assets/imagen8.jpeg')">
+                      <img src="assets/imagen8.jpeg" alt="Trabajo Tattoo 8">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Black & Grey</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Estudio de Sombras</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Gradación suave y profundidad técnica.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN VIDEOS EN MOVIMIENTO (REDISEÑADA HIGH-END) -->
+      <section id="en-movimiento" class="py-24 md:py-32 bg-panel relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="reveal-mask text-center mb-16">
+              <span class="reveal-item delay-1 text-accent text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-semibold block mb-2">Cinemática & Proceso</span>
+              <h2 class="reveal-item delay-1 font-cinzel text-2xl md:text-4xl text-bone tracking-widest font-normal uppercase">
+                El Estudio en Movimiento
+              </h2>
+              <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm leading-relaxed max-w-xl mx-auto font-light mt-3">
+                  Un recorrido visual en alta definición por la atmósfera, el rigor higiénico y la concentración de cada sesión.
+              </p>
+              <div class="w-12 h-px bg-accent/40 mx-auto mt-4"></div>
+          </div>
+
+          <div class="reveal-mask">
+              <div class="reveal-item delay-2 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                  
+                  <!-- VIDEO 1 -->
+                  <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
+                      <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 aspect-video flex items-center justify-center">
+                          <video
+                              class="w-full h-full object-cover"
+                              controls
+                              playsinline
+                              preload="metadata"
+                              controlslist="nodownload">
+                              <source src="assets/video1.mp4" type="video/mp4">
+                              Tu navegador no soporta la reproducción de este video.
+                          </video>
+                      </div>
+                      <div class="px-2 pb-2">
+                          <div class="flex items-center justify-between mb-1">
+                              <h3 class="font-serif text-base text-bone font-light">El Proceso Creativo</h3>
+                              <span class="text-[9px] font-mono text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded">01 / Video</span>
+                          </div>
+                          <p class="text-xs text-muted font-light leading-relaxed">Detalle del trazado, aplicación de agujas estériles y ambiente del estudio.</p>
+                      </div>
+                  </div>
+
+                  <!-- VIDEO 2 -->
+                  <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
+                      <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 aspect-video flex items-center justify-center">
+                          <video
+                              class="w-full h-full object-cover"
+                              controls
+                              playsinline
+                              preload="metadata"
+                              controlslist="nodownload">
+                              <source src="assets/video2.mov" type="video/quicktime">
+                              <source src="assets/video2.mov" type="video/mp4">
+                              Tu navegador no soporta la reproducción de este video.
+                          </video>
+                      </div>
+                      <div class="px-2 pb-2">
+                          <div class="flex items-center justify-between mb-1">
+                              <h3 class="font-serif text-base text-bone font-light">Acabados & Pigmentación</h3>
+                              <span class="text-[9px] font-mono text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded">02 / Video</span>
+                          </div>
+                          <p class="text-xs text-muted font-light leading-relaxed">Revisión final de pieza terminada y contraste bajo luz directa.</p>
+                      </div>
+                  </div>
+
               </div>
           </div>
         </div>
@@ -639,7 +779,7 @@
                                              class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm focus:outline-none focus:border-accent">
                                   </div>
                                   <div>
-                                      <label class="block text-[10px] uppercase text-muted tracking-wider mb-1">Usuario de Instagram</label>
+                                      <label class="block text-[10px] uppercase text-muted tracking-wider mb-1 font-sans">Usuario de Instagram</label>
                                       <input type="text" id="client-email" required placeholder="@tu_instagram"
                                              class="w-full bg-studio border border-white/10 rounded-lg px-3 py-2 text-bone text-xs md:text-sm focus:outline-none focus:border-accent">
                                   </div>
@@ -726,7 +866,7 @@
     <footer class="bg-studio py-12 md:py-16 border-t border-[rgba(255,255,255,0.02)] text-center relative z-10">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-accent text-lg mb-4"><i class="fa-solid fa-leaf"></i></div>
-        <p class="font-serif text-lg md:text-xl tracking-wide text-bone mb-3 font-light">Hipso Tattoo</p>
+        <p class="font-cinzel text-lg md:text-xl tracking-widest text-bone mb-3 font-light uppercase">Hipso Tatto</p>
         <p class="font-sans text-[9px] md:text-[10px] text-muted uppercase tracking-widest">© 2026. Arte Corporal.</p>
       </div>
     </footer>
@@ -860,7 +1000,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN -->
+<!-- PANEL ADMIN (CÓDIGO INTACTO) -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -1043,7 +1183,7 @@
 
 <script>
     // =====================================================================
-    // VARIABLES GLOBALES Y MESES EN ESPAÑOL
+    // VARIABLES GLOBALES Y MESES EN ESPAÑOL (LÓGICA INTACTA)
     // =====================================================================
     const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -1084,13 +1224,6 @@
         return `${year}-${month}-${day}`;
     }
 
-    // =====================================================================
-    // ANTI-BUCLE DE CARGA (FAIL-SAFE)
-    // Oculta la pantalla de carga pase lo que pase con la red/Supabase.
-    // Antes esta función se invocaba pero nunca estaba definida, lo que
-    // provocaba un ReferenceError que abortaba silenciosamente el resto del
-    // arranque (suscripción realtime, polling, calendarios, etc).
-    // =====================================================================
     let loadingScreenHidden = false;
     function hideLoadingScreen() {
         if (loadingScreenHidden) return;
@@ -1103,11 +1236,6 @@
         }, 1000);
     }
 
-    // =====================================================================
-    // GUARDA DE INTERACCIÓN — evita que la sincronización silenciosa (polling
-    // cada 3s / Realtime) cierre un <select> abierto o borre un campo que el
-    // administrador está editando en ese instante.
-    // =====================================================================
     function isEditingProtectedAdminArea() {
         const active = document.activeElement;
         if (!active) return false;
@@ -1116,8 +1244,6 @@
         return !!(active.closest && (active.closest('#admin-bookings-table') || active.closest('#admin-day-editor-content')));
     }
 
-    // Re-renderiza todo, mientras conserva selects/inputs activos del admin.
-    // Usada por el polling silencioso y por los callbacks de Supabase Realtime.
     function renderAllViewsSilent() {
         renderClientCalendar();
         renderClientSlots();
@@ -1133,7 +1259,6 @@
         updateAuthUI();
     }
 
-    // MODAL DE SUBIR COMPROBANTE CON CONTRARELOJ DE 15 MIN
     function openReceiptModal() {
         const modal = document.getElementById('receipt-upload-modal');
         const info = document.getElementById('receipt-booking-info');
@@ -1441,7 +1566,6 @@
         }
     }
 
-    // Compatibilidad con el nombre anterior (imágenes de referencia del tatuaje)
     async function uploadClientImageToStorage(file) {
         return uploadFileToStorage(file, 'references');
     }
@@ -1563,9 +1687,6 @@
         }
     }
 
-    // Bandera de "cambios sin guardar" en la configuración de horarios/bloqueos.
-    // Mientras esté en true, la sincronización silenciosa NO debe sobrescribir
-    // `config`, o se perdería lo que el admin está editando y aún no guardó.
     let configDirty = false;
 
     async function saveState() {
@@ -1620,24 +1741,6 @@
         }
     }
 
-    // =====================================================================
-    // INSERCIÓN ATÓMICA DE UNA RESERVA NUEVA (PREVENCIÓN REAL DE DOBLE RESERVA)
-    //
-    // IMPORTANTE: esto depende de un índice único parcial en la base de datos.
-    // Sin él, dos clientes pueden reservar el mismo horario si ambos insertan
-    // en la misma fracción de segundo, sin importar cuántas verificaciones se
-    // hagan antes en el navegador (el pre-chequeo de disponibilidad NO es
-    // suficiente por sí solo: solo reduce la ventana de colisión).
-    // Ejecutar UNA VEZ en el SQL Editor de Supabase:
-    //
-    //   CREATE UNIQUE INDEX IF NOT EXISTS uniq_active_booking_slot
-    //   ON hipso_bookings (date, time)
-    //   WHERE status <> 'Cancelada';
-    //
-    // Con ese índice, si dos inserts llegan casi simultáneos para el mismo
-    // date+time, Postgres garantiza que solo UNO tenga éxito; el otro recibe
-    // el código de error 23505 (unique_violation), que capturamos abajo.
-    // =====================================================================
     async function insertNewBookingAtomic(b) {
         try {
             const { error } = await supabaseClient
@@ -1657,8 +1760,6 @@
                 });
 
             if (error) {
-                // 23505 = unique_violation -> alguien más reservó ese mismo horario
-                // en el mismo instante. Cualquier otro código es un error genérico.
                 const isConflict = error.code === '23505' || (error.message && error.message.toLowerCase().includes('duplicate'));
                 return { success: false, conflict: isConflict, error };
             }
@@ -1677,12 +1778,6 @@
         }
     }
 
-    // =====================================================================
-    // BARRIDO GLOBAL DE EXPIRACIÓN (15 MIN)
-    // Se ejecuta en el polling de cualquier pestaña abierta (cliente o admin),
-    // así el horario se libera de verdad aunque nadie haya abierto el modal
-    // de "Subir Comprobante" para esa reserva puntual.
-    // =====================================================================
     let cleanupInProgress = false;
     async function cleanupExpiredBookings() {
         if (cleanupInProgress) return false;
@@ -1725,8 +1820,8 @@
         if (emailInput === ADMIN_EMAIL.toLowerCase() && passInput === ADMIN_PASS) {
             currentUser = {
                 email: ADMIN_EMAIL,
-                name: "Hipso Tattoo Admin",
-                picture: "https://ui-avatars.com/api/?name=Hipso+Tattoo&background=62776a&color=fff"
+                name: "Hipso Tatto Admin",
+                picture: "https://ui-avatars.com/api/?name=Hipso+Tatto&background=62776a&color=fff"
             };
             localStorage.setItem('hipso_user', JSON.stringify(currentUser));
             document.getElementById('login-form').reset();
@@ -2032,7 +2127,6 @@
 
     let pendingBookingData = null;
 
-    // PROCESAR RESERVA CLIENTE CON VERIFICACIÓN PREVIA ANTI-DOBLE RESERVA
     async function processClientBooking(e) {
         e.preventDefault();
 
@@ -2041,7 +2135,6 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Verificando disponibilidad...</span>';
 
-        // 1. VERIFICACIÓN ATÓMICA EN TIEMPO REAL CON SUPABASE
         const { data: existingBookings, error: checkError } = await supabaseClient
             .from('hipso_bookings')
             .select('id, status')
@@ -2062,7 +2155,6 @@
             return;
         }
 
-        // 2. SUBIDA DE LA IMAGEN DE REFERENCIA
         const clientFileInput = document.getElementById('client-image');
         const referenceFile = (clientFileInput && clientFileInput.files && clientFileInput.files.length > 0) ? clientFileInput.files[0] : currentSelectedImageFile;
 
@@ -2089,9 +2181,6 @@
 
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Confirmando reserva...</span>';
 
-        // 3. INSERCIÓN ATÓMICA REAL (protegida por índice único en Supabase).
-        // Esta es la verdadera barrera anti-doble-reserva; el chequeo del
-        // paso 1 solo mejora la experiencia evitando pasos innecesarios.
         const result = await insertNewBookingAtomic(pendingBookingData);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
@@ -2126,7 +2215,6 @@
         validateBookingForm();
     }
 
-    // CALENDARIO ADMIN (MENSUAL POR DÍAS)
     function renderAdminDashboard() {
         renderAdminCalendar();
         renderAdminDayEditor();
@@ -2641,11 +2729,11 @@
 
         const previousStatus = item.status;
         item.status = newStatus;
-        renderAdminBookingsTable(); // feedback visual inmediato
+        renderAdminBookingsTable();
 
         const success = await saveBookingToSupabase(item);
         if (!success) {
-            item.status = previousStatus; // revertir si Supabase rechazó el cambio
+            item.status = previousStatus;
             await loadDataFromSupabase(false);
         }
         renderAllViews();
@@ -2661,62 +2749,6 @@
         const parts = dateStr.split('-');
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
-
-    let currentSlide = 0;
-    let isPlaying = true;
-    let slideInterval;
-    const slides = document.querySelectorAll('.carousel-slide');
-    const dots = document.querySelectorAll('.carousel-dot');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-
-    function showSlide(index) {
-        if (!slides.length) return;
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
-
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
-        currentSlide = index;
-    }
-
-    function nextSlide() {
-        let nextIndex = (currentSlide + 1) % slides.length;
-        showSlide(nextIndex);
-    }
-
-    function prevSlide() {
-        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(prevIndex);
-    }
-
-    function goToSlide(index) {
-        showSlide(index);
-        resetInterval();
-    }
-
-    function togglePlay() {
-        if (isPlaying) {
-            clearInterval(slideInterval);
-            if (playPauseBtn) playPauseBtn.innerHTML = '&#9658;';
-        } else {
-            startInterval();
-            if (playPauseBtn) playPauseBtn.innerHTML = '||';
-        }
-        isPlaying = !isPlaying;
-    }
-
-    function startInterval() {
-        slideInterval = setInterval(nextSlide, 4000);
-    }
-
-    function resetInterval() {
-        if (isPlaying) {
-            clearInterval(slideInterval);
-            startInterval();
-        }
-    }
-
-    startInterval();
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -2767,7 +2799,7 @@
             bgSlides[currentHeroSlide].classList.remove('active');
             currentHeroSlide = (currentHeroSlide + 1) % bgSlides.length;
             bgSlides[currentHeroSlide].classList.add('active');
-        }, 2000);
+        }, 4000);
     }
 
     function openLightbox(imgUrl) {
@@ -2816,23 +2848,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-        // ---------------------------------------------------------------
-        // FIX: activar la clase que revela el contenido animado.
-        // El CSS define ".page-ready .reveal-mask.in-view > .reveal-item"
-        // para mostrar títulos, textos y TODA la sección de agenda/booking,
-        // pero esa clase "page-ready" nunca se agregaba en ningún script,
-        // así que ese contenido quedaba con opacity:0 para siempre.
-        // ---------------------------------------------------------------
         document.documentElement.classList.add('page-ready');
 
-        // ---------------------------------------------------------------
-        // FAIL-SAFE ANTI-BUCLE: pase lo que pase con la red o con Supabase,
-        // la app se muestra igual dentro de 1.8s como máximo. Este timer es
-        // completamente independiente del resto de la inicialización.
-        // ---------------------------------------------------------------
         const safetyTimer = setTimeout(hideLoadingScreen, 1800);
 
-        // Carga inicial de datos (no bloquea el resto del arranque si falla)
         try {
             await loadDataFromSupabase(false);
         } catch (e) {
@@ -2841,7 +2860,6 @@
         clearTimeout(safetyTimer);
         hideLoadingScreen();
 
-        // Estado inicial de calendarios/fecha (aislado en su propio try)
         try {
             const today = getLocalDateString(new Date());
             selectedClientDate = today;
@@ -2864,17 +2882,10 @@
 
         try { startHeroBgRotation(); } catch (e) { console.error(e); }
 
-        // Refresca los contadores regresivos cada segundo sin tocar el resto del DOM
         setInterval(() => {
             try { updateAdminTimersOnly(); } catch (e) { console.error(e); }
         }, 1000);
 
-        // =================================================================
-        // SINCRONIZACIÓN SILENCIOSA (POLLING DE RESPALDO CADA 3 SEGUNDOS)
-        // Actúa como respaldo robusto de Supabase Realtime: si el WebSocket
-        // se cae o tarda, el polling igual mantiene todo al día. También es
-        // responsable del barrido automático de reservas expiradas (15 min).
-        // =================================================================
         async function silentSync() {
             try {
                 const { data: bookingsData, error: bErr } = await supabaseClient.from('hipso_bookings').select('*');
@@ -2916,9 +2927,6 @@
                     }
                 }
 
-                // Barrido de reservas "Pendiente de Comprobante" con más de 15 min:
-                // corre en CUALQUIER pestaña abierta, no solo si alguien abrió el
-                // modal de "Subir Comprobante" de esa reserva en particular.
                 const cleaned = await cleanupExpiredBookings();
                 if (cleaned) shouldUpdate = true;
 
@@ -2931,10 +2939,6 @@
         }
         setInterval(silentSync, 3000);
 
-        // =================================================================
-        // SUPABASE REALTIME (WebSockets) — actualización instantánea.
-        // Combinado con el polling de arriba como respaldo robusto.
-        // =================================================================
         try {
             supabaseClient
                 .channel('realtime_changes')
