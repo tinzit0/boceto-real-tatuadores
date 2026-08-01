@@ -1519,17 +1519,19 @@
                 .select('*')
                 .eq('key', 'main_config');
 
-            if (settingsRows && settingsRows.length > 0) {
-                const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
-                const loadedConfig = sortedRows[0].value || {};
+            if (!configDirty) {
+                if (settingsRows && settingsRows.length > 0) {
+                    const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
+                    const loadedConfig = sortedRows[0].value || {};
 
-                config = {
-                    daySchedules: loadedConfig.daySchedules || {},
-                    blockedDates: loadedConfig.blockedDates || [],
-                    blockedReasons: loadedConfig.blockedReasons || {},
-                };
-            } else {
-                config = { daySchedules: {}, blockedDates: [], blockedReasons: {} };
+                    config = {
+                        daySchedules: loadedConfig.daySchedules || {},
+                        blockedDates: loadedConfig.blockedDates || [],
+                        blockedReasons: loadedConfig.blockedReasons || {},
+                    };
+                } else {
+                    config = { daySchedules: {}, blockedDates: [], blockedReasons: {} };
+                }
             }
 
             const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
@@ -1561,6 +1563,11 @@
         }
     }
 
+    // Bandera de "cambios sin guardar" en la configuración de horarios/bloqueos.
+    // Mientras esté en true, la sincronización silenciosa NO debe sobrescribir
+    // `config`, o se perdería lo que el admin está editando y aún no guardó.
+    let configDirty = false;
+
     async function saveState() {
         setSyncStatus('syncing');
         try {
@@ -1573,6 +1580,7 @@
                 showToast("Error al guardar en la nube.", "error");
                 return false;
             } else {
+                configDirty = false;
                 setSyncStatus('synced');
                 renderAllViews();
                 showToast("Cambios guardados con éxito.", "success");
@@ -2259,6 +2267,7 @@
     function toggleAdminDayActive(dateStr) {
         if (config.daySchedules[dateStr]) {
             config.daySchedules[dateStr].active = !config.daySchedules[dateStr].active;
+            configDirty = true;
             renderAdminDayEditor();
             renderAdminCalendar();
         }
@@ -2287,6 +2296,7 @@
         if (!config.daySchedules[dateStr].slots.includes(timeVal)) {
             config.daySchedules[dateStr].slots.push(timeVal);
             config.daySchedules[dateStr].slots.sort();
+            configDirty = true;
             renderAdminDayEditor();
             renderAdminCalendar();
         }
@@ -2295,6 +2305,7 @@
     function removeSlotFromAdminDay(dateStr, idx) {
         if (config.daySchedules[dateStr] && config.daySchedules[dateStr].slots) {
             config.daySchedules[dateStr].slots.splice(idx, 1);
+            configDirty = true;
             renderAdminDayEditor();
             renderAdminCalendar();
         }
@@ -2335,6 +2346,7 @@
 
         config.daySchedules[dateStr].slots = slots;
         config.daySchedules[dateStr].active = true;
+        configDirty = true;
         renderAdminDayEditor();
         renderAdminCalendar();
         showToast("Horarios generados con éxito.", "success");
@@ -2890,7 +2902,7 @@
                     }
                 }
 
-                if (!sErr && settingsRows && settingsRows.length > 0) {
+                if (!sErr && settingsRows && settingsRows.length > 0 && !configDirty) {
                     const sortedRows = [...settingsRows].sort((a, b) => (b.id || 0) - (a.id || 0));
                     const loadedConfig = sortedRows[0].value || {};
                     const newConfig = {
