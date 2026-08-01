@@ -939,7 +939,22 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-4 flex justify-center"><img src="assets/logo1.png" alt="Hipso Tattoo Logo" class="h-10 w-auto object-contain" style="mix-blend-mode: screen;"></div>
         <p class="font-cinzel text-lg md:text-xl tracking-widest text-bone mb-3 font-light uppercase">Hipso Tattoo</p>
-        <p class="font-sans text-[9px] md:text-[10px] text-muted uppercase tracking-widest">© 2026. Arte Corporal.</p>
+        
+        <!-- REDES SOCIALES -->
+        <div class="flex justify-center items-center gap-5 my-4">
+            <a href="https://www.instagram.com/hipso_tattoo/" target="_blank" rel="noopener noreferrer" 
+               class="w-10 h-10 rounded-full border border-white/10 bg-white/[0.02] text-muted hover:text-accent hover:border-accent flex items-center justify-center text-lg transition-all" 
+               title="Instagram @hipso_tattoo">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@hipso_tattoo" target="_blank" rel="noopener noreferrer" 
+               class="w-10 h-10 rounded-full border border-white/10 bg-white/[0.02] text-muted hover:text-accent hover:border-accent flex items-center justify-center text-lg transition-all" 
+               title="TikTok @hipso_tattoo">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+        </div>
+
+        <p class="font-sans text-[9px] md:text-[10px] text-muted uppercase tracking-widest mt-4">© 2026. Arte Corporal.</p>
       </div>
     </footer>
 </div>
@@ -1072,7 +1087,7 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN (CÓDIGO INTACTO) -->
+<!-- PANEL ADMIN -->
 <div id="admin-container" class="hidden relative z-30 min-h-screen pt-36 md:pt-40 pb-16 px-3 md:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-white/10 gap-3">
         <div>
@@ -1812,7 +1827,7 @@
                 return false;
             }
 
-            // VERIFICACIÓN POST-GUARDADO CORREGIDA (SIN .order('id'))
+            // VERIFICACIÓN POST-GUARDADO
             const { data: verifyRows, error: verifyError } = await supabaseClient
                 .from('hipso_settings')
                 .select('value')
