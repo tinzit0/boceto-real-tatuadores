@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Hipso Tatto | Estudio Privado & Agendamiento</title>
+    <title>Hipso Tattoo | Estudio Privado & Agendamiento</title>
     <meta name="description" content="Estudio de tatuajes y arte corporal. Tucapel 391, Concepción.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -267,7 +267,7 @@
 <!-- PANTALLA DE CARGA -->
 <div id="pantalla-carga">
     <div class="spinner"></div>
-    <h2 class="font-cinzel text-xl tracking-[0.2em] text-bone uppercase font-light">Hipso Tatto</h2>
+    <h2 class="font-cinzel text-xl tracking-[0.2em] text-bone uppercase font-light">Hipso Tattoo</h2>
     <p id="loading-status" class="text-muted text-xs mt-2 font-mono">Cargando experiencia...</p>
 </div>
 
@@ -276,15 +276,16 @@
 
 <!-- NAVBAR -->
 <nav id="navbar" class="navbar fixed top-0 w-full z-40 flex flex-col items-center px-4">
-    <div class="text-muted text-lg md:text-xl mb-2 hover:text-accent transition-colors cursor-pointer" onclick="showPublicLanding()">
-        <i class="fa-solid fa-leaf"></i>
+    <div class="mb-2 hover:opacity-80 transition-opacity cursor-pointer" onclick="showPublicLanding()">
+        <img src="assets/logo1.png" alt="Hipso Tattoo Logo" class="h-9 md:h-11 w-auto object-contain" style="mix-blend-mode: screen;">
     </div>
-    <a href="#" onclick="showPublicLanding()" class="font-cinzel text-2xl md:text-3xl text-bone tracking-[0.15em] font-normal mb-3 md:mb-4 uppercase">Hipso Tatto</a>
+    <a href="#" onclick="showPublicLanding()" class="font-cinzel text-2xl md:text-3xl text-bone tracking-[0.15em] font-normal mb-3 md:mb-4 uppercase">Hipso Tattoo</a>
 
     <div class="hidden md:flex items-center gap-6 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-muted">
         <div id="public-nav-links" class="flex items-center gap-6">
-            <a href="#estudio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Estudio</a>
+            <a href="#estudio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Blood Level Estudio</a>
             <a href="#portafolio" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Portafolio</a>
+            <a href="#disenos" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Diseños</a>
             <a href="#preparacion" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Info</a>
             <a href="#agendar" onclick="showPublicLanding()" class="nav-link hover:text-bone transition-colors">Booking</a>
             <button onclick="openClientManageModal()" class="nav-link text-accent hover:text-bone transition-colors flex items-center gap-1.5">
@@ -315,8 +316,9 @@
 
 <!-- Mobile Menu -->
 <div id="mobileMenu" class="fixed inset-0 bg-studio z-50 hidden flex-col justify-center items-center gap-6 font-serif text-lg text-bone">
-    <a href="#estudio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Estudio</a>
+    <a href="#estudio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Blood Level Estudio</a>
     <a href="#portafolio" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Portafolio</a>
+    <a href="#disenos" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Diseños</a>
     <a href="#preparacion" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Info</a>
     <a href="#agendar" onclick="showPublicLanding()" class="hover:text-accent mobile-link transition-colors">Booking</a>
     <button onclick="openClientManageModal(); toggleMobileMenu();" class="hover:text-accent text-accent transition-colors flex items-center gap-2">
@@ -523,10 +525,180 @@
         </div>
       </section>
 
+      <section id="disenos" class="py-24 md:py-32 bg-panel relative border-y border-[rgba(255,255,255,0.02)]">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="reveal-mask text-center mb-16">
+              <span class="reveal-item delay-1 text-accent text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-semibold block mb-2">Flashes & Propuestas</span>
+              <h2 class="reveal-item delay-1 font-cinzel text-2xl md:text-4xl text-bone tracking-widest font-normal uppercase">
+                Propuestas de Diseño
+              </h2>
+              <div class="w-12 h-px bg-accent/40 mx-auto mt-4"></div>
+              <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm max-w-xl mx-auto mt-5 font-light leading-relaxed">
+                  Diseños ya listos para agendar directamente, o como punto de partida para adaptar a tu idea. Menciónalo en el campo de notas al reservar tu cita.
+              </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              <div class="reveal-mask">
+                  <div class="delay-1 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno1.jpeg')">
+                      <img src="disenos/diseno1.jpeg" alt="Propuesta de Diseño 1">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°1</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-2 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno2.jpeg')">
+                      <img src="disenos/diseno2.jpeg" alt="Propuesta de Diseño 2">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°2</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-3 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno3.jpeg')">
+                      <img src="disenos/diseno3.jpeg" alt="Propuesta de Diseño 3">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°3</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-1 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno4.jpeg')">
+                      <img src="disenos/diseno4.jpeg" alt="Propuesta de Diseño 4">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°4</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-2 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno5.jpeg')">
+                      <img src="disenos/diseno5.jpeg" alt="Propuesta de Diseño 5">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°5</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-3 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno6.jpeg')">
+                      <img src="disenos/diseno6.jpeg" alt="Propuesta de Diseño 6">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°6</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-1 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno7.jpeg')">
+                      <img src="disenos/diseno7.jpeg" alt="Propuesta de Diseño 7">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°7</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-2 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno8.jpeg')">
+                      <img src="disenos/diseno8.jpeg" alt="Propuesta de Diseño 8">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°8</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-3 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno9.jpeg')">
+                      <img src="disenos/diseno9.jpeg" alt="Propuesta de Diseño 9">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°9</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="reveal-mask">
+                  <div class="delay-1 reveal-item gallery-card h-[300px] md:h-[340px]" onclick="openLightbox('disenos/diseno10.jpeg')">
+                      <img src="disenos/diseno10.jpeg" alt="Propuesta de Diseño 10">
+                      <div class="gallery-overlay">
+                          <span class="text-accent text-[9px] tracking-[0.2em] font-mono uppercase mb-1">Diseño Disponible</span>
+                          <h3 class="font-serif text-lg text-bone font-light">Propuesta N°10</h3>
+                          <p class="text-[11px] text-muted mt-1 font-sans font-light">Disponible para agendar tal cual o adaptar a tu idea.</p>
+                          <div class="mt-4 flex items-center gap-2 text-accent text-xs font-semibold uppercase tracking-wider">
+                              <span>Ampliar Imagen</span>
+                              <i class="fa-solid fa-magnifying-glass-plus text-[10px]"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </section>
+
       <section id="estudio" class="py-20 md:py-32 relative bg-studio">
         <div class="max-w-4xl mx-auto px-6 text-center">
-          <div class="reveal-mask mb-8 md:mb-12">
+          <div class="reveal-mask mb-4">
               <h2 class="reveal-item delay-1 font-serif text-2xl md:text-3xl text-bone font-light">El Estudio</h2>
+          </div>
+          <div class="reveal-mask mb-8 md:mb-12">
+              <p class="reveal-item delay-1 font-cinzel text-accent text-xs md:text-sm tracking-[0.25em] uppercase font-semibold">Blood Level Estudio</p>
           </div>
           <div class="reveal-mask mb-12 md:mb-16">
               <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm leading-relaxed md:leading-loose max-w-2xl mx-auto font-light">
@@ -575,9 +747,30 @@
                         <i class="fa-solid fa-angle-down text-accent text-sm transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content">
-                        <p class="pb-5 font-sans text-muted text-xs md:text-sm font-light leading-relaxed">
-                            Lavado con jabón neutro, humectación con crema especializada y cero exposición al sol o piscina durante al menos dos semanas.
-                        </p>
+                        <div class="pb-5 font-sans text-muted text-xs md:text-sm font-light leading-relaxed space-y-4">
+                            <p>
+                                Ocupar la savanilla al menos 4 horas o lo que se indique, luego lavar con agua tibia y jabón neutro eliminando todos los residuos. Repetir las veces que sea necesario durante el día.
+                            </p>
+                            <ul class="space-y-1.5 list-none">
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Primera noche: ocupar savanilla.</span></li>
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Segundo día: mantener la zona en reposo, lavar y tener seco.</span></li>
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Segunda noche: ocupar savanilla.</span></li>
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Días posteriores: lavar y mantener seco.</span></li>
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Desde el quinto día: aplicar crema de una a dos veces al día. Repetir hasta que la piel esté regenerada.</span></li>
+                                <li class="flex gap-2"><span class="text-accent">•</span><span>Para cualquier duda, escríbenos directamente.</span></li>
+                            </ul>
+                            <div class="pt-2 border-t border-white/[0.04]">
+                                <p class="text-bone font-medium mb-2 tracking-wide uppercase text-[10px]">Recomendaciones</p>
+                                <ul class="space-y-1.5 list-none">
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>Hidrata la zona semanas o días antes con crema humectante.</span></li>
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>Antes de la cita, aliméntate bien e hidrátate.</span></li>
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>Lleva líquido y un snack que contenga azúcar (ideal chocolate).</span></li>
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>Considera descanso post tatuaje (ideal un par de días si es un Blackout).</span></li>
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>NO consumir drogas ni antes ni después del tatuaje.</span></li>
+                                    <li class="flex gap-2"><span class="text-accent">•</span><span>Evitar venir con acompañante.</span></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -689,7 +882,7 @@
                                   <div class="bg-studio/50 p-3 rounded-lg border border-white/5 text-[11px] text-muted space-y-1 transition-all duration-300">
                                       <div class="flex justify-between"><span>Fecha:</span> <strong id="summary-date" class="text-bone">--</strong></div>
                                       <div class="flex justify-between"><span>Hora:</span> <strong id="summary-time" class="text-bone">--</strong></div>
-                                      <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$20.000 CLP</strong></div>
+                                      <div class="flex justify-between"><span>Abono requerido:</span> <strong class="text-accent">$40.000 CLP</strong></div>
                                   </div>
                                   
                                   <button type="submit" id="btn-submit-booking" disabled
@@ -744,8 +937,8 @@
 
     <footer class="bg-studio py-12 md:py-16 border-t border-[rgba(255,255,255,0.02)] text-center relative z-10">
       <div class="max-w-7xl mx-auto px-6">
-        <div class="text-accent text-lg mb-4"><i class="fa-solid fa-leaf"></i></div>
-        <p class="font-cinzel text-lg md:text-xl tracking-widest text-bone mb-3 font-light uppercase">Hipso Tatto</p>
+        <div class="mb-4 flex justify-center"><img src="assets/logo1.png" alt="Hipso Tattoo Logo" class="h-10 w-auto object-contain" style="mix-blend-mode: screen;"></div>
+        <p class="font-cinzel text-lg md:text-xl tracking-widest text-bone mb-3 font-light uppercase">Hipso Tattoo</p>
         <p class="font-sans text-[9px] md:text-[10px] text-muted uppercase tracking-widest">© 2026. Arte Corporal.</p>
       </div>
     </footer>
@@ -991,8 +1184,12 @@
                     </div>
                 </div>
 
-                <div id="admin-day-save-wrap" class="hidden pt-3 border-t border-white/5">
-                    <button onclick="saveAdminDaySchedule()" class="btn-primary-action w-full py-3 rounded-xl text-xs font-semibold uppercase tracking-widest text-white cursor-pointer">
+                <div id="admin-day-save-wrap" class="hidden pt-3 border-t border-white/5 space-y-2">
+                    <p id="admin-day-unsaved-badge" style="display:none;" class="text-[11px] text-amber-400 font-semibold items-center gap-1.5">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Tienes cambios sin guardar en este día — presiona el botón para que se reflejen en la agenda de clientes.
+                    </p>
+                    <button id="btn-save-admin-day" onclick="saveAdminDaySchedule()" class="btn-primary-action w-full py-3 rounded-xl text-xs font-semibold uppercase tracking-widest text-white cursor-pointer">
                         Guardar Horarios del Día
                     </button>
                 </div>
@@ -1062,7 +1259,7 @@
 
 <script>
     // =====================================================================
-    // VARIABLES GLOBALES Y MESES EN ESPAÑOL (LÓGICA INTACTA)
+    // VARIABLES GLOBALES Y MESES EN ESPAÑOL
     // =====================================================================
     const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -1568,6 +1765,38 @@
 
     let configDirty = false;
 
+    window.addEventListener('beforeunload', (e) => {
+        if (configDirty) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    function deepEqual(a, b) {
+        if (a === b) return true;
+        if (typeof a !== typeof b) return false;
+        if (a === null || b === null) return a === b;
+        if (typeof a !== 'object') return a === b;
+
+        if (Array.isArray(a) || Array.isArray(b)) {
+            if (!Array.isArray(a) || !Array.isArray(b)) return false;
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (!deepEqual(a[i], b[i])) return false;
+            }
+            return true;
+        }
+
+        const keysA = Object.keys(a);
+        const keysB = Object.keys(b);
+        if (keysA.length !== keysB.length) return false;
+        for (const key of keysA) {
+            if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+            if (!deepEqual(a[key], b[key])) return false;
+        }
+        return true;
+    }
+
     async function saveState() {
         setSyncStatus('syncing');
         try {
@@ -1576,18 +1805,39 @@
                 .upsert({ key: 'main_config', value: config }, { onConflict: 'key' });
 
             if (error) {
+                console.error("Error de Supabase al guardar horarios:", error);
                 setSyncStatus('error');
+                alert("No se pudieron guardar los horarios en la nube.\n\nDetalle: " + (error.message || 'Error desconocido') + "\n\nTus cambios NO se perdieron en esta pantalla, pero los clientes no los verán hasta que el guardado funcione. Revisa tu conexión e inténtalo de nuevo.");
                 showToast("Error al guardar en la nube.", "error");
                 return false;
-            } else {
-                configDirty = false;
-                setSyncStatus('synced');
-                renderAllViews();
-                showToast("Cambios guardados con éxito.", "success");
-                return true;
             }
+
+            // VERIFICACIÓN POST-GUARDADO CORREGIDA (SIN .order('id'))
+            const { data: verifyRows, error: verifyError } = await supabaseClient
+                .from('hipso_settings')
+                .select('value')
+                .eq('key', 'main_config')
+                .limit(1);
+
+            const persistedOk = !verifyError && verifyRows && verifyRows.length > 0 &&
+                deepEqual(verifyRows[0].value, config);
+
+            if (!persistedOk) {
+                console.error("Verificación de guardado falló. Se leyó:", verifyRows, "Se esperaba:", config, verifyError);
+                setSyncStatus('error');
+                alert("Los horarios se enviaron, pero al verificar en la nube no coinciden con lo que guardaste.\n\nEsto suele pasar si falta una restricción única en la tabla 'hipso_settings' (columna 'key') o si hay una regla de seguridad (RLS) bloqueando la actualización.\n\nTus cambios se mantienen en esta pantalla (no los pierdas cerrando la página), pero por ahora los clientes NO los verán. Contacta al desarrollador con este mensaje.");
+                return false;
+            }
+
+            configDirty = false;
+            setSyncStatus('synced');
+            renderAllViews();
+            showToast("Cambios guardados con éxito.", "success");
+            return true;
         } catch (err) {
+            console.error("Excepción al guardar horarios:", err);
             setSyncStatus('error');
+            alert("Ocurrió un error inesperado al guardar los horarios: " + (err.message || err));
             return false;
         }
     }
@@ -1699,7 +1949,7 @@
         if (emailInput === ADMIN_EMAIL.toLowerCase() && passInput === ADMIN_PASS) {
             currentUser = {
                 email: ADMIN_EMAIL,
-                name: "Hipso Tatto Admin",
+                name: "Hipso Tattoo Admin",
                 picture: "https://ui-avatars.com/api/?name=Hipso+Tatto&background=62776a&color=fff"
             };
             localStorage.setItem('hipso_user', JSON.stringify(currentUser));
@@ -2147,7 +2397,11 @@
             cell.innerHTML = `<span>${day}</span><span class="cal-dot cal-dot-${dotColor}"></span>`;
             
             if (!isPast) {
-                cell.onclick = () => {
+                cell.onclick = async () => {
+                    if (configDirty && dateStr !== selectedAdminDate) {
+                        await saveState();
+                        showToast("Tus cambios pendientes se guardaron automáticamente antes de cambiar de día.", "info");
+                    }
                     selectedAdminDate = dateStr;
                     renderAdminCalendar();
                     renderAdminDayEditor();
@@ -2229,6 +2483,21 @@
                 ` : ''}
             </div>
         `;
+
+        updateUnsavedIndicator();
+    }
+
+    function updateUnsavedIndicator() {
+        const badge = document.getElementById('admin-day-unsaved-badge');
+        const btn = document.getElementById('btn-save-admin-day');
+        if (badge) badge.style.display = configDirty ? 'flex' : 'none';
+        if (btn) {
+            if (configDirty) {
+                btn.classList.add('ring-2', 'ring-amber-400', 'animate-pulse');
+            } else {
+                btn.classList.remove('ring-2', 'ring-amber-400', 'animate-pulse');
+            }
+        }
     }
 
     function toggleAdminDayActive(dateStr) {
@@ -2773,7 +3042,7 @@
                         status: b.status || 'Pendiente de Comprobante',
                         createdAt: b.created_at
                     }));
-                    if (JSON.stringify(newBookings) !== JSON.stringify(bookings)) {
+                    if (!deepEqual(newBookings, bookings)) {
                         bookings = newBookings;
                         shouldUpdate = true;
                     }
@@ -2787,7 +3056,7 @@
                         blockedDates: loadedConfig.blockedDates || [],
                         blockedReasons: loadedConfig.blockedReasons || {},
                     };
-                    if (JSON.stringify(newConfig) !== JSON.stringify(config)) {
+                    if (!deepEqual(newConfig, config)) {
                         config = newConfig;
                         shouldUpdate = true;
                     }
