@@ -2805,6 +2805,15 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
         // ---------------------------------------------------------------
+        // FIX: activar la clase que revela el contenido animado.
+        // El CSS define ".page-ready .reveal-mask.in-view > .reveal-item"
+        // para mostrar títulos, textos y TODA la sección de agenda/booking,
+        // pero esa clase "page-ready" nunca se agregaba en ningún script,
+        // así que ese contenido quedaba con opacity:0 para siempre.
+        // ---------------------------------------------------------------
+        document.documentElement.classList.add('page-ready');
+
+        // ---------------------------------------------------------------
         // FAIL-SAFE ANTI-BUCLE: pase lo que pase con la red o con Supabase,
         // la app se muestra igual dentro de 1.8s como máximo. Este timer es
         // completamente independiente del resto de la inicialización.
