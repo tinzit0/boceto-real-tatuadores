@@ -161,6 +161,19 @@
             opacity: 1;
         }
 
+        .portfolio-img-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid rgba(98, 119, 106, 0.2);
+            background-color: #121614;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .action-card {
             background: linear-gradient(145deg, #1f2622 0%, #171d19 100%);
             border: 1px solid rgba(98, 119, 106, 0.2);
@@ -474,7 +487,7 @@
               <div class="w-12 h-px bg-accent/40 mx-auto mt-4"></div>
           </div>
 
-          <!-- GRID EDITORIAL MASONRY DENSITY -->
+          <!-- GRID EDITORIAL MASONRY -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               
               <!-- ITEM 1 -->
@@ -577,72 +590,46 @@
         </div>
       </section>
 
-      <!-- SECCIÓN VIDEOS EN MOVIMIENTO CON VIDEO1.MP4 Y VIDEO2.MOV -->
-      <section id="en-movimiento" class="py-24 md:py-32 bg-panel relative overflow-hidden">
-        <div class="max-w-6xl mx-auto px-6">
-          <div class="reveal-mask text-center mb-16">
-              <span class="reveal-item delay-1 text-accent text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-semibold block mb-2">Cinemática & Proceso</span>
-              <h2 class="reveal-item delay-1 font-cinzel text-2xl md:text-4xl text-bone tracking-widest font-normal uppercase">
+      <!-- SECCIÓN VIDEOS EN MOVIMIENTO (video1.mp4 y video2.mov) -->
+      <section id="en-movimiento" class="py-16 md:py-24 bg-studio">
+        <div class="max-w-6xl mx-auto px-4 md:px-6">
+          <div class="reveal-mask mb-8 md:mb-12 text-center">
+              <h2 class="reveal-item delay-1 font-serif text-xl md:text-3xl text-bone border-b border-accent inline-block pb-2 px-4">
                 El Estudio en Movimiento
               </h2>
-              <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm leading-relaxed max-w-xl mx-auto font-light mt-3">
-                  Un recorrido visual en alta definición por la atmósfera, el rigor higiénico y la concentración de cada sesión.
-              </p>
-              <div class="w-12 h-px bg-accent/40 mx-auto mt-4"></div>
           </div>
-
+          <div class="reveal-mask mb-10 md:mb-14 text-center">
+              <p class="reveal-item delay-2 font-sans text-muted text-xs md:text-sm leading-relaxed max-w-2xl mx-auto font-light">
+                  Un vistazo en video a nuestro proceso, ambiente y detalle en cada sesión.
+              </p>
+          </div>
           <div class="reveal-mask">
-              <div class="reveal-item delay-2 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-                  
-                  <!-- VIDEO 1 (video1.mp4 con poster de precarga) -->
-                  <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
-                      <div class="relative rounded-xl overflow-hidden bg-studio border border-white/10 aspect-video flex items-center justify-center group">
-                          <video
-                              class="w-full h-full object-cover"
-                              controls
-                              playsinline
-                              muted
-                              preload="metadata"
-                              poster="assets/imagen1.jpeg"
-                              controlslist="nodownload">
-                              <source src="assets/video1.mp4" type="video/mp4">
-                              Tu navegador no soporta la reproducción de este video.
-                          </video>
-                      </div>
-                      <div class="px-2 pb-2">
-                          <div class="flex items-center justify-between mb-1">
-                              <h3 class="font-serif text-base text-bone font-light">El Proceso Creativo</h3>
-                              <span class="text-[9px] font-mono text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded">01 / Video</span>
-                          </div>
-                          <p class="text-xs text-muted font-light leading-relaxed">Detalle del trazado, aplicación de agujas estériles y ambiente del estudio.</p>
-                      </div>
+              <div class="reveal-item delay-2 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                  <!-- PRIMER VIDEO: video1.mp4 -->
+                  <div class="portfolio-img-card rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.4)] bg-panel">
+                      <video
+                          class="w-full h-auto max-h-[480px] object-cover bg-black"
+                          controls
+                          playsinline
+                          preload="metadata"
+                          controlslist="nodownload">
+                          <source src="assets/video1.mp4" type="video/mp4">
+                          Tu navegador no soporta la reproducción de este video.
+                      </video>
                   </div>
-
-                  <!-- VIDEO 2 -->
-                  <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
-                      <div class="relative rounded-xl overflow-hidden bg-studio border border-white/10 aspect-video flex items-center justify-center group">
-                          <video
-                              class="w-full h-full object-cover"
-                              controls
-                              playsinline
-                              muted
-                              preload="metadata"
-                              poster="assets/imagen2.jpeg"
-                              controlslist="nodownload">
-                              <source src="assets/video2.mov" type="video/quicktime">
-                              <source src="assets/video2.mp4" type="video/mp4">
-                              Tu navegador no soporta la reproducción de este video.
-                          </video>
-                      </div>
-                      <div class="px-2 pb-2">
-                          <div class="flex items-center justify-between mb-1">
-                              <h3 class="font-serif text-base text-bone font-light">Acabados & Pigmentación</h3>
-                              <span class="text-[9px] font-mono text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded">02 / Video</span>
-                          </div>
-                          <p class="text-xs text-muted font-light leading-relaxed">Revisión final de pieza terminada y contraste bajo luz directa.</p>
-                      </div>
+                  <!-- SEGUNDO VIDEO: video2.mov -->
+                  <div class="portfolio-img-card rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.4)] bg-panel">
+                      <video
+                          class="w-full h-auto max-h-[480px] object-cover bg-black"
+                          controls
+                          playsinline
+                          preload="metadata"
+                          controlslist="nodownload">
+                          <source src="assets/video2.mov" type="video/quicktime">
+                          <source src="assets/video2.mov" type="video/mp4">
+                          Tu navegador no soporta la reproducción de este video.
+                      </video>
                   </div>
-
               </div>
           </div>
         </div>
