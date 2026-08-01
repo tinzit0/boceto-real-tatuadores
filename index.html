@@ -463,7 +463,7 @@
     </header>
 
     <main>
-      <!-- SECCIÓN PORTAFOLIO DE ALTA GAMA (GALERÍA EDITORIAL REDISEÑADA) -->
+      <!-- SECCIÓN PORTAFOLIO DE ALTA GAMA -->
       <section id="portafolio" class="py-24 md:py-32 bg-studio relative border-y border-[rgba(255,255,255,0.02)]">
         <div class="max-w-7xl mx-auto px-6">
           <div class="reveal-mask text-center mb-16">
@@ -577,7 +577,7 @@
         </div>
       </section>
 
-      <!-- SECCIÓN VIDEOS EN MOVIMIENTO (REDISEÑADA HIGH-END) -->
+      <!-- SECCIÓN VIDEOS EN MOVIMIENTO CON VIDEO1.MP4 Y VIDEO2.MOV -->
       <section id="en-movimiento" class="py-24 md:py-32 bg-panel relative overflow-hidden">
         <div class="max-w-6xl mx-auto px-6">
           <div class="reveal-mask text-center mb-16">
@@ -594,14 +594,16 @@
           <div class="reveal-mask">
               <div class="reveal-item delay-2 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                   
-                  <!-- VIDEO 1 -->
+                  <!-- VIDEO 1 (video1.mp4 con poster de precarga) -->
                   <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
-                      <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 aspect-video flex items-center justify-center">
+                      <div class="relative rounded-xl overflow-hidden bg-studio border border-white/10 aspect-video flex items-center justify-center group">
                           <video
                               class="w-full h-full object-cover"
                               controls
                               playsinline
+                              muted
                               preload="metadata"
+                              poster="assets/imagen1.jpeg"
                               controlslist="nodownload">
                               <source src="assets/video1.mp4" type="video/mp4">
                               Tu navegador no soporta la reproducción de este video.
@@ -618,15 +620,17 @@
 
                   <!-- VIDEO 2 -->
                   <div class="action-card rounded-2xl p-4 md:p-5 shadow-2xl space-y-4 hover:-translate-y-1 transition-transform duration-500">
-                      <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 aspect-video flex items-center justify-center">
+                      <div class="relative rounded-xl overflow-hidden bg-studio border border-white/10 aspect-video flex items-center justify-center group">
                           <video
                               class="w-full h-full object-cover"
                               controls
                               playsinline
+                              muted
                               preload="metadata"
+                              poster="assets/imagen2.jpeg"
                               controlslist="nodownload">
                               <source src="assets/video2.mov" type="video/quicktime">
-                              <source src="assets/video2.mov" type="video/mp4">
+                              <source src="assets/video2.mp4" type="video/mp4">
                               Tu navegador no soporta la reproducción de este video.
                           </video>
                       </div>
