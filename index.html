@@ -1365,11 +1365,10 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const ADMIN_EMAIL = "hipso.tattoo@gmail.com";
-    const ADMIN_PASS = "hipso2026";
 
     let config = { daySchedules: {}, blockedDates: [], blockedReasons: {} };
     let bookings = [];
-    let currentUser = JSON.parse(localStorage.getItem('hipso_user')) || null;
+    let currentUser = null; // se define al validar la sesión real de Supabase Auth (ver checkAdminSession)
 
     let selectedClientDate = getLocalDateString(new Date());
     let selectedClientSlot = "";
@@ -1624,27 +1623,49 @@
         updateAuthUI();
     }
 
-    function processDirectLogin(e) {
+    async function processDirectLogin(e) {
         e.preventDefault();
         const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
         const passInput = document.getElementById('login-password').value;
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
-        if (emailInput === ADMIN_EMAIL.toLowerCase() && passInput === ADMIN_PASS) {
-            currentUser = { email: ADMIN_EMAIL, name: "Hipso Admin" };
-            localStorage.setItem('hipso_user', JSON.stringify(currentUser));
-            document.getElementById('login-form').reset();
-            updateAuthUI();
-            showAdminPanel();
-        } else {
+        if (submitBtn) { submitBtn.disabled = true; }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: emailInput,
+            password: passInput
+        });
+
+        if (submitBtn) { submitBtn.disabled = false; }
+
+        if (error || !data.session) {
             showToast("Credenciales incorrectas.", "error");
+            return;
         }
+
+        currentUser = { email: data.user.email, name: "Hipso Admin" };
+        document.getElementById('login-form').reset();
+        updateAuthUI();
+        await loadDataFromSupabase(false);
+        showAdminPanel();
     }
 
-    function logoutAdmin() {
+    async function logoutAdmin() {
+        await supabaseClient.auth.signOut();
         currentUser = null;
-        localStorage.removeItem('hipso_user');
         updateAuthUI();
         showPublicLanding();
+    }
+
+    // Verifica si ya hay una sesión real de Supabase Auth activa (persistida por el propio SDK)
+    async function checkAdminSession() {
+        const { data } = await supabaseClient.auth.getSession();
+        if (data.session && data.session.user && data.session.user.email === ADMIN_EMAIL) {
+            currentUser = { email: data.session.user.email, name: "Hipso Admin" };
+        } else {
+            currentUser = null;
+        }
+        updateAuthUI();
     }
 
     function updateAuthUI() {
@@ -3185,14 +3206,23 @@
         const monthFilter = document.getElementById('admin-month-filter');
         if (monthFilter) monthFilter.value = "";
 
-        updateAuthUI();
         renderAllViews();
         hideLoadingScreen();
 
-        // 2. Traer datos de Supabase en segundo plano
+        // 2. Verificar sesión real de admin y traer datos de Supabase en segundo plano
+        checkAdminSession().then(() => renderAllViews());
         loadDataFromSupabase(false).then(() => {
             renderAllViews();
         }).catch(e => console.error("Error en carga inicial:", e));
+
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+            if (session && session.user && session.user.email === ADMIN_EMAIL) {
+                currentUser = { email: session.user.email, name: "Hipso Admin" };
+            } else {
+                currentUser = null;
+            }
+            updateAuthUI();
+        });
 
         setInterval(() => { try { updateAdminTimersOnly(); } catch (e) {} }, 1000);
 
