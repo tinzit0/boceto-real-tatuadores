@@ -2338,7 +2338,8 @@
 
         // COMPRESIÓN DE IMAGEN PARA VELOCIDAD EXTREMA
         const compressedImage = await compressImage(currentSelectedReceiptFile);
-        const receiptUrl = await uploadFileToStorage(compressedImage, 'receipts');
+        // Mantener la carpeta autorizada por las políticas actuales del bucket.
+        const receiptUrl = await uploadFileToStorage(compressedImage, 'tattoo-ideas');
 
         if (!receiptUrl) {
             showToast("Error al subir la imagen a la nube.", "error");
@@ -2416,6 +2417,7 @@
 
             if (error) {
                 console.error("Error al subir archivo a Storage:", error);
+                showToast(`Error de Storage: ${error.message || 'permiso o configuración del bucket'}`, "error");
                 return null;
             }
             const { data: publicUrlData } = supabaseClient.storage.from('tattoo-ideas').getPublicUrl(filePath);
