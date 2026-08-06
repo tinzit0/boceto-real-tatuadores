@@ -1416,7 +1416,12 @@
                     ctx.drawImage(img, 0, 0, width, height);
 
                     canvas.toBlob((blob) => {
-                        resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
+                        if (!blob) {
+                            resolve(file);
+                            return;
+                        }
+                        const baseName = file.name.replace(/\.[^.]+$/, '') || 'imagen';
+                        resolve(new File([blob], `${baseName}.jpg`, { type: 'image/jpeg', lastModified: Date.now() }));
                     }, 'image/jpeg', quality);
                 };
                 img.onerror = () => resolve(file);
@@ -2333,7 +2338,7 @@
 
         // COMPRESIÓN DE IMAGEN PARA VELOCIDAD EXTREMA
         const compressedImage = await compressImage(currentSelectedReceiptFile);
-        const receiptUrl = await uploadFileToStorage(compressedImage, 'tattoo-ideas');
+        const receiptUrl = await uploadFileToStorage(compressedImage, 'receipts');
 
         if (!receiptUrl) {
             showToast("Error al subir la imagen a la nube.", "error");
@@ -2351,19 +2356,25 @@
             bookings[itemIdx].status = 'Pendiente de Revisión';
         }
 
-        // Re-render instantáneo de la ventana
-        const searchInputId = 'page-receipt-search-input';
-        const searchInput = document.getElementById(searchInputId);
-        if(searchInput && searchInput.value) {
-            verifyPageBookingForReceipt();
+        // Solo confirmar al cliente cuando la URL quedó asociada a la reserva.
+        const savedReceipt = await saveBookingToSupabase(activeFoundBookingForReceipt);
+        if (!savedReceipt) {
+            activeFoundBookingForReceipt.paymentReceiptUrl = null;
+            activeFoundBookingForReceipt.status = 'Pendiente de Comprobante';
+            if (itemIdx !== -1) {
+                bookings[itemIdx].paymentReceiptUrl = null;
+                bookings[itemIdx].status = 'Pendiente de Comprobante';
+            }
+            showToast('La imagen se subió, pero no se pudo asociar a la reserva. Inténtalo nuevamente.', 'error');
+            if(btn) { btn.disabled = false; btn.innerText = originalText; }
+            return;
         }
-        
+
+        currentSelectedReceiptFile = null;
+        const searchInput = document.getElementById('page-receipt-search-input');
+        if(searchInput && searchInput.value) verifyPageBookingForReceipt();
         renderAllViews();
         showToast("¡Comprobante enviado con éxito!", "success");
-
-        // Guardado en nube background
-            const savedReceipt = await saveBookingToSupabase(activeFoundBookingForReceipt);
-            if (!savedReceipt) showToast('El comprobante se subió, pero no se pudo asociar a la reserva. Contacta al estudio.', 'error');
     }
 
     // =====================================================================
@@ -2395,7 +2406,7 @@
         if (previewContainer) previewContainer.classList.add('hidden');
     }
 
-    async function uploadFileToStorage(file, folder = 'tattoo-ideas') {
+    async function uploadFileToStorage(file, folder = 'references') {
         try {
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
@@ -2409,7 +2420,10 @@
             }
             const { data: publicUrlData } = supabaseClient.storage.from('tattoo-ideas').getPublicUrl(filePath);
             return publicUrlData.publicUrl;
-        } catch (err) { return null; }
+        } catch (err) {
+            console.error("Error inesperado al subir archivo a Storage:", err);
+            return null;
+        }
     }
 
     async function uploadClientImageToStorage(file) { return uploadFileToStorage(file, 'references'); }
