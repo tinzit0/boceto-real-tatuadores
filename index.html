@@ -2417,7 +2417,6 @@
 
             if (error) {
                 console.error("Error al subir archivo a Storage:", error);
-                showToast(`Error de Storage: ${error.message || 'permiso o configuración del bucket'}`, "error");
                 return null;
             }
             const { data: publicUrlData } = supabaseClient.storage.from('tattoo-ideas').getPublicUrl(filePath);
