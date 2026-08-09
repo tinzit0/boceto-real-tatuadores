@@ -342,12 +342,16 @@
     <!-- PORTADA DE ALTA GAMA -->
     <header class="relative min-h-screen flex items-center justify-center text-center pt-24 pb-12 overflow-hidden bg-studio">
         <div class="absolute inset-0 z-0 overflow-hidden">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover grayscale mix-blend-overlay opacity-40 scale-105">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover grayscale opacity-[0.56] scale-[1.08]" style="filter: blur(4px) brightness(0.72) contrast(0.9) saturate(0.5);">
                 <source src="assets/video2.mov" type="video/quicktime">
                 <source src="assets/video2.mov" type="video/mp4">
             </video>
-            <div class="absolute inset-0 bg-gradient-to-b from-studio via-studio/70 to-studio"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#161b18_85%)]"></div>
+            <!-- Tinte del mismo verde oscuro de la web para integrar el video con la paleta -->
+            <div class="absolute inset-0 bg-[#161b18]/35"></div>
+            <!-- Degradado más envolvente: el video sigue visible, pero mucho más difuminado -->
+            <div class="absolute inset-0 bg-gradient-to-b from-studio/62 via-studio/48 to-studio/88"></div>
+            <!-- Viñeta profunda para fundir los bordes con el fondo de la página -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_8%,_rgba(22,27,24,0.42)_68%,_#161b18_100%)]"></div>
         </div>
 
         <div class="relative z-10 max-w-4xl px-6 flex flex-col items-center">
