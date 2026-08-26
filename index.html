@@ -812,7 +812,7 @@
                                   <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4ade80]"></span>Disponible</span>
                                   <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#facc15]"></span>Últimas horas</span>
                                   <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f87171]"></span>Sin cupos</span>
-                                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#6b7280]"></span>No disponible</span>
+                                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f87171]"></span>No disponible</span>
                               </div>
                               <p id="client-day-note" class="hidden mt-3 text-[11px] text-accent bg-accent/10 border border-accent/20 rounded-lg px-3 py-2 leading-relaxed text-center font-mono"></p>
                           </div>
@@ -842,7 +842,12 @@
                                   </div>
                                   <div>
                                       <label class="block text-[10px] font-mono uppercase text-muted tracking-wider mb-1.5 font-bold">Usuario de Instagram *</label>
-                                      <input type="text" id="client-email" required placeholder="@tu_instagram"
+                                      <input type="text" id="client-instagram" required placeholder="@tu_instagram"
+                                              class="w-full bg-studio border border-white/10 rounded-xl px-4 py-3 text-bone text-xs focus:outline-none focus:border-accent transition shadow-inner">
+                                  </div>
+                                  <div>
+                                      <label class="block text-[10px] font-mono uppercase text-muted tracking-wider mb-1.5 font-bold">Correo electrónico *</label>
+                                      <input type="email" id="client-email" required placeholder="tu@correo.cl" autocomplete="email"
                                              class="w-full bg-studio border border-white/10 rounded-xl px-4 py-3 text-bone text-xs focus:outline-none focus:border-accent transition shadow-inner">
                                   </div>
                                   <div>
@@ -903,7 +908,7 @@
                   Puedes realizar el pago de tu abono de <strong class="text-bone">$40.000 CLP</strong> de forma rápida y segura a través de la pasarela oficial de Webpay Plus. Recuerda que tienes 15 minutos tras agendar para subir tu comprobante.
               </p>
               <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <a href="https://www.webpay.cl/company/158953" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://www.webpay.cl/company/158953" onclick="return openWebpay(event)" rel="noopener noreferrer"
                      class="btn-primary-action w-full sm:w-auto inline-flex items-center justify-center gap-3 text-white font-mono text-[11px] md:text-xs font-bold tracking-widest py-4 px-8 rounded-xl uppercase shadow-xl hover:scale-105 transition-transform">
                       <i class="fa-solid fa-lock text-sm"></i>
                       <span>Pagar en Webpay Plus</span>
@@ -974,7 +979,7 @@
                             <form onsubmit="searchPageClientBookings(event)" class="space-y-4">
                                 <div>
                                     <label class="block text-[10px] font-mono uppercase text-muted tracking-wider mb-1.5 font-bold">Dato de la reserva</label>
-                                    <input type="text" id="page-client-search-input" required placeholder="Ej: @tu_instagram o +56912345678"
+                                    <input type="text" id="page-client-search-input" required placeholder="Instagram, correo o teléfono"
                                            class="w-full bg-studio border border-white/10 rounded-xl px-4 py-3.5 text-bone text-sm focus:outline-none focus:border-accent transition shadow-inner">
                                 </div>
                                 <button type="submit" class="btn-primary-action w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white cursor-pointer font-mono shadow-md mt-1">
@@ -1023,6 +1028,9 @@
             Tu reserva ha sido guardada temporalmente. Tienes <strong class="text-accent">15 minutos</strong> para subir tu comprobante de abono, de lo contrario la hora se liberará.
         </p>
         <div class="pt-2">
+            <a id="client-google-calendar-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full mb-3 inline-flex items-center justify-center gap-2 bg-studio hover:bg-white/5 border border-white/10 text-bone font-mono text-[10px] md:text-xs font-bold py-3.5 rounded-2xl uppercase tracking-wider shadow-sm transition">
+                <i class="fa-brands fa-google text-accent"></i> Agregar a Google Calendar
+            </a>
             <button type="button" onclick="closeSuccessModal(); scrollToReceiptBox();" class="btn-primary-action w-full font-mono text-[10px] md:text-xs font-bold py-3.5 rounded-2xl uppercase tracking-wider shadow-sm cursor-pointer">
                 Ir a Subir Comprobante
             </button>
@@ -1048,7 +1056,7 @@
             </p>
             <form onsubmit="verifyPageBookingForReceipt(event)" class="space-y-4">
                 <div>
-                    <input type="text" id="page-receipt-search-input" required placeholder="Ej: @tu_instagram o +56912345678"
+                    <input type="text" id="page-receipt-search-input" required placeholder="Instagram, correo o teléfono"
                            class="w-full bg-studio border border-white/10 rounded-xl px-4 py-3.5 text-bone text-sm focus:outline-none focus:border-accent transition shadow-inner">
                 </div>
                 <button type="submit" class="btn-primary-action w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white cursor-pointer font-mono shadow-md mt-1">
@@ -1180,7 +1188,7 @@
                             <tr>
                                 <th class="pb-3 w-1/5">Fecha / Hora</th>
                                 <th class="pb-3 w-1/4">Cliente / Detalles</th>
-                                <th class="pb-3 w-1/5">Instagram / Teléfono</th>
+                                <th class="pb-3 w-1/5">Instagram / Correo / Teléfono</th>
                                 <th class="pb-3 w-1/6">Estado</th>
                                 <th class="pb-3 text-right">Opciones</th>
                             </tr>
@@ -1377,6 +1385,8 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const ADMIN_EMAIL = "hipso.tattoo@gmail.com";
+    const BOOKING_BUFFER_MINUTES = 5 * 60;
+    const WEBPAY_URL = 'https://www.webpay.cl/company/158953';
 
     // Evita que datos escritos por clientes se interpreten como HTML/JavaScript.
     function escapeHTML(value) {
@@ -1568,7 +1578,7 @@
             const { data: bookingsData } = await supabaseClient.from('hipso_bookings').select('*');
             if (bookingsData) {
                 bookings = bookingsData.map(b => ({
-                    id: b.id, date: b.date, time: b.time, clientName: b.client_name, clientEmail: b.client_email, clientPhone: b.client_phone, notes: b.notes,
+                    id: b.id, date: b.date, time: b.time, clientName: b.client_name, clientInstagram: b.client_instagram || '', clientEmail: b.client_email, clientPhone: b.client_phone, notes: b.notes,
                     imageUrl: b.image_url || null, paymentReceiptUrl: b.payment_receipt_url || null, status: b.status || 'Pendiente de Comprobante', createdAt: b.created_at
                 }));
             }
@@ -1597,7 +1607,7 @@
     async function saveBookingToSupabase(b) {
         try {
             const { error } = await supabaseClient.from('hipso_bookings').upsert({
-                id: b.id, date: b.date, time: b.time, client_name: b.clientName, client_email: b.clientEmail, client_phone: b.clientPhone, notes: b.notes,
+                id: b.id, date: b.date, time: b.time, client_name: b.clientName, client_instagram: b.clientInstagram || '', client_email: b.clientEmail, client_phone: b.clientPhone, notes: b.notes,
                 image_url: b.imageUrl || null, payment_receipt_url: b.paymentReceiptUrl || null, status: b.status || 'Pendiente de Comprobante', created_at: b.createdAt || new Date().toISOString()
             }, { onConflict: 'id' });
             return !error;
@@ -1607,7 +1617,7 @@
     async function insertNewBookingAtomic(b) {
         try {
             const { error } = await supabaseClient.from('hipso_bookings').insert({
-                id: b.id, date: b.date, time: b.time, client_name: b.clientName, client_email: b.clientEmail, client_phone: b.clientPhone, notes: b.notes,
+                id: b.id, date: b.date, time: b.time, client_name: b.clientName, client_instagram: b.clientInstagram || '', client_email: b.clientEmail, client_phone: b.clientPhone, notes: b.notes,
                 image_url: b.imageUrl || null, payment_receipt_url: b.paymentReceiptUrl || null, status: b.status || 'Pendiente de Comprobante', created_at: b.createdAt || new Date().toISOString()
             });
             if (error) {
@@ -1780,19 +1790,34 @@
         const remainingSlots = getRemainingSlotsForDate(dateStr);
         if (remainingSlots.length === 0) return true;
         const availableSlots = remainingSlots.filter(slot => {
-            return !bookings.some(b => b.date === dateStr && b.time === slot && !b.status.includes('Cancelada'));
+            return !isSlotBlockedByBooking(dateStr, slot, bookingToReschedule && bookingToReschedule.id);
         });
         return availableSlots.length === 0;
+    }
+
+    function timeToMinutes(time) {
+        const [hours, minutes] = String(time || '').split(':').map(Number);
+        return Number.isFinite(hours) && Number.isFinite(minutes) ? (hours * 60) + minutes : NaN;
+    }
+
+    function isActiveBooking(booking) {
+        return !String(booking && booking.status || '').includes('Cancelada');
+    }
+
+    function isSlotBlockedByBooking(dateStr, slot, excludedBookingId = null, source = bookings) {
+        const slotMinutes = timeToMinutes(slot);
+        return source.some(booking => booking.date === dateStr && booking.id !== excludedBookingId && isActiveBooking(booking)
+            && Math.abs(timeToMinutes(booking.time) - slotMinutes) <= BOOKING_BUFFER_MINUTES);
     }
 
     function getDayAvailabilityStatus(dateStr, isPast) {
         if (isPast) return { status: 'gray', free: 0, total: 0 };
         const sched = getEffectiveScheduleForDate(dateStr);
-        if (sched.blocked || !sched.active || !sched.slots || sched.slots.length === 0) { return { status: 'gray', free: 0, total: 0 }; }
+        if (sched.blocked || !sched.active || !sched.slots || sched.slots.length === 0) { return { status: 'red', free: 0, total: 0 }; }
         const remainingSlots = getRemainingSlotsForDate(dateStr);
-        if (remainingSlots.length === 0) return { status: 'gray', free: 0, total: 0 };
+        if (remainingSlots.length === 0) return { status: 'red', free: 0, total: 0 };
         const total = remainingSlots.length;
-        const free = remainingSlots.filter(slot => !bookings.some(b => b.date === dateStr && b.time === slot && !b.status.includes('Cancelada'))).length;
+        const free = remainingSlots.filter(slot => !isSlotBlockedByBooking(dateStr, slot, bookingToReschedule && bookingToReschedule.id)).length;
         if (free === 0) return { status: 'red', free, total };
         if (free <= 2) return { status: 'yellow', free, total };
         return { status: 'green', free, total };
@@ -1883,12 +1908,12 @@
         }
 
         remainingSlots.forEach(slot => {
-            const isBooked = bookings.some(b => b.date === selectedClientDate && b.time === slot && !b.status.includes('Cancelada'));
+            const isBooked = isSlotBlockedByBooking(selectedClientDate, slot, bookingToReschedule && bookingToReschedule.id);
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = `slot-btn py-2.5 px-3 rounded-xl text-[11px] md:text-xs font-mono text-center cursor-pointer ${selectedClientSlot === slot ? 'selected' : 'text-bone'}`;
             btn.disabled = isBooked;
-            btn.innerText = isBooked ? `${slot} (Ocupado)` : slot;
+            btn.innerText = isBooked ? `${slot} (Sin cupo)` : slot;
 
             if (!isBooked) {
                 btn.onclick = () => {
@@ -1905,12 +1930,13 @@
     function validateBookingForm() {
         const name = document.getElementById('client-name').value;
         const email = document.getElementById('client-email').value;
+        const instagram = document.getElementById('client-instagram').value;
         const phone = document.getElementById('client-phone').value;
         const submitBtn = document.getElementById('btn-submit-booking');
-        submitBtn.disabled = !(selectedClientDate && selectedClientSlot && name && email && phone && !isDayFullyBookedOrClosed(selectedClientDate));
+        submitBtn.disabled = !(selectedClientDate && selectedClientSlot && name && instagram && email && phone && document.getElementById('client-email').checkValidity() && !isSlotBlockedByBooking(selectedClientDate, selectedClientSlot, bookingToReschedule && bookingToReschedule.id));
     }
 
-    ['client-name', 'client-email', 'client-phone'].forEach(id => {
+    ['client-name', 'client-instagram', 'client-email', 'client-phone'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', validateBookingForm);
     });
@@ -1927,9 +1953,9 @@
             // REAGENDAMIENTO DE CITA EXISTENTE
             if (bookingToReschedule) {
                 const { data: existingBookings, error: checkError } = await supabaseClient
-                    .from('hipso_bookings').select('id, status').eq('date', selectedClientDate).eq('time', selectedClientSlot);
+                    .from('hipso_bookings').select('id, time, status').eq('date', selectedClientDate);
 
-                const activeExisting = existingBookings ? existingBookings.filter(eb => !eb.status.includes('Cancelada') && eb.id !== bookingToReschedule.id) : [];
+                const activeExisting = existingBookings ? existingBookings.filter(eb => eb.id !== bookingToReschedule.id && isActiveBooking(eb) && Math.abs(timeToMinutes(eb.time) - timeToMinutes(selectedClientSlot)) <= BOOKING_BUFFER_MINUTES) : [];
 
                 if (activeExisting.length > 0) {
                     submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText;
@@ -1940,6 +1966,7 @@
                 bookingToReschedule.date = selectedClientDate;
                 bookingToReschedule.time = selectedClientSlot;
                 bookingToReschedule.clientName = document.getElementById('client-name').value;
+                bookingToReschedule.clientInstagram = document.getElementById('client-instagram').value;
                 bookingToReschedule.clientEmail = document.getElementById('client-email').value;
                 bookingToReschedule.clientPhone = document.getElementById('client-phone').value;
                 
@@ -1966,9 +1993,9 @@
 
             // NUEVA CITA NORMAL
             const { data: existingBookings, error: checkError } = await supabaseClient
-                .from('hipso_bookings').select('id, status').eq('date', selectedClientDate).eq('time', selectedClientSlot);
+                    .from('hipso_bookings').select('id, time, status').eq('date', selectedClientDate);
 
-            const activeExisting = existingBookings ? existingBookings.filter(eb => !eb.status.includes('Cancelada')) : [];
+            const activeExisting = existingBookings ? existingBookings.filter(eb => isActiveBooking(eb) && Math.abs(timeToMinutes(eb.time) - timeToMinutes(selectedClientSlot)) <= BOOKING_BUFFER_MINUTES) : [];
 
             if (activeExisting.length > 0) {
                 submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText;
@@ -1988,6 +2015,7 @@
                 date: selectedClientDate,
                 time: selectedClientSlot,
                 clientName: document.getElementById('client-name').value,
+                clientInstagram: document.getElementById('client-instagram').value,
                 clientEmail: document.getElementById('client-email').value,
                 clientPhone: document.getElementById('client-phone').value,
                 notes: document.getElementById('client-notes').value,
@@ -2002,8 +2030,6 @@
             removeSelectedImage();
             selectedClientSlot = ""; 
             renderAllViews();
-            document.getElementById('success-modal').classList.remove('hidden');
-            document.getElementById('success-modal').classList.add('flex');
 
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
@@ -2018,6 +2044,10 @@
                 showToast(saveResult.conflict ? 'Ese horario acaba de ser reservado por otra persona.' : 'No se pudo guardar la reserva. Inténtalo nuevamente.', 'error');
                 return;
             }
+            const calendarLink = document.getElementById('client-google-calendar-link');
+            if (calendarLink) calendarLink.href = getGoogleCalendarUrl(pendingBookingData, false);
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
             
         } catch (error) {
             console.error(error);
@@ -2032,6 +2062,14 @@
         resetBookingFormUI();
     }
 
+    function openWebpay(event) {
+        if (event) event.preventDefault();
+        // La navegación en la misma pestaña funciona también dentro del navegador de Instagram,
+        // donde las ventanas nuevas suelen ser bloqueadas.
+        window.location.assign(WEBPAY_URL);
+        return false;
+    }
+
     function openReceiptModal() {
         document.getElementById('receipt-modal').classList.remove('hidden');
         document.getElementById('receipt-modal').classList.add('flex');
@@ -2044,7 +2082,7 @@
 
     function scrollToReceiptBox() {
         const phone = document.getElementById('client-phone').value;
-        const ig = document.getElementById('client-email').value;
+        const ig = document.getElementById('client-instagram').value;
         const searchVal = phone || ig;
         
         openReceiptModal();
@@ -2070,9 +2108,10 @@
 
         const userBookings = bookings.filter(b => {
             const nameMatch = b.clientName && b.clientName.toLowerCase().includes(matchInput);
-            const igMatch = b.clientEmail && b.clientEmail.toLowerCase().replace('@', '').includes(matchInput);
+            const igMatch = b.clientInstagram && b.clientInstagram.toLowerCase().replace('@', '').includes(matchInput);
+            const emailMatch = b.clientEmail && b.clientEmail.toLowerCase().includes(inputVal);
             const phoneMatch = b.clientPhone && b.clientPhone.toLowerCase().includes(matchInput);
-            return nameMatch || igMatch || phoneMatch;
+            return nameMatch || igMatch || emailMatch || phoneMatch;
         });
 
         if (userBookings.length === 0) {
@@ -2084,7 +2123,7 @@
             const card = document.createElement('div');
             card.className = "bg-studio/80 border border-white/5 rounded-2xl p-4 flex flex-col gap-3 shadow-sm relative overflow-hidden";
             
-            const igRaw = (b.clientEmail || '').trim().replace(/^@/, '');
+            const igRaw = (b.clientInstagram || '').trim().replace(/^@/, '');
             const safeIgRaw = escapeHTML(igRaw);
             const igDisplay = igRaw 
                 ? `<a href="https://instagram.com/${encodeURIComponent(igRaw)}" target="_blank" rel="noopener noreferrer" class="hover:underline text-accent font-semibold">@${safeIgRaw}</a>`
@@ -2097,6 +2136,7 @@
             
             const apptDate = new Date(`${b.date}T${b.time}:00`);
             const diffHours = (apptDate - new Date()) / (1000 * 60 * 60);
+            const clientCalendarUrl = getGoogleCalendarUrl(b, false);
 
             let colorBorder = 'bg-amber-400';
             if (isCanceled) colorBorder = 'bg-danger';
@@ -2106,6 +2146,7 @@
 
             if (!isCanceled) {
                 actionButtons += `<div class="flex items-center gap-2 mt-2 w-full flex-wrap justify-end border-t border-white/5 pt-3">`;
+                actionButtons += `<a href="${clientCalendarUrl}" target="_blank" rel="noopener noreferrer" class="bg-studio hover:bg-white/5 border border-white/10 text-bone text-[10px] px-4 py-2 rounded-xl transition font-mono font-bold w-full sm:w-auto text-center shadow-sm inline-flex items-center justify-center gap-2"><i class="fa-brands fa-google text-accent"></i> Agregar a Google Calendar</a>`;
                 if (!hasPaid) {
                     actionButtons += `<button type="button" onclick="cancelClientBooking('${b.id}', 'page-client-search-input')" class="bg-danger/10 hover:bg-danger/20 border border-danger/30 text-danger text-[10px] px-4 py-2 rounded-xl transition font-mono cursor-pointer font-bold w-full sm:w-auto shadow-sm">Cancelar Reserva</button>`;
                 } else {
@@ -2127,6 +2168,7 @@
                     <div class="font-mono text-xs font-bold text-bone">${formatDateReadable(b.date)} a las ${b.time}</div>
                     <div class="text-[11px] text-accent font-medium mt-1">${escapeHTML(b.clientName)} (${igDisplay})</div>
                     <div class="text-[10px] font-mono text-muted mt-0.5"><i class="fa-solid fa-phone text-[9px] text-emerald-400"></i> ${escapeHTML(b.clientPhone || 'Sin teléfono')}</div>
+                    <div class="text-[10px] font-mono text-muted mt-0.5"><i class="fa-solid fa-envelope text-[9px] text-accent"></i> ${escapeHTML(b.clientEmail || 'Sin correo')}</div>
                     <div class="text-[10px] ${isCanceled ? 'text-danger bg-danger/10 border-danger/20' : 'text-bone bg-panel border-white/10'} border font-bold mt-2 px-2.5 py-1 rounded-md inline-block shadow-sm">Estado: ${escapeHTML(b.status)}</div>
                 </div>
                 ${actionButtons}
@@ -2160,6 +2202,7 @@
         if (!bookingToReschedule) return;
         
         document.getElementById('client-name').value = bookingToReschedule.clientName;
+        document.getElementById('client-instagram').value = bookingToReschedule.clientInstagram || '';
         document.getElementById('client-email').value = bookingToReschedule.clientEmail;
         document.getElementById('client-phone').value = bookingToReschedule.clientPhone;
         document.getElementById('client-notes').value = bookingToReschedule.notes || '';
@@ -2220,8 +2263,9 @@
 
         const found = bookings.find(b => {
             const phoneMatch = b.clientPhone && b.clientPhone.toLowerCase().includes(inputVal);
-            const igMatch = b.clientEmail && b.clientEmail.toLowerCase().replace('@', '').includes(inputVal);
-            return (phoneMatch || igMatch) && (b.status === 'Pendiente de Comprobante' || b.status === 'Pendiente de Revisión' || b.status === 'Confirmada');
+            const igMatch = b.clientInstagram && b.clientInstagram.toLowerCase().replace('@', '').includes(inputVal);
+            const emailMatch = b.clientEmail && b.clientEmail.toLowerCase().includes(inputVal);
+            return (phoneMatch || igMatch || emailMatch) && (b.status === 'Pendiente de Comprobante' || b.status === 'Pendiente de Revisión' || b.status === 'Confirmada');
         });
 
         if (!found) {
@@ -2455,18 +2499,24 @@
         return `<a href="https://instagram.com/${cleanHandle}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline flex items-center gap-1 font-semibold"><i class="fa-brands fa-instagram text-[10px]"></i> @${cleanHandle}</a>`;
     }
 
-    function getGoogleCalendarUrl(b) {
+    function getGoogleCalendarUrl(b, includeClientData = true) {
         if (!b.date || !b.time) return "#";
         try {
-            const title = encodeURIComponent(`Cita Tatuaje: ${b.clientName}`);
-            const details = encodeURIComponent(`Idea: ${b.notes || 'Sin detalles'}\nInstagram: ${b.clientEmail}\nTeléfono: ${b.clientPhone}`);
+            const title = encodeURIComponent(includeClientData ? `Cita Tatuaje: ${b.clientName}` : 'Cita de tatuaje - Hipso Tattoo');
+            const detailsText = includeClientData
+                ? `Idea: ${b.notes || 'Sin detalles'}\nInstagram: ${b.clientInstagram || 'Sin Instagram'}\nCorreo: ${b.clientEmail || 'Sin correo'}\nTeléfono: ${b.clientPhone}`
+                : 'Cita reservada en Hipso Tattoo. Recuerda completar y confirmar el pago de tu abono.';
+            const details = encodeURIComponent(detailsText);
             const location = encodeURIComponent("Tucapel 391, Concepción, Chile");
 
             const fechaLimpia = b.date.replace(/-/g, '');
             const horaLimpia = b.time.replace(':', '') + '00';
             const fechaInicio = `${fechaLimpia}T${horaLimpia}`;
+            const endDate = new Date(`${b.date}T${b.time}:00`);
+            endDate.setMinutes(endDate.getMinutes() + BOOKING_BUFFER_MINUTES);
+            const fechaFin = `${getLocalDateString(endDate).replace(/-/g, '')}T${String(endDate.getHours()).padStart(2, '0')}${String(endDate.getMinutes()).padStart(2, '0')}00`;
 
-            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${fechaInicio}/${fechaInicio}`;
+            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${fechaInicio}/${fechaFin}&ctz=America%2FSantiago`;
         } catch(e) {
             return "#";
         }
@@ -2552,7 +2602,7 @@
                 </button>
             ` : '';
 
-            const igLink = formatInstagramHandle(b.clientEmail);
+            const igLink = formatInstagramHandle(b.clientInstagram);
             const phoneRaw = (b.clientPhone || '').replace(/\D/g, '');
             const phoneLink = phoneRaw
                 ? `<a href="https://wa.me/${phoneRaw}" target="_blank" rel="noopener noreferrer" class="text-emerald-400 font-mono text-[10px] hover:underline inline-flex items-center gap-1 font-bold">
@@ -2572,6 +2622,7 @@
                 </td>
                 <td class="py-4 text-[10px] align-top pr-2">
                     <div>${igLink}</div>
+                    <div class="text-muted font-mono text-[10px] mt-0.5 break-all">${escapeHTML(b.clientEmail || 'Sin correo')}</div>
                     <div class="text-muted mt-0.5">${phoneLink}</div>
                 </td>
                 <td class="py-4 align-top">${statusBadge}</td>
@@ -3299,6 +3350,7 @@
                         date: b.date,
                         time: b.time,
                         clientName: b.client_name,
+                        clientInstagram: b.client_instagram || '',
                         clientEmail: b.client_email,
                         clientPhone: b.client_phone,
                         notes: b.notes,
